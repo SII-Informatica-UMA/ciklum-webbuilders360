@@ -22,11 +22,13 @@ export class DetalleGerenteComponent {
     ref.componentInstance.accion = "Editar";
     ref.componentInstance.gerente = {...this.gerente};
     ref.result.then((gerente: Gerente) => {
+      console.log();
       this.gerenteEditado.emit(gerente);
     }, (reason) => {});
   }
 
   eliminarGerente(): void {
     this.gerenteEliminado.emit(this.gerente?.idUsuario);
+    this.modal.close();
   }
 }

@@ -33,6 +33,12 @@ export class AppComponent implements OnInit {
     this.centroElegido = centro;
     let ref = this.modalService.open(DetalleCentroComponent);
     ref.componentInstance.centro = centro;
+    /*AÑADIDO PARA EDITAR DATOS*/
+    ref.componentInstance.centroEditado.subscribe((centroEditado: Centro) => {
+      this.centrosService.editarCentro(centroEditado); // Actualizar el centro editado en el servicio
+      this.centros = this.centrosService.getCentros(); // Actualizar la lista de centros en el componente
+      this.centroElegido = this.centros.find(c => c.idCentro === centroEditado.idCentro); // Actualizar el centro elegido
+    });
   }
 
   aniadirCentro(): void {
@@ -55,6 +61,7 @@ export class AppComponent implements OnInit {
     this.centrosService.eliminarcCentro(id);
     this.centros = this.centrosService.getCentros();
     this.centroElegido = undefined;
+    this.modalService.dismissAll();
   }
 
 
@@ -62,6 +69,12 @@ export class AppComponent implements OnInit {
     this.gerenteElegido = gerente;
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
+    /*AÑADIDO PARA EDITAR DETALLES*/
+    ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
+      this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
+      this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      this.gerenteElegido = this.gerentes.find(c => c.idUsuario === gerenteEditado.idUsuario); // Actualizar el centro elegido
+    });
   }
 
   aniadirGerente(): void {
@@ -84,6 +97,7 @@ export class AppComponent implements OnInit {
     this.gerentesService.eliminargGerente(id);
     this.gerentes = this.gerentesService.getGerentes();
     this.gerenteElegido = undefined;
+    this.modalService.dismissAll();
   }
   
 

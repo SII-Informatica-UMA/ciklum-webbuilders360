@@ -28,6 +28,7 @@ export class DetalleCentroComponent {
 
   eliminarCentro(): void {
     this.centroEliminado.emit(this.centro?.idCentro);
+    this.modal.close();
   }
 }
 
