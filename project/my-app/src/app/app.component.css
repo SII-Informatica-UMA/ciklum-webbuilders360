@@ -1,9 +1,8 @@
 body{
     position:relative;
     display:flex;
-    
-  flex-direction: row;
-  flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 .row1{
     width: 50%;
@@ -13,4 +12,9 @@ body{
 .row2{
     width: 50%;
     float:right;
+}
+
+.list-group{
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
