@@ -1,0 +1,16 @@
+body{
+    position:relative;
+    display:flex;
+    
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.row1{
+    width: 50%;
+    float:left;
+}
+
+.row2{
+    width: 50%;
+    float:right;
+}
