@@ -1,3 +1,4 @@
+<!--
 <div class="container">
   <div class="row">
     <h2 >Detalles de {{gerente?.idUsuario}}</h2>
@@ -17,4 +18,26 @@
   <button class="col-auto btn btn-outline-primary" (click)="editarGerente()">Editar <i class="bi bi-pencil-fill"></i></button>
 </div>
 
+</div>-->
+<!--PRUEBA-->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Detalles del {{gerente?.idUsuario}}</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <div class="row" id="idUsuario">
+      <label class="col-md-3" for="idUsuario">ID usuario:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{gerente?.idUsuario}}</span>
+    </div>
+    <div class="row" id="empresa">
+      <label class="col-md-3" for="empresa">Empresa:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{gerente?.empresa}}</span>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <button class="col-auto btn btn-outline-primary" (click)="eliminarGerente()">Eliminar <i class="bi bi-trash-fill"></i></button>
+  <div class="col-1"></div>
+  <button class="col-auto btn btn-outline-primary" (click)="editarGerente()">Editar <i class="bi bi-pencil-fill"></i></button>
 </div>

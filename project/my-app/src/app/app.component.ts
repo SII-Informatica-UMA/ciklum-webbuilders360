@@ -6,6 +6,8 @@ import { GerentesService } from './gerentes.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormularioCentroComponent } from './formulario-centro/formulario-centro.component'
 import { FormularioGerenteComponent } from './formulario-gerente/formulario-gerente.component';
+import { DetalleCentroComponent } from './detalle-centro/detalle-centro.component';
+import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.component';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +31,8 @@ export class AppComponent implements OnInit {
 
   elegirCentro(centro: Centro): void {
     this.centroElegido = centro;
+    let ref = this.modalService.open(DetalleCentroComponent);
+    ref.componentInstance.centro = centro;
   }
 
   aniadirCentro(): void {
@@ -56,6 +60,8 @@ export class AppComponent implements OnInit {
 
   elegirGerente(gerente: Gerente): void {
     this.gerenteElegido = gerente;
+    let ref = this.modalService.open(DetalleGerenteComponent);
+    ref.componentInstance.gerente = gerente;
   }
 
   aniadirGerente(): void {
