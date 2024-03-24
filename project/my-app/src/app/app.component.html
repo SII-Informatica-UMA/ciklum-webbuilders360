@@ -1,49 +1,52 @@
-<head>
-  <link rel="stylesheet" type="text/css" href="app.component.css">
-</head>
-<body>
-<div class="container">
-  <div class="row1">
-    <div class="col-md-6">
-      <h1>Lista de centros</h1>
-      <div class="list-group">
-        <button *ngFor="let centro of centros"
-          class="list-group-item list-group-item-action"
-          (click)="elegirCentro(centro)"
-          [class.active]="centro === centroElegido">{{centro.nombre}}</button>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="app.component.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="row1">
+      <div class="col-md-6">
+        <h1>Lista de centros</h1>
+        <div class="list-group">
+          <button *ngFor="let centro of centros"
+            class="list-group-item list-group-item-action"
+            (click)="elegirCentro(centro)"
+            [class.active]="centro === centroElegido">{{centro.nombre}}</button>
+        </div>
+        <br>
+        <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirCentro()"></button>
       </div>
-      <br>
-      <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirCentro()"></button>
+      <div class="col-md-6" *ngIf="centroElegido">
+        <app-detalle-centro [centro]="centroElegido"
+          (centroEditado)="centroEditado($event)"
+          (centroEliminado)="eliminarCentro($event)"
+          ></app-detalle-centro>
+      </div>
     </div>
-    <div class="col-md-6" *ngIf="centroElegido">
-      <app-detalle-centro [centro]="centroElegido"
-        (centroEditado)="centroEditado($event)"
-        (centroEliminado)="eliminarCentro($event)"
-        ></app-detalle-centro>
+
+
+    <div class="row2">
+      <div class="col-md-6">
+        <h1>Lista de gerentes</h1>
+        <div class="list-group">
+          <button *ngFor="let gerente of gerentes"
+            class="list-group-item list-group-item-action"
+            (click)="elegirGerente(gerente)"
+            [class.active]="gerente === gerenteElegido">{{gerente.idUsuario}}</button>
+        </div>
+        <br>
+        <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirGerente()"></button>
+      </div>
+      <div class="col-md-6" *ngIf="gerenteElegido">
+        <app-detalle-gerente [gerente]="gerenteElegido"
+          (gerenteEditado)="gerenteEditado($event)"
+          (gerenteEliminado)="eliminarGerente($event)"
+          ></app-detalle-gerente>
+      </div>
+
     </div>
   </div>
-
-
-  <div class="row2">
-    <div class="col-md-6">
-      <h1>Lista de gerentes</h1>
-      <div class="list-group">
-        <button *ngFor="let gerente of gerentes"
-          class="list-group-item list-group-item-action"
-          (click)="elegirGerente(gerente)"
-          [class.active]="gerente === gerenteElegido">{{gerente.idUsuario}}</button>
-      </div>
-      <br>
-      <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirGerente()"></button>
-    </div>
-    <div class="col-md-6" *ngIf="gerenteElegido">
-      <app-detalle-gerente [gerente]="gerenteElegido"
-        (gerenteEditado)="gerenteEditado($event)"
-        (gerenteEliminado)="eliminarGerente($event)"
-        ></app-detalle-gerente>
-    </div>
-
-  </div>
-</div>
-</body>
-
+  </body>
+</html>
