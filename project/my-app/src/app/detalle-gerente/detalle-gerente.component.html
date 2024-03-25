@@ -1,12 +1,25 @@
 <div class="container">
   <div class="row">
-    <h2 >Detalles de {{gerente?.idUsuario}}</h2>
+    <h2 >Detalles de {{gerente?.nombre}} {{gerente?.apellido1}} {{gerente?.apellido2}}</h2>
   </div>
 
 <div class="row" id="idUsuario">
   <label class="col-md-3" for="idUsuario">ID usuario:</label>
   <span class="col-md-9 offset-2 offset-md-0">{{gerente?.idUsuario}}</span>
 </div>
+<div class="row" id="id">
+  <label class="col-md-3" for="id">ID gerente:</label>
+  <span class="col-md-9 offset-2 offset-md-0">{{gerente?.id}}</span>
+</div>
+<div class="row" id="nombre">
+  <label class="col-md-3" for="nombre">Nombre:</label>
+  <span class="col-md-9 offset-2 offset-md-0">{{gerente?.nombre}} {{gerente?.apellido1}} {{gerente?.apellido2}}</span>
+</div>
+<div class="row" id="email">
+  <label class="col-md-3" for="email">Email:</label>
+  <span class="col-md-9 offset-2 offset-md-0">{{gerente?.email}}</span>
+</div>
+
 <div class="row" id="empresa">
   <label class="col-md-3" for="empresa">Empresa:</label>
   <span class="col-md-9 offset-2 offset-md-0">{{gerente?.empresa}}</span>

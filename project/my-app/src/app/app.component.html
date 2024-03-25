@@ -25,27 +25,36 @@
       </div>
     </div>
 
+    <div *ngIf="esAdmin; else bloqueGerente">
 
-    <div class="gerentes-ctr">
-      <div class="contenido">
-        <h1>Lista de gerentes</h1>
-        <div class="list-group">
-          <button *ngFor="let gerente of gerentes"
-            class="list-group-item list-group-item-action"
-            (click)="elegirGerente(gerente)"
-            [class.active]="gerente === gerenteElegido">{{gerente.idUsuario}}</button>
+      <div class="gerentes-ctr">
+        <div class="contenido">
+          <h1>Lista de gerentes</h1>
+          <div class="list-group">
+            <button *ngFor="let gerente of gerentes"
+              class="list-group-item list-group-item-action"
+              (click)="elegirGerente(gerente)"
+              [class.active]="gerente === gerenteElegido">{{gerente.nombre}} {{gerente.apellido1}} {{gerente.apellido2}}</button>
+          </div>
+          <br>
+          <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirGerente()"></button>
         </div>
-        <br>
-        <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirGerente()"></button>
+        <div class="contenido" *ngIf="gerenteElegido">
+          <app-detalle-gerente [gerente]="gerenteElegido"
+            (gerenteEditado)="gerenteEditado($event)"
+            (gerenteEliminado)="eliminarGerente($event)"
+            ></app-detalle-gerente>
+        </div>
+  
       </div>
-      <div class="contenido" *ngIf="gerenteElegido">
-        <app-detalle-gerente [gerente]="gerenteElegido"
-          (gerenteEditado)="gerenteEditado($event)"
-          (gerenteEliminado)="eliminarGerente($event)"
-          ></app-detalle-gerente>
-      </div>
-
     </div>
+    <ng-template #bloqueGerente>
+      Mensajes aparecerían aquí
+    </ng-template>
+
+   
+
+   
   </div>
   </body>
 </html>

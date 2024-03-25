@@ -13,6 +13,9 @@ import { FormularioGerenteComponent } from './formulario-gerente/formulario-gere
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
+  esAdmin: boolean = true;
+
   centros: Centro [] = [];
   centroElegido?: Centro;
 

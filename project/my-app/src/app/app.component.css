@@ -20,8 +20,8 @@ body{
 .centros-ctr{
     margin: 30px 30px 30px 0px;
     padding: 10px 10px 10px 10px;
-    width: 40%;
-    height: 70%;
+    width: 30em;
+    height: 40em;
     float:left;
     background-color: rgb(241, 241, 241);
     border-radius: 5px;
@@ -35,8 +35,8 @@ body{
 .gerentes-ctr{
     margin: 30px 0px 30px 30px;
     padding: 10px 10px 10px 10px;
-    width: 40%;
-    height: 70%;
+    width: 30em;
+    height: 40em;
     float:right;
     background-color: rgb(241, 241, 241);
     border-radius: 5px;
@@ -47,9 +47,9 @@ body{
 }
 
 .list-group{
-    height: 70%;
+    height: 16em;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     font-size:15px;
 }
 
