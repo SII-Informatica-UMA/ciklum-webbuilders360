@@ -39,6 +39,12 @@ export class AppComponent implements OnInit {
       this.centros = this.centrosService.getCentros(); // Actualizar la lista de centros en el componente
       this.centroElegido = this.centros.find(c => c.idCentro === centroEditado.idCentro); // Actualizar el centro elegido
     });
+    /*AÑADIDO PARA ELIMINAR EL ELEMENTO DE LA LISTA*/
+    ref.componentInstance.centroEliminado.subscribe((idCentro: number) => {
+      this.centrosService.eliminarcCentro(idCentro); // Eliminar el centro del servicio
+      this.centros = this.centrosService.getCentros(); // Actualizar la lista de centros en el componente
+      this.centroElegido = undefined; // Limpiar el centro elegido si fue eliminado
+    });
   }
 
   aniadirCentro(): void {
@@ -55,6 +61,7 @@ export class AppComponent implements OnInit {
     this.centrosService.editarCentro(centro);
     this.centros = this.centrosService.getCentros();
     this.centroElegido = this.centros.find(c => c.idCentro == centro.idCentro);
+    this.modalService.dismissAll();
   }
 
   eliminarCentro(id: number): void {
@@ -74,6 +81,12 @@ export class AppComponent implements OnInit {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
       this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
       this.gerenteElegido = this.gerentes.find(c => c.idUsuario === gerenteEditado.idUsuario); // Actualizar el centro elegido
+    });
+    /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA*/
+    ref.componentInstance.gerenteEliminado.subscribe((idGerente: number) => {
+      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
     });
   }
 

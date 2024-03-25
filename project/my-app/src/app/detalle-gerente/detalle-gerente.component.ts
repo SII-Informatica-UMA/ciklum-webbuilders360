@@ -25,6 +25,7 @@ export class DetalleGerenteComponent {
       console.log();
       this.gerenteEditado.emit(gerente);
     }, (reason) => {});
+    this.modal.close();
   }
 
   eliminarGerente(): void {

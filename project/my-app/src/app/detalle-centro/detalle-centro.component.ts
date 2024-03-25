@@ -24,6 +24,7 @@ export class DetalleCentroComponent {
     ref.result.then((centro: Centro) => {
       this.centroEditado.emit(centro);
     }, (reason) => {});
+    this.modal.close();
   }
 
   eliminarCentro(): void {
