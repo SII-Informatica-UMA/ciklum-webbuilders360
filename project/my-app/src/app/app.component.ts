@@ -83,5 +83,7 @@ export class AppComponent implements OnInit {
     this.gerenteElegido = undefined;
   }
   
-
+  asociar(): void {
+    
+  }
 }

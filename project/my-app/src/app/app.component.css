@@ -1,7 +1,9 @@
 body{
     display: flex;
     justify-content: center;
-    background-color: white;
+    background: url(fondo.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
     height: 100vh;
     width: 100vw;
 }
@@ -9,7 +11,7 @@ body{
 .container{
     margin: 0px;
     padding: 0px;
-    background-color: white;
+    background-color: transparent;
     position:relative;
     display:flex;
     flex-direction: row;
