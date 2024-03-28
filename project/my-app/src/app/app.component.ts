@@ -15,7 +15,7 @@ import { FormularioGerenteComponent } from './formulario-gerente/formulario-gere
 export class AppComponent implements OnInit {
 
   // booleano provisional
-  esAdmin: boolean = false;
+  esAdmin: boolean = true;
 
   centros: Centro [] = [];
   centroElegido?: Centro;
