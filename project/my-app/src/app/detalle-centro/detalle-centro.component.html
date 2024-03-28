@@ -12,12 +12,14 @@
       <label class="col-md-3" for="direccion">Dirección:</label>
       <span class="col-md-9 offset-2 offset-md-0">{{centro?.direccion}}</span>
     </div>
+    <div class="row" id="idCentro">
+      <label class="col-md-3" for="idCentro">ID centro:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{centro?.idCentro}}</span>
+    </div>
+    <br>
   </div>
 
-<div class="row" id="idCentro">
-  <label class="col-md-3" for="idCentro">ID centro:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{centro?.idCentro}}</span>
-</div>
+
 
 <div class="modal-footer">
   <button class="col-auto btn btn-outline-primary" (click)="eliminarCentro()">Eliminar <i class="bi bi-trash-fill"></i></button>
