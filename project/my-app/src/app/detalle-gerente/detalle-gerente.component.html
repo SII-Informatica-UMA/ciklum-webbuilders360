@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Detalles del {{gerente?.idUsuario}}</h4>
+  <h4 class="modal-title" id="modal-basic-title">Detalles de {{gerente?.idUsuario}}</h4>
   <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button>
 </div>
 <div class="modal-body">
@@ -12,30 +12,20 @@
       <label class="col-md-3" for="empresa">Empresa:</label>
       <span class="col-md-9 offset-2 offset-md-0">{{gerente?.empresa}}</span>
     </div>
-<div class="container">
-  <div class="row">
-    <h2 >Detalles de {{gerente?.id}}</h2>
+    <!--
+  <div class="row" id="nombre">
+    <label class="col-md-3" for="nombre">Nombre:</label>
+    <span class="col-md-9 offset-2 offset-md-0">{{gerente?.nombre}} {{gerente?.apellido1}} {{gerente?.apellido2}}</span>
   </div>
-</div>
+  <div class="row" id="email">
+    <label class="col-md-3" for="email">Email:</label>
+    <span class="col-md-9 offset-2 offset-md-0">{{gerente?.email}}</span>
+  </div>
+  -->
 <div class="modal-footer">
-<div class="row" id="id">
-  <label class="col-md-3" for="id">ID gerente:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{gerente?.id}}</span>
-</div>
-<!--
-<div class="row" id="nombre">
-  <label class="col-md-3" for="nombre">Nombre:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{gerente?.nombre}} {{gerente?.apellido1}} {{gerente?.apellido2}}</span>
-</div>
-<div class="row" id="email">
-  <label class="col-md-3" for="email">Email:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{gerente?.email}}</span>
-</div>
--->
-<div class="row" id="empresa">
-  <label class="col-md-3" for="empresa">Empresa:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{gerente?.empresa}}</span>
-</div>
+
+
+
 <div class="row">
   <button class="col-auto btn btn-outline-primary" (click)="eliminarGerente()">Eliminar <i class="bi bi-trash-fill"></i></button>
   <div class="col-1"></div>
