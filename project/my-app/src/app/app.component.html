@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,8 +5,8 @@
   </head>
   <body>
   <div class="container">
-    <div class="row1">
-      <div class="col-md-6">
+    <div class="centros-ctr">
+      <div class="contenido">
         <h1>Lista de centros</h1>
         <div class="list-group">
           <button *ngFor="let centro of centros"
@@ -18,7 +17,7 @@
         <br>
         <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirCentro()"></button>
       </div>
-      <div class="col-md-6" *ngIf="centroElegido">
+      <div class="contenido" *ngIf="centroElegido">
         <app-detalle-centro [centro]="centroElegido"
           (centroEditado)="centroEditado($event)"
           (centroEliminado)="eliminarCentro($event)"
@@ -26,27 +25,36 @@
       </div>
     </div>
 
+    <div *ngIf="esAdmin; else bloqueGerente">
 
-    <div class="row2">
-      <div class="col-md-6">
-        <h1>Lista de gerentes</h1>
-        <div class="list-group">
-          <button *ngFor="let gerente of gerentes"
-            class="list-group-item list-group-item-action"
-            (click)="elegirGerente(gerente)"
-            [class.active]="gerente === gerenteElegido">{{gerente.idUsuario}}</button>
+      <div class="gerentes-ctr">
+        <div class="contenido">
+          <h1>Lista de gerentes</h1>
+          <div class="list-group">
+            <button *ngFor="let gerente of gerentes"
+              class="list-group-item list-group-item-action"
+              (click)="elegirGerente(gerente)"
+              [class.active]="gerente === gerenteElegido">{{gerente.id}}</button>
+          </div>
+          <br>
+          <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirGerente()"></button>
         </div>
-        <br>
-        <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirGerente()"></button>
+        <div class="contenido" *ngIf="gerenteElegido">
+          <app-detalle-gerente [gerente]="gerenteElegido"
+            (gerenteEditado)="gerenteEditado($event)"
+            (gerenteEliminado)="eliminarGerente($event)"
+            ></app-detalle-gerente>
+        </div>
       </div>
-      <div class="col-md-6" *ngIf="gerenteElegido">
-        <app-detalle-gerente [gerente]="gerenteElegido"
-          (gerenteEditado)="gerenteEditado($event)"
-          (gerenteEliminado)="eliminarGerente($event)"
-          ></app-detalle-gerente>
-      </div>
-
+      <button type="button" class="btn" (click)="asociar()">ASOCIAR</button>
     </div>
+    <ng-template #bloqueGerente>
+      Mensajes aparecerían aquí
+    </ng-template>
+
+   
+
+   
   </div>
   </body>
 </html>
