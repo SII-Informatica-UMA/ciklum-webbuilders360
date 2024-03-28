@@ -14,7 +14,8 @@ import { FormularioGerenteComponent } from './formulario-gerente/formulario-gere
 })
 export class AppComponent implements OnInit {
 
-  esAdmin: boolean = true;
+  // booleano provisional
+  esAdmin: boolean = false;
 
   centros: Centro [] = [];
   centroElegido?: Centro;
@@ -29,6 +30,9 @@ export class AppComponent implements OnInit {
     this.centros = this.centrosService.getCentros();
     this.gerentes = this.gerentesService.getGerentes();
   }
+
+
+// CENTROS
 
   elegirCentro(centro: Centro): void {
     this.centroElegido = centro;
@@ -56,6 +60,8 @@ export class AppComponent implements OnInit {
     this.centroElegido = undefined;
   }
 
+
+// GERENTES
 
   elegirGerente(gerente: Gerente): void {
     this.gerenteElegido = gerente;
@@ -86,4 +92,7 @@ export class AppComponent implements OnInit {
   asociar(): void {
     
   }
+
+// MENSAJES
+
 }

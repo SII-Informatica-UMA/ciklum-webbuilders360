@@ -9,7 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class FormularioGerenteComponent {
   accion?: "Añadir" | "Editar";
-  gerente: Gerente = {idUsuario: 0, empresa: '', id: 0, nombre: '', apellido1: '', apellido2: '', email:''};
+  gerente: Gerente = {idUsuario: 0, empresa: '', id: 0};
 
   constructor(public modal: NgbActiveModal) { }
 

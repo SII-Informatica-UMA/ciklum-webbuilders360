@@ -6,9 +6,9 @@ import { Gerente } from './gerente';
 })
 export class GerentesService {
   private gerentes: Gerente [] = [
-    {idUsuario: 1, empresa: 'Juan SL', id: 123, nombre: 'Juan', apellido1:'Garcia', apellido2:'Rodriguez', email:'juan@correo'},
-    {idUsuario: 2, empresa: 'Paco SL', id: 456, nombre: 'Paco', apellido1:'Rodriguez', apellido2:'Muñoz', email:'paco@correo'},
-    {idUsuario: 3, empresa: 'Marta SL', id: 678, nombre: 'Marta', apellido1:'Muñoz', apellido2:'Garcia', email:'marta@correo'}
+    {idUsuario: 1, empresa: 'Juan SL', id: 123},
+    {idUsuario: 2, empresa: 'Paco SL', id: 456},
+    {idUsuario: 3, empresa: 'Marta SL', id: 678}
   ];
 
   constructor() { }
