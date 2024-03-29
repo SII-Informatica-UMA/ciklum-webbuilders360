@@ -1,45 +1,58 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from '@angular/core';
+import { firstValueFrom} from 'rxjs';
+import { Destinatario } from "./destinatario";
 
-@Injectable({
-    providedIn: 'root'
-})
 export class DestinatarioService {
-    private clienteURL: string = 'http://localhost:8080/cliente'; // Cambiar
-    private entrenadorURL: string = 'http://localhost:8080/entrenador'; // Cambiar
-    private gerenteURL: string = 'http://localhost:8080/cliente'; // Cambiar
-    private usuarioURL: string = 'http://localhost:8080/cliente'; // Cambiar
-    private clientes: Destinatario[] = [];
-    private entrenadores: Destinatario[] = [];
-    private gerentes: Destinatario[] = [];
+    private clienteURL: string = 'http://localhost:8080/cliente?centro=';
+    private entrenadorURL: string = 'http://localhost:8080/entrenador?centro=';
+    private usuarioURL: string = 'http://localhost:8080/usuario/';
+    private clientes: Map<number, string> = new Map();
+    private entrenadores: Map<number, string> = new Map();
+    private gerentes: Map<number, string> = new Map();
 
-    constructor(private http: HttpClient) {
-        // inicializar variables
-        this.inicializarArrays();
+    constructor(private http: HttpClient, centrosID: number[]) {
+        this.inicializarArrays(centrosID);
     }
 
-    private async inicializarArrays() {
-        // Inicializar
-        let [clientesDTO, entrenadoresDTO, gerentesDTO] = await Promise.all([this.http.get<ClienteDTO[]>(this.clienteURL),
-                                                                            this.http.get<EntrenadorDTO[]>(this.entrenadorURL),
-                                                                            this.http.get<GerenteDTO[]>(this.gerenteURL)]);
-        
+    private async inicializarArrays(centrosID: number[]) {
+        for (let centroID of centrosID) {
+            let [clientesDTO, entrenadoresDTO] =
+                await Promise.all([firstValueFrom(this.http.get<ClienteDTO[]>(this.clienteURL + centroID.toString())),
+                                   firstValueFrom(this.http.get<EntrenadorDTO[]>(this.entrenadorURL + centroID.toString()))]);
+            this.procesarClientesDTO(clientesDTO);
+            this.procesarEntrenadoresDTO(entrenadoresDTO);
+        }
     }
 
-    private procesarClientesDTO(clientesDTO: ClienteDTO[], usuariosDTO: UsuarioDTO[]): void {
-        
+    private async procesarClientesDTO(clientesDTO: ClienteDTO[]) {
+        for (let clienteDTO of clientesDTO) {
+            let usuarioDTO: UsuarioDTO =
+                await firstValueFrom(this.http.get<UsuarioDTO>(this.usuarioURL + clienteDTO.idUsuario.toString()));
+            this.clientes.set(clienteDTO.idUsuario, usuarioDTO.email);
+        }
     }
 
-    public getCliente(id: number): Destinatario {
-        return {id: -1, nombre: ""};
+    private async procesarEntrenadoresDTO(entrenadoresDTO: EntrenadorDTO[]) {
+        for (let entrenadorDTO of entrenadoresDTO) {
+            let usuarioDTO: UsuarioDTO =
+                await firstValueFrom(this.http.get<UsuarioDTO>(this.usuarioURL + entrenadorDTO.idUsuario.toString()));
+            this.clientes.set(entrenadorDTO.idUsuario, usuarioDTO.email);
+        }
     }
 
-    public getEntrenador(id: number): Destinatario {
-        return {id: -1, nombre: ""};
+    public getClienteDestinatario(id: number): Destinatario {
+        let aux = this.clientes.get(id);
+        if (aux == undefined) {
+            aux = "";
+        }
+        return new Destinatario(id, aux);
     }
 
-    public getGerente(id: number): Destinatario {
-        return {id: -1, nombre: ""};
+    public getEntrenadorDestinatario(id: number): Destinatario {
+        let aux = this.entrenadores.get(id);
+        if (aux == undefined) {
+            aux = "";
+        }
+        return new Destinatario(id, aux);
     }
-
 }

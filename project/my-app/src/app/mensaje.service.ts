@@ -1,18 +1,24 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable, map } from 'rxjs';
 import { Mensaje } from "./mensaje";
-@Injectable({
-    providedIn: 'root'
-})
-export class DestinatarioService {
-    private baseURL: string = 'http://localhost:8080/mensaje/centro';
+import { Destinatario } from "./destinatario";
+import { DestinatarioService } from "./destinatario.service";
 
-    constructor(private http: HttpClient, private destinatarioService: DestinatarioService) {}
+export class MesajeService {
+    private baseURL: string = 'http://localhost:8080/mensaje/centro?centro=';
+    private destinatarioService: DestinatarioService;
+
+    constructor(private http: HttpClient, private centrosID: number[]) {
+        this.destinatarioService = new DestinatarioService(http, centrosID);
+    }
 
     public async getMensajes(): Promise<Mensaje[]> {
-        let mensajesDTO: MensajeDTO[] = await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURL));
-        return this.procesarMensajesDTO(mensajesDTO);
+        let mensajes: Mensaje[] = [];
+        for (let centroID of this.centrosID) {
+            let mensajesDTO: MensajeDTO[] = await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURL));
+            mensajes = mensajes.concat(this.procesarMensajesDTO(mensajesDTO));
+        }
+        return mensajes;
     }
 
     private procesarMensajesDTO(mensajesDTO: MensajeDTO[]): Mensaje[] {
@@ -29,7 +35,17 @@ export class DestinatarioService {
     }
 
     private procesarDestinatariosDTO(destinatariosDTO: DestinatarioDTO[]): Destinatario[] {
-        // Procesar
-        return [];
+        let destinatarios: Destinatario[] = [];
+        for (let destinatarioDTO of destinatariosDTO) {
+            switch(destinatarioDTO.tipo) {
+                case "CLIENTE":
+                    destinatarios.push(this.destinatarioService.getClienteDestinatario(destinatarioDTO.id));
+                    break;
+                case "ENTRENADOR":
+                    destinatarios.push(this.destinatarioService.getEntrenadorDestinatario(destinatarioDTO.id));
+                    break;
+            }
+        }
+        return destinatarios;
     }
 }
