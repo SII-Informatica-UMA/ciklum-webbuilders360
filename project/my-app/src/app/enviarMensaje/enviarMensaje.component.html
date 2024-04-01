@@ -8,21 +8,65 @@
             <button> x </button> <!-- Botón de cierre -->
         </div>
         <div>
-            Destinatario: <mat-form-field>
-                <input type="text" placeholder="Enter Name" matInput formControlName="myControl" [matAutocomplete]="auto"/>
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions"[value]="option">
-                        {{ option }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
+            Destinatario: <form class="example-form">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Destinatario</mat-label>
+                  <input #inputDestinatario
+                         type="text"
+                         placeholder="Destinatario"
+                         matInput
+                         [formControl]="myControl"
+                         [matAutocomplete]="auto"
+                         (input)="filterDestinatario()"
+                         (focus)="filterDestinatario()">
+                  <mat-autocomplete requireSelection #auto="matAutocomplete">
+                    @for (nombre of nombresDestinatarios; track nombre) {
+                      <mat-option [value]="nombre">{{nombre}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
         </div>
         <hr>
         <div>
-            Copia:
+            Copia: <form class="example-form">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Destinatario</mat-label>
+                  <input #inputCopia
+                         type="text"
+                         placeholder="Destinatario"
+                         matInput
+                         [formControl]="myControlCopia"
+                         [matAutocomplete]="auto"
+                         (input)="filterCopia()"
+                         (focus)="filterCopia()">
+                  <mat-autocomplete requireSelection #auto="matAutocomplete">
+                    @for (nombre of nombresDestinatarios; track nombre) {
+                      <mat-option [value]="nombre">{{nombre}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
         </div>
         <div>
-            Copia Oculta:
+            Copia Oculta: <form class="example-form">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Destinatario</mat-label>
+                  <input #inputCopiaOculta
+                         type="text"
+                         placeholder="Destinatario"
+                         matInput
+                         [formControl]="myControlCopiaOculta"
+                         [matAutocomplete]="auto"
+                         (input)="filterCopiaOculta()"
+                         (focus)="filterCopiaOculta()">
+                  <mat-autocomplete requireSelection #auto="matAutocomplete">
+                    @for (nombre of nombresDestinatarios; track nombre) {
+                      <mat-option [value]="nombre">{{nombre}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
         </div>
         <hr>
         <div>
