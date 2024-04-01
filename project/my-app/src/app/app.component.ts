@@ -21,9 +21,13 @@ export class AppComponent implements OnInit {
 
   centros: Centro [] = [];
   centroElegido?: Centro;
+  centroSelect: boolean = false;
 
   gerentes: Gerente [] = [];
   gerenteElegido?: Gerente;
+  gerenteSelect: boolean = false;
+
+  isButtonDisabled: boolean = true;
 
   constructor(private centrosService: CentrosService, private gerentesService: GerentesService, 
     private modalService: NgbModal) { }
@@ -38,6 +42,8 @@ export class AppComponent implements OnInit {
 
   elegirCentro(centro: Centro): void {
     this.centroElegido = centro;
+    this.centroSelect = true;
+    this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
     let ref = this.modalService.open(DetalleCentroComponent);
     ref.componentInstance.centro = centro;
     /*AÑADIDO PARA EDITAR DATOS*/
@@ -83,6 +89,8 @@ export class AppComponent implements OnInit {
 
   elegirGerente(gerente: Gerente): void {
     this.gerenteElegido = gerente;
+    this.gerenteSelect = true;
+    this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
     /*AÑADIDO PARA EDITAR DETALLES*/
@@ -123,8 +131,12 @@ export class AppComponent implements OnInit {
   }
   
   asociar(): void {
+   if(!this.isButtonDisabled){
     
+   }
+  
   }
+
 
 // MENSAJES
 
