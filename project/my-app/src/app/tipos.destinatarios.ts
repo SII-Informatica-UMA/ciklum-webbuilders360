@@ -1,5 +1,5 @@
 enum TiposDestinatarios {
-    CENTRO,
-    ENTRENADOR,
-    CLIENTE
+    CENTRO = "CENTRO",
+    ENTRENADOR = "ENTRENADOR",
+    CLIENTE = "CLIENTE"
 }

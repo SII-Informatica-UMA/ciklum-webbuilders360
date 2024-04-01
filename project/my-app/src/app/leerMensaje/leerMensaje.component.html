@@ -8,22 +8,33 @@
             <button> x </button> <!-- Botón de cierre -->
         </div>
         <div>
-            Destinatario: {{mensajeDestinatarios}}
+            Destinatario: <ul>
+                <li *ngFor="let destinatario of getMensaje().getDestinatarios()">
+                    {{destinatario.getNombre()}}
+                </li>
+            </ul>
         </div>
         <hr>
         <div>
-            Copia: {{mensajeCopia}}
+            Copia: <ul>
+                <li *ngFor="let destinatario of getMensaje().getCopia()">
+                    {{destinatario.getNombre()}}
+                </li>
+            </ul>
         </div>
         <hr>
         <div>
-            Asunto: {{mensajeAsunto}}
+            Asunto: {{getMensaje().getAsunto()}}
         </div>
         <hr>
         <div>
             Mensaje:
         </div>
         <div>
-            {{mensajeContenido}}
+            {{getMensaje().getContenido()}}
+        </div>
+        <div>
+            <button (click)="eliminarMensaje()">Eliminar</button>
         </div>
     </body>
 </html>

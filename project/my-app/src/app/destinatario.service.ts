@@ -8,7 +8,8 @@ export class DestinatarioService {
     private usuarioURL: string = 'http://localhost:8080/usuario/';
     private clientes: Map<number, string> = new Map();
     private entrenadores: Map<number, string> = new Map();
-    private gerentes: Map<number, string> = new Map();
+    private centros: Map<number, string> = new Map(); // TODO Añadir funcionalidad con los centros
+    private nombres: string[] = [];
 
     constructor(private http: HttpClient, centrosID: number[]) {
         this.inicializarArrays(centrosID);
@@ -36,7 +37,25 @@ export class DestinatarioService {
         for (let entrenadorDTO of entrenadoresDTO) {
             let usuarioDTO: UsuarioDTO =
                 await firstValueFrom(this.http.get<UsuarioDTO>(this.usuarioURL + entrenadorDTO.idUsuario.toString()));
-            this.clientes.set(entrenadorDTO.idUsuario, usuarioDTO.email);
+            this.entrenadores.set(entrenadorDTO.idUsuario, usuarioDTO.email);
+        }
+    }
+
+    private procesarNombreUsuario(usuarioDTO: UsuarioDTO): string {
+        // TODO Añadir posibilidad de no tener segundo apellido
+        let nombre: string = usuarioDTO.nombre + " " + usuarioDTO.apellido1 + " " + usuarioDTO.apellido2;
+        this.nombres.push;
+        return nombre;
+    }
+
+    public destinatarioDTO2Destinatario(destinatarioDTO: DestinatarioDTO): Destinatario {
+        switch(destinatarioDTO.tipo) {
+            case TiposDestinatarios.CLIENTE:
+                return this.getClienteDestinatario(destinatarioDTO.id);
+            case TiposDestinatarios.ENTRENADOR:
+                return this.getEntrenadorDestinatario(destinatarioDTO.id);
+            default:
+                return new Destinatario(-1, "", ""); // TODO cambiar por mensaje de error
         }
     }
 
@@ -45,7 +64,7 @@ export class DestinatarioService {
         if (aux == undefined) {
             aux = "";
         }
-        return new Destinatario(id, aux);
+        return new Destinatario(id, aux, TiposDestinatarios.CLIENTE);
     }
 
     public getEntrenadorDestinatario(id: number): Destinatario {
@@ -53,6 +72,14 @@ export class DestinatarioService {
         if (aux == undefined) {
             aux = "";
         }
-        return new Destinatario(id, aux);
+        return new Destinatario(id, aux, TiposDestinatarios.ENTRENADOR);
+    }
+
+    public destinatario2DestinatarioDTO(destinatario: Destinatario): DestinatarioDTO {
+        return {id: destinatario.getID(), tipo: destinatario.getTipo()};
+    }
+
+    public getNombresDestinatarios(): readonly string[] {
+        return this.nombres;
     }
 }

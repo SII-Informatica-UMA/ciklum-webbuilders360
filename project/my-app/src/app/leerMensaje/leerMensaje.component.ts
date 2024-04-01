@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Mensaje } from '../mensaje';
 import { Destinatario } from '../destinatario';
+import { MensajeService } from "../mensaje.service";
 
 
 @Component({
@@ -10,27 +11,15 @@ import { Destinatario } from '../destinatario';
 })
 
 export class LeerMensaje {
-    constructor(private mensaje: Mensaje) {
+    constructor(private mensaje: Mensaje, private mensajeService: MensajeService) {
 
     }
 
-    get mensajeContenido(): string {
-        return this.mensaje.contenido;
+    public getMensaje(): Mensaje {
+        return this.mensaje;
     }
 
-    get mensajeDestinatarios(): readonly string[] {
-        return this.mensaje.listaNombresDestinatarios;
-    }
-
-    get mensajeCopia(): readonly Destinatario[] {
-        return this.mensaje.listaCopia;
-    }
-
-    get mensajeCopiaOculta(): readonly Destinatario[] {
-        return this.mensaje.listaCopiaOculta;
-    }
-
-    get mensajeAsunto(): string {
-        return this.mensaje.asunto;
+    public eliminarMensaje(): void {
+        this.mensajeService.eliminarMensaje(this.mensaje.getIdMensaje());
     }
 }

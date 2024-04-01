@@ -8,7 +8,14 @@
             <button> x </button> <!-- Botón de cierre -->
         </div>
         <div>
-            Destinatario:
+            Destinatario: <mat-form-field>
+                <input type="text" placeholder="Enter Name" matInput formControlName="myControl" [matAutocomplete]="auto"/>
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions"[value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
         </div>
         <hr>
         <div>
@@ -19,7 +26,7 @@
         </div>
         <hr>
         <div>
-            Asunto: <input type = "text" [(ngModel)] = "contenido">
+            Asunto: <input type = "text" [(ngModel)] = "asunto">
         </div>
         <hr>
         <div>
@@ -27,6 +34,9 @@
         </div>
         <div>
             <input type = "text" [(ngModel)] = "contenido">
+        </div>
+        <div>
+            <button (click)="enviarMensaje()">Enviar</button>
         </div>
     </body>
 </html>
