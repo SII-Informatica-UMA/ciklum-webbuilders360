@@ -5,9 +5,9 @@ import { MensajeService } from "../mensaje.service";
 
 
 @Component({
-    selector: 'leerMensaje',
-    templateUrl: './leerMensaje.component.html',
-    styleUrls: ['./leerMensaje.component.css']
+    selector: 'leer-mensaje',
+    templateUrl: './leer.mensaje.component.html',
+    styleUrls: ['./leer.mensaje.component.css']
 })
 
 export class LeerMensaje {

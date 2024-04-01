@@ -8,11 +8,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-    selector: 'enviarMensaje',
+    selector: 'enviar-mensaje',
     standalone: true,
     imports: [MatInputModule, ReactiveFormsModule, AsyncPipe, FormsModule, MatFormFieldModule, MatAutocompleteModule],
-    templateUrl: './enviarMensaje.component.html',
-    styleUrls: ['./enviarMensaje.component.css']
+    templateUrl: './enviar.mensaje.component.html',
+    styleUrls: ['./enviar.mensaje.component.css']
 })
 
 export class EnviarMensaje {
