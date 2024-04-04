@@ -17,7 +17,7 @@ import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.compo
 export class AppComponent implements OnInit {
 
   // booleano provisional
-  admin: boolean = false;
+  admin: boolean = true;
 
   centros: Centro [] = [];
   centroElegido?: Centro;
@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
   gerenteSeleccionado?: Gerente;
 
   isButtonDisabled: boolean = true;
+  asociaciones: [Centro, Gerente][] = [];
 
   constructor(private centrosService: CentrosService, private gerentesService: GerentesService, 
     private modalService: NgbModal) { }
@@ -47,10 +48,9 @@ export class AppComponent implements OnInit {
 // CENTROS
 
   elegirCentro(centro: Centro): void {
-    //this.centroElegido = centro;
     this.centroSeleccionado = centro;
     this.centroSelect = true;
-    this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
+    this.isButtonDisabled=!(this.centroSelect && this.gerenteSelect);
   }
 
   mostrarDetallesCentro(centro: Centro): void{
@@ -98,7 +98,6 @@ export class AppComponent implements OnInit {
 // GERENTES
 
   elegirGerente(gerente: Gerente): void {
-    //this.gerenteElegido = gerente;
     this.gerenteSeleccionado = gerente;
     this.gerenteSelect = true;
     this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
@@ -145,10 +144,11 @@ export class AppComponent implements OnInit {
   }
   
   asociar(): void {
-   if(!this.isButtonDisabled){
-    
-   }
-  
+    if(!this.isButtonDisabled){
+      if (this.centroSeleccionado && this.gerenteSeleccionado) {
+        this.asociaciones.push([this.centroSeleccionado, this.gerenteSeleccionado]);
+      }
+    }
   }
 
 

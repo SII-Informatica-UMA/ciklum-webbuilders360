@@ -13,8 +13,7 @@
             class="list-group-item list-group-item-action"
             (click)="elegirCentro(centro)"
             [class.active]="centro === centroSeleccionado"
-            (dblclick)="mostrarDetallesCentro(centro)"
-            [class.active]="centro === centroElegido">{{centro.nombre}}
+            (dblclick)="mostrarDetallesCentro(centro)" > {{centro.nombre}}
           </button>
         </div>
         <br>
@@ -37,8 +36,7 @@
               class="list-group-item list-group-item-action"
               (click)="elegirGerente(gerente)"
               [class.active]="gerente === gerenteSeleccionado"
-              (dblclick)="mostrarDetallesGerente(gerente)"
-              [class.active]="gerente === gerenteElegido">{{gerente.id}}
+              (dblclick)="mostrarDetallesGerente(gerente)" > {{gerente.id}}
             </button>
           </div>
           <br>
