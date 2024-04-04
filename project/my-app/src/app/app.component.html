@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div *ngIf="esAdmin; else bloqueGerente">
+    <div *ngIf="esAdmin(); else bloqueMensajes">
       <div class="gerentes-ctr">
         <div class="content">
           <h1>Lista de gerentes</h1>
@@ -46,8 +46,26 @@
         </div>
       </div>
     </div>
-    <ng-template #bloqueGerente>
-      Mensajes aparecerían aquí
+    <ng-template #bloqueMensajes>
+      <div class="mensajes-ctr">
+        <div class="content">
+          <h1>Lista de mensajes</h1>
+          <div class="list-group">
+            <button *ngFor="let gerente of gerentes"
+              class="list-group-item list-group-item-action"
+              (click)="elegirGerente(gerente)"
+              [class.active]="gerente === gerenteElegido">{{gerente.id}}</button>
+          </div>
+          <br>
+          <button type="button" class="btn" (click)="aniadirGerente()">AÑADIR</button>
+        </div>
+        <div class="content" *ngIf="gerenteElegido">
+          <app-detalle-gerente [gerente]="gerenteElegido"
+            (gerenteEditado)="gerenteEditado($event)"
+            (gerenteEliminado)="eliminarGerente($event)"
+            ></app-detalle-gerente>
+        </div>
+      </div>
     </ng-template>
   </div>
   <button id="asociarBtn" type="button" class="btn" [disabled]="isButtonDisabled" (click)="asociar()" *ngIf="esAdmin; else null">ASOCIAR</button>

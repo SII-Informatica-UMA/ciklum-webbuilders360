@@ -17,7 +17,7 @@ import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.compo
 export class AppComponent implements OnInit {
 
   // booleano provisional
-  esAdmin: boolean = true;
+  admin: boolean = false;
 
   centros: Centro [] = [];
   centroElegido?: Centro;
@@ -37,6 +37,10 @@ export class AppComponent implements OnInit {
     this.gerentes = this.gerentesService.getGerentes();
   }
 
+
+  esAdmin(): boolean {
+    return this.admin;
+  }
 
 // CENTROS
 
