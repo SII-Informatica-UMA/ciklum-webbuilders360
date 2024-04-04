@@ -1,13 +1,131 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Centro } from './centro';
+import { Gerente } from './gerente';
+import { CentrosService } from './centros.service';
+import { GerentesService } from './gerentes.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormularioCentroComponent } from './formulario-centro/formulario-centro.component'
+import { FormularioGerenteComponent } from './formulario-gerente/formulario-gerente.component';
+import { DetalleCentroComponent } from './detalle-centro/detalle-centro.component';
+import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.component';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'my-app';
+export class AppComponent implements OnInit {
+
+  // booleano provisional
+  esAdmin: boolean = true;
+
+  centros: Centro [] = [];
+  centroElegido?: Centro;
+
+  gerentes: Gerente [] = [];
+  gerenteElegido?: Gerente;
+
+  constructor(private centrosService: CentrosService, private gerentesService: GerentesService, 
+    private modalService: NgbModal) { }
+
+  ngOnInit(): void {
+    this.centros = this.centrosService.getCentros();
+    this.gerentes = this.gerentesService.getGerentes();
+  }
+
+
+// CENTROS
+
+  elegirCentro(centro: Centro): void {
+    this.centroElegido = centro;
+    let ref = this.modalService.open(DetalleCentroComponent);
+    ref.componentInstance.centro = centro;
+    /*AÑADIDO PARA EDITAR DATOS*/
+    ref.componentInstance.centroEditado.subscribe((centroEditado: Centro) => {
+      this.centrosService.editarCentro(centroEditado); // Actualizar el centro editado en el servicio
+      this.centros = this.centrosService.getCentros(); // Actualizar la lista de centros en el componente
+      this.centroElegido = this.centros.find(c => c.idCentro === centroEditado.idCentro); // Actualizar el centro elegido
+    });
+    /*AÑADIDO PARA ELIMINAR EL ELEMENTO DE LA LISTA*/
+    ref.componentInstance.centroEliminado.subscribe((idCentro: number) => {
+      this.centrosService.eliminarcCentro(idCentro); // Eliminar el centro del servicio
+      this.centros = this.centrosService.getCentros(); // Actualizar la lista de centros en el componente
+      this.centroElegido = undefined; // Limpiar el centro elegido si fue eliminado
+    });
+  }
+
+  aniadirCentro(): void {
+    let ref = this.modalService.open(FormularioCentroComponent);
+    ref.componentInstance.accion = "Añadir";
+    ref.componentInstance.centro = {idCentro: 0, nombre: '', direccion: ''};
+    ref.result.then((centro: Centro) => {
+      this.centrosService.addCentro(centro);
+      this.centros = this.centrosService.getCentros();
+    }, (reason) => {});
+
+  }
+  centroEditado(centro: Centro): void {
+    this.centrosService.editarCentro(centro);
+    this.centros = this.centrosService.getCentros();
+    this.centroElegido = this.centros.find(c => c.idCentro == centro.idCentro);
+    this.modalService.dismissAll();
+  }
+
+  eliminarCentro(id: number): void {
+    this.centrosService.eliminarcCentro(id);
+    this.centros = this.centrosService.getCentros();
+    this.centroElegido = undefined;
+    this.modalService.dismissAll();
+  }
+
+
+// GERENTES
+
+  elegirGerente(gerente: Gerente): void {
+    this.gerenteElegido = gerente;
+    let ref = this.modalService.open(DetalleGerenteComponent);
+    ref.componentInstance.gerente = gerente;
+    /*AÑADIDO PARA EDITAR DETALLES*/
+    ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
+      this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
+      this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      this.gerenteElegido = this.gerentes.find(c => c.idUsuario === gerenteEditado.idUsuario); // Actualizar el centro elegido
+    });
+    /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA*/
+    ref.componentInstance.gerenteEliminado.subscribe((idGerente: number) => {
+      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
+    });
+  }
+
+  aniadirGerente(): void {
+    let ref = this.modalService.open(FormularioGerenteComponent);
+    ref.componentInstance.accion = "Añadir";
+    ref.componentInstance.gerente = {idUsuario: 0, empresa: '', id: 0};
+    ref.result.then((gerente: Gerente) => {
+      this.gerentesService.addGerente(gerente);
+      this.gerentes = this.gerentesService.getGerentes();
+    }, (reason) => {});
+
+  }
+  gerenteEditado(gerente: Gerente): void {
+    this.gerentesService.editarGerente(gerente);
+    this.gerentes = this.gerentesService.getGerentes();
+    this.gerenteElegido = this.gerentes.find(c => c.idUsuario == gerente.idUsuario);
+  }
+
+  eliminarGerente(id: number): void {
+    this.gerentesService.eliminargGerente(id);
+    this.gerentes = this.gerentesService.getGerentes();
+    this.gerenteElegido = undefined;
+    this.modalService.dismissAll();
+  }
+  
+  asociar(): void {
+    
+  }
+
+// MENSAJES
+
 }
