@@ -1,25 +1,28 @@
-<div class="container">
-  <div class="row">
-    <h2 >Detalles de {{centro?.nombre}}</h2>
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Detalles de {{centro?.nombre}}</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <div class="row" id="nombre">
+      <label class="col-md-3" for="nombre">Nombre:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{centro?.nombre}}</span>
+    </div>
+    <div class="row" id="direccion">
+      <label class="col-md-3" for="direccion">Dirección:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{centro?.direccion}}</span>
+    </div>
+    <div class="row" id="idCentro">
+      <label class="col-md-3" for="idCentro">ID centro:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{centro?.idCentro}}</span>
+    </div>
+    <br>
   </div>
 
-<div class="row" id="idCentro">
-  <label class="col-md-3" for="idCentro">ID centro:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{centro?.idCentro}}</span>
-</div>
 
-<div class="row" id="nombre">
-  <label class="col-md-3" for="nombre">Nombre:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{centro?.nombre}}</span>
-</div>
-<div class="row" id="direccion">
-  <label class="col-md-3" for="direccion">Dirección:</label>
-  <span class="col-md-9 offset-2 offset-md-0">{{centro?.direccion}}</span>
-</div>
-<div class="row">
+
+<div class="modal-footer">
   <button class="col-auto btn btn-outline-primary" (click)="eliminarCentro()">Eliminar <i class="bi bi-trash-fill"></i></button>
   
   <button class="col-auto btn btn-outline-primary" (click)="editarCentro()">Editar <i class="bi bi-pencil-fill"></i></button>
-</div>
-
 </div>

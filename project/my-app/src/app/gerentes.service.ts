@@ -30,5 +30,13 @@ export class GerentesService {
   eliminargGerente(id: number) {
     let indice = this.gerentes.findIndex(c => c.idUsuario == id);
     this.gerentes.splice(indice, 1);
+    this.actualizarIdUsuarios();
+  }
+
+  /*SE ACTUALIZA EL IDUSUARIO DEL GERENTE*/
+  private actualizarIdUsuarios(){
+    for(let i = 0; i < this.gerentes.length; i++){
+      this.gerentes[i].idUsuario = i + 1
+    }
   }
 }
