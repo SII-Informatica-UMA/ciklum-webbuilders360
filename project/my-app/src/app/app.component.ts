@@ -22,10 +22,12 @@ export class AppComponent implements OnInit {
   centros: Centro [] = [];
   centroElegido?: Centro;
   centroSelect: boolean = false;
+  centroSeleccionado?: Centro;
 
   gerentes: Gerente [] = [];
   gerenteElegido?: Gerente;
   gerenteSelect: boolean = false;
+  gerenteSeleccionado?: Gerente;
 
   isButtonDisabled: boolean = true;
 
@@ -41,9 +43,13 @@ export class AppComponent implements OnInit {
 // CENTROS
 
   elegirCentro(centro: Centro): void {
-    this.centroElegido = centro;
+    //this.centroElegido = centro;
+    this.centroSeleccionado = centro;
     this.centroSelect = true;
     this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
+  }
+
+  mostrarDetallesCentro(centro: Centro): void{
     let ref = this.modalService.open(DetalleCentroComponent);
     ref.componentInstance.centro = centro;
     /*AÑADIDO PARA EDITAR DATOS*/
@@ -88,9 +94,13 @@ export class AppComponent implements OnInit {
 // GERENTES
 
   elegirGerente(gerente: Gerente): void {
-    this.gerenteElegido = gerente;
+    //this.gerenteElegido = gerente;
+    this.gerenteSeleccionado = gerente;
     this.gerenteSelect = true;
     this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
+  }
+
+  mostrarDetallesGerente(gerente: Gerente): void{
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
     /*AÑADIDO PARA EDITAR DETALLES*/
