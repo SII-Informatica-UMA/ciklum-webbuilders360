@@ -1,27 +1,35 @@
+import { Destinatario } from "./destinatario";
 
-export interface Mensaje {
-  asunto: string;
+export class Mensaje {
+    
+    public constructor(private asunto: string,
+                       private destinatarios: Destinatario[],
+                       private copia: Destinatario[],
+                       private copiaOculta: Destinatario[],
+                       private contenido: string,
+                       private idMensaje: number) {}
+    
+    public getAsunto(): string {
+        return this.asunto;
+    }
 
-  destinatarios: 
-  {
-    id: number;
-    tipo: string;
-  }[];
+    public getDestinatarios(): Destinatario[] {
+        return this.destinatarios;
+    }
 
-  copia: 
-  {
-    id: number;
-    tipo: string;
-  }[];
+    public getCopia(): Destinatario[] {
+        return this.copia;
+    }
 
-  copiaOculta: 
-  {
-    id: number;
-    tipo: string;
-  }[];
+    public getCopiaOculta(): Destinatario[] {
+        return this.copiaOculta;
+    }
 
-  contenido: string;
-  
-  idMensaje: number;
+    public getContenido(): string {
+        return this.contenido;
+    }
+
+    public getIdMensaje(): number {
+        return this.idMensaje;
+    }
 }
-
