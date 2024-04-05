@@ -9,6 +9,7 @@ import { FormularioCentroComponent } from './formulario-centro/formulario-centro
 
 import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.component';
 import { FormularioGerenteComponent } from './formulario-gerente/formulario-gerente.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FormularioGerenteComponent } from './formulario-gerente/formulario-gere
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    NoopAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

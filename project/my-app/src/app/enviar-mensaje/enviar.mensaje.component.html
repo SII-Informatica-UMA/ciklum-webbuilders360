@@ -20,9 +20,9 @@
                          (input)="filterDestinatario()"
                          (focus)="filterDestinatario()">
                   <mat-autocomplete requireSelection #auto="matAutocomplete">
-                    @for (nombre of nombresDestinatarios; track nombre) {
+                    <div *ngFor="let nombre of nombresDestinatarios">
                       <mat-option [value]="nombre">{{nombre}}</mat-option>
-                    }
+                    </div>
                   </mat-autocomplete>
                 </mat-form-field>
               </form>
@@ -41,9 +41,9 @@
                          (input)="filterCopia()"
                          (focus)="filterCopia()">
                   <mat-autocomplete requireSelection #auto="matAutocomplete">
-                    @for (nombre of nombresDestinatarios; track nombre) {
+                    <div *ngFor="let nombre of nombresDestinatarios">
                       <mat-option [value]="nombre">{{nombre}}</mat-option>
-                    }
+                    </div>
                   </mat-autocomplete>
                 </mat-form-field>
               </form>
@@ -62,9 +62,9 @@
                          (input)="filterCopiaOculta()"
                          (focus)="filterCopiaOculta()">
                   <mat-autocomplete requireSelection #auto="matAutocomplete">
-                    @for (nombre of nombresDestinatarios; track nombre) {
+                    <div *ngFor="let nombre of nombresDestinatarios">
                       <mat-option [value]="nombre">{{nombre}}</mat-option>
-                    }
+                    </div>
                   </mat-autocomplete>
                 </mat-form-field>
               </form>
