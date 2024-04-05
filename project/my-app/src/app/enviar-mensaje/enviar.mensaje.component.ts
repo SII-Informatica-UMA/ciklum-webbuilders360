@@ -19,9 +19,9 @@ import { NgFor } from '@angular/common';
 export class EnviarMensaje {
     asunto: string = "";
     contenido: string = "";
-    destinatarios: Destinatario[] = [];
-    copia: Destinatario[] = [];
-    copiaOculta: Destinatario[] = [];
+    destinatarios: string[] = [""];
+    copia: string[] = [""];
+    copiaOculta: string[] = [""];
     nombresDestinatarios: readonly string[];
 
     @ViewChild('inputDestinatario') inputDestinatario!: ElementRef<HTMLInputElement>;
@@ -44,11 +44,7 @@ export class EnviarMensaje {
     }
 
     public async enviarMensaje() {
-        this.mensajeService.enviarMensaje({asunto: this.asunto,
-            destinatarios: this.mensajeService.destinatarios2DestinatariosDTO(this.destinatarios),
-            copia: this.mensajeService.destinatarios2DestinatariosDTO(this.copia),
-            copiaOculta: this.mensajeService.destinatarios2DestinatariosDTO(this.copiaOculta),
-            contenido: this.contenido});
+        this.mensajeService.enviarMensaje(this.asunto, this.destinatarios, this.copia, this.copiaOculta, this.contenido);
     }
 
     public filterDestinatario(): void {
@@ -64,5 +60,17 @@ export class EnviarMensaje {
     public filterCopiaOculta(): void {
         const filterValue = this.inputCopiaOculta.nativeElement.value.toLowerCase();
         this.filteredOptionsCopiaOculta = this.nombresDestinatarios.filter(o => o.toLowerCase().includes(filterValue));
+    }
+
+    public addInputDestinatario(): void {
+        this.destinatarios.push("");
+    }
+
+    public addInputCopia(): void {
+        this.copia.push("");
+    }
+
+    public addInputCopiaOculta(): void {
+        this.copiaOculta.push("");
     }
 }

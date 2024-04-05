@@ -10,6 +10,7 @@
         <div>
             Destinatario:
             <form class="example-form">
+              <div *ngFor="let input of destinatarios; let i = index">
                 <mat-form-field class="example-full-width">
                   <input #inputDestinatario
                          type="text"
@@ -25,33 +26,39 @@
                     </div>
                   </mat-autocomplete>
                 </mat-form-field>
-              </form>
+              </div>
+              <button (click)="addInputDestinatario()">Añadir</button>
+            </form>
         </div>
         <hr>
         <div>
             Copia:
             <form class="example-form">
+              <div *ngFor="let input of copia; let i = index">
                 <mat-form-field class="example-full-width">
                   <input #inputCopia
-                         type="text"
-                         placeholder="Destinatario"
-                         matInput
-                         [formControl]="myControlCopia"
-                         [matAutocomplete]="auto"
-                         (input)="filterCopia()"
-                         (focus)="filterCopia()">
+                    type="text"
+                    placeholder="Destinatario"
+                    matInput
+                    [formControl]="myControlCopia"
+                    [matAutocomplete]="auto"
+                    (input)="filterCopia()"
+                    (focus)="filterCopia()">
                   <mat-autocomplete requireSelection #auto="matAutocomplete">
                     <div *ngFor="let nombre of nombresDestinatarios">
                       <mat-option [value]="nombre">{{nombre}}</mat-option>
                     </div>
                   </mat-autocomplete>
                 </mat-form-field>
-              </form>
+              </div>
+              <button (click)="addInputCopia()">Añadir</button>
+            </form>
         </div>
         <hr>
         <div>
             Copia Oculta:
             <form class="example-form">
+              <div *ngFor="let input of copiaOculta; let i = index">
                 <mat-form-field class="example-full-width">
                   <input #inputCopiaOculta
                          type="text"
@@ -67,7 +74,9 @@
                     </div>
                   </mat-autocomplete>
                 </mat-form-field>
-              </form>
+              </div>
+              <button (click)="addInputCopiaOculta()">Añadir</button>
+            </form>
         </div>
         <hr>
         <div>

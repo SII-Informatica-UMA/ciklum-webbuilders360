@@ -6,8 +6,9 @@ export class DestinatarioService {
     private clienteURL: string = 'http://localhost:8080/cliente?centro=';
     private entrenadorURL: string = 'http://localhost:8080/entrenador?centro=';
     private usuarioURL: string = 'http://localhost:8080/usuario/';
-    private clientes: Map<number, string> = new Map();
-    private entrenadores: Map<number, string> = new Map();
+    private clientesID2Nombre: Map<number, string> = new Map();
+    private entrenadoresID2Nombre: Map<number, string> = new Map();
+    private nombre2Info: Map<string, DestinatarioDTO> = new Map();
     private centros: Map<number, string> = new Map(); // TODO Añadir funcionalidad con los centros
     private nombres: string[] = [];
 
@@ -29,7 +30,10 @@ export class DestinatarioService {
         for (let clienteDTO of clientesDTO) {
             let usuarioDTO: UsuarioDTO =
                 await firstValueFrom(this.http.get<UsuarioDTO>(this.usuarioURL + clienteDTO.idUsuario.toString()));
-            this.clientes.set(clienteDTO.idUsuario, usuarioDTO.email);
+            let nombre: string = this.procesarNombreUsuario(usuarioDTO)
+            this.clientesID2Nombre.set(clienteDTO.idUsuario, nombre);
+            this.nombre2Info.set(nombre, {id: clienteDTO.id, tipo: TiposDestinatarios.CLIENTE})
+
         }
     }
 
@@ -37,14 +41,15 @@ export class DestinatarioService {
         for (let entrenadorDTO of entrenadoresDTO) {
             let usuarioDTO: UsuarioDTO =
                 await firstValueFrom(this.http.get<UsuarioDTO>(this.usuarioURL + entrenadorDTO.idUsuario.toString()));
-            this.entrenadores.set(entrenadorDTO.idUsuario, usuarioDTO.email);
+            let nombre: string = this.procesarNombreUsuario(usuarioDTO)
+            this.entrenadoresID2Nombre.set(entrenadorDTO.idUsuario, nombre);
+            this.nombre2Info.set(nombre, {id: entrenadorDTO.id, tipo: TiposDestinatarios.ENTRENADOR})
         }
     }
 
     private procesarNombreUsuario(usuarioDTO: UsuarioDTO): string {
-        // TODO Añadir posibilidad de no tener segundo apellido
-        let nombre: string = usuarioDTO.nombre + " " + usuarioDTO.apellido1 + " " + usuarioDTO.apellido2;
-        this.nombres.push;
+        let nombre: string = (usuarioDTO.nombre + " " + usuarioDTO.apellido1 + " " + usuarioDTO.apellido2).trim();
+        this.nombres.push(nombre);
         return nombre;
     }
 
@@ -60,7 +65,7 @@ export class DestinatarioService {
     }
 
     public getClienteDestinatario(id: number): Destinatario {
-        let aux = this.clientes.get(id);
+        let aux = this.clientesID2Nombre.get(id);
         if (aux == undefined) {
             aux = "";
         }
@@ -68,7 +73,7 @@ export class DestinatarioService {
     }
 
     public getEntrenadorDestinatario(id: number): Destinatario {
-        let aux = this.entrenadores.get(id);
+        let aux = this.entrenadoresID2Nombre.get(id);
         if (aux == undefined) {
             aux = "";
         }
@@ -81,5 +86,17 @@ export class DestinatarioService {
 
     public getNombresDestinatarios(): readonly string[] {
         return this.nombres;
+    }
+
+    public nombres2DestinatariosDTO(nombres: string[]): DestinatarioDTO[] {
+        // TODO Añadir funcionalidad para centros y añadir mensaje de error (en caso de que no se compruebe antes que los nombres son correctos)
+        let destinatariosDTO: DestinatarioDTO[] = [];
+        for (let nombre of nombres) {
+            let destinatarioDTO = this.nombre2Info.get(nombre);
+            if (destinatarioDTO !== undefined) {
+                destinatariosDTO.push(destinatarioDTO);
+            }
+        }
+        return [];
     }
 }

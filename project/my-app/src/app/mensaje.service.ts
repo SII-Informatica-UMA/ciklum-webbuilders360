@@ -51,9 +51,15 @@ export class MensajeService {
         this.http.delete(this.baseURL + '/' + id);
     }
 
-    public async enviarMensaje(mensajePOST: MensajePOST): Promise<Mensaje> {
-        let mensajeDTO: MensajeDTO = await firstValueFrom(this.http.post<MensajeDTO>(this.baseURL, mensajePOST));
-        return this.mensajeDTO2Mensaje(mensajeDTO);
+    public async enviarMensaje(asunto: string, destinatarios: string[], copia: string[], copiaOculta: string[],
+        contenido: string): Promise<Mensaje> {
+            let mensajePOST: MensajePOST = {asunto: asunto,
+                                            destinatarios: this.destinatarioService.nombres2DestinatariosDTO(destinatarios),
+                                            copia: this.destinatarioService.nombres2DestinatariosDTO(copia),
+                                            copiaOculta: this.destinatarioService.nombres2DestinatariosDTO(copiaOculta),
+                                            contenido: contenido};
+            let mensajeDTO: MensajeDTO = await firstValueFrom(this.http.post<MensajeDTO>(this.baseURL, mensajePOST));
+            return this.mensajeDTO2Mensaje(mensajeDTO);
     }
 
     /*
