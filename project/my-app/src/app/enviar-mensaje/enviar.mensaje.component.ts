@@ -6,11 +6,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AsyncPipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgFor } from '@angular/common';
 
 @Component({
     selector: 'enviar-mensaje',
     standalone: true,
-    imports: [MatInputModule, ReactiveFormsModule, AsyncPipe, FormsModule, MatFormFieldModule, MatAutocompleteModule],
+    imports: [MatInputModule, ReactiveFormsModule, AsyncPipe, FormsModule, MatFormFieldModule, MatAutocompleteModule, NgFor],
     templateUrl: './enviar.mensaje.component.html',
     styleUrls: ['./enviar.mensaje.component.css']
 })
