@@ -13,7 +13,7 @@ import { Gerente } from '../gerente';
     styleUrls: ['./leer-mensaje.component.css']
 })
 
-export class LeerMensaje {
+export class LeerMensajeComponent {
     @Input() mensaje?: Mensaje;
     @Output() gerenteEditado = new EventEmitter<Gerente>();
     @Output() gerenteEliminado = new EventEmitter<number>();
