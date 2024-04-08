@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="app.component.css">
+  </head>
+  <body>
+    <div class="container">
+    <div class="centros-ctr">
+      <div class="content">
+        <h1>Lista de centros</h1>
+        <div class="list-group">
+          <button *ngFor="let centro of centros"
+            class="list-group-item list-group-item-action"
+            (click)="elegirCentro(centro)"
+            [class.active]="centro === centroSeleccionado"
+            (dblclick)="mostrarDetallesCentro(centro)"
+            [class.active]="centro === centroElegido">{{centro.nombre}}
+          </button>
+        </div>
+        <br>
+        <button type="button" class="btn" (click)="aniadirCentro()">AÑADIR</button>
+      </div>
+      <div class="content" *ngIf="centroElegido">
+        <app-detalle-centro [centro]="centroElegido"
+          (centroEditado)="centroEditado($event)"
+          (centroEliminado)="eliminarCentro($event)"
+          ></app-detalle-centro>
+      </div>
+    </div>
+
+    <div *ngIf="esAdmin(); else bloqueMensajes">
+      <div class="gerentes-ctr">
+        <div class="content">
+          <h1>Lista de gerentes</h1>
+          <div class="list-group">
+            <button *ngFor="let gerente of gerentes"
+              class="list-group-item list-group-item-action"
+              (click)="elegirGerente(gerente)"
+              [class.active]="gerente === gerenteSeleccionado"
+              (dblclick)="mostrarDetallesGerente(gerente)"
+              [class.active]="gerente === gerenteElegido">{{gerente.id}}
+            </button>
+          </div>
+          <br>
+          <button type="button" class="btn" (click)="aniadirGerente()">AÑADIR</button>
+        </div>
+        <div class="content" *ngIf="gerenteElegido">
+          <app-detalle-gerente [gerente]="gerenteElegido"
+            (gerenteEditado)="gerenteEditado($event)"
+            (gerenteEliminado)="eliminarGerente($event)"
+            ></app-detalle-gerente>
+        </div>
+      </div>
+    </div>
+    <ng-template #bloqueMensajes>
+      <div class="mensajes-ctr">
+        <div class="content">
+          <h1>Lista de mensajes</h1>
+          <div class="list-group">
+            <button *ngFor="let mensaje of mensajes"
+              class="list-group-item list-group-item-action"
+              (click)="elegirMensaje(mensaje)"
+              [class.active]="mensaje === mensajeElegido">{{mensaje.asunto}}</button>
+          </div>
+          <br>
+          <button type="button" class="btn" (click)="aniadirMensaje()">AÑADIR</button>
+        </div>
+        <div class="content" *ngIf="mensajeElegido"><!--
+          <app-leer-mensaje  [mensaje]="mensajeElegido"
+          (mensajeEliminado)="eliminarMensaje($event)"
+          ></leer-mensaje>-->
+        </div>
+      </div>
+    </ng-template>
+  </div>
+  <button id="asociarBtn" type="button" class="btn" [disabled]="isButtonDisabled" (click)="asociar()" *ngIf="esAdmin(); else null">ASOCIAR</button>
+  </body>
+</html>
