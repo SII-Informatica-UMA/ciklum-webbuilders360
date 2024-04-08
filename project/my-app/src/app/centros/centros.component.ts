@@ -12,9 +12,12 @@ import { Mensaje } from '../mensaje';
 import { MensajeService } from '../mensaje.service';
 import { EnviarMensaje } from '../enviar-mensaje/enviar.mensaje.component';
 import { LeerMensajeComponent } from '../leer-mensaje/leer-mensaje.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-centros',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './centros.component.html',
   styleUrls: ['./centros.component.css']
 })

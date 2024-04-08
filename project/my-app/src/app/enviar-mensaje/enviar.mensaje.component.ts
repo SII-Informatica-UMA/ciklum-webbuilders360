@@ -15,7 +15,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     templateUrl: './enviar.mensaje.component.html',
     styleUrls: ['./enviar.mensaje.component.css']
 })
-
 export class EnviarMensaje {
     asunto: string = "";
     contenido: string = "";

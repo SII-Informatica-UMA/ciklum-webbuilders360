@@ -7,6 +7,7 @@ import { CentrosService } from '../centros.service';
 
 @Component({
   selector: 'app-detalle-centro',
+  standalone: true,
   templateUrl: './detalle-centro.component.html',
   styleUrls: ['./detalle-centro.component.css']
 })

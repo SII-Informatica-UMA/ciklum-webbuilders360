@@ -7,6 +7,7 @@ import { GerentesService } from '../gerentes.service';
 
 @Component({
   selector: 'app-detalle-gerente',
+  standalone: true,
   templateUrl: './detalle-gerente.component.html',
   styleUrls: ['./detalle-gerente.component.css']
 })

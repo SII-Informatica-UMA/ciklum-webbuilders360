@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import  { Gerente } from '../gerente'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-formulario-gerente',
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './formulario-gerente.component.html',
   styleUrls: ['./formulario-gerente.component.css']
 })
