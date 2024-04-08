@@ -11,7 +11,7 @@ import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.compo
 import { Mensaje } from './mensaje';
 import { MensajeService } from './mensaje.service';
 import { EnviarMensaje } from './enviar-mensaje/enviar.mensaje.component';
-import { LeerMensaje } from './leer-mensaje/leer.mensaje.component';
+import { LeerMensaje } from './leer-mensaje/leer-mensaje.component';
 
 @Component({
   selector: 'app-root',
@@ -165,7 +165,6 @@ export class AppComponent implements OnInit {
 // MENSAJES
 
   elegirMensaje(mensaje: Mensaje): void {
-    //this.gerenteElegido = gerente;
     this.mensajeSeleccionado = mensaje;
     this.mensajeSelect = true;
   }
@@ -175,8 +174,8 @@ export class AppComponent implements OnInit {
     ref.result.then(() => {}, (reason) => {});
   }
 
-  public eliminarMensaje(mensaje: Mensaje): void {
-    this.mensajesService.eliminarMensaje(mensaje.getIdMensaje());
+  public eliminarMensaje(mensaje: number): void {
+    this.mensajesService.eliminarMensaje(mensaje);
   }
 
 
