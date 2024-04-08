@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="app.component.css">
+    <link rel="stylesheet" type="text/css" href="centros.component.css">
   </head>
   <body>
     <div class="container">
@@ -20,11 +20,11 @@
         <br>
         <button type="button" class="btn" (click)="aniadirCentro()">AÑADIR</button>
       </div>
-      <div class="content" *ngIf="centroElegido">
+      <div class="content" *ngIf="centroElegido"><!--
         <app-detalle-centro [centro]="centroElegido"
           (centroEditado)="centroEditado($event)"
           (centroEliminado)="eliminarCentro($event)"
-          ></app-detalle-centro>
+          ></app-detalle-centro>-->
       </div>
     </div>
 
@@ -44,11 +44,11 @@
           <br>
           <button type="button" class="btn" (click)="aniadirGerente()">AÑADIR</button>
         </div>
-        <div class="content" *ngIf="gerenteElegido">
+        <div class="content" *ngIf="gerenteElegido"><!--
           <app-detalle-gerente [gerente]="gerenteElegido"
             (gerenteEditado)="gerenteEditado($event)"
             (gerenteEliminado)="eliminarGerente($event)"
-            ></app-detalle-gerente>
+            ></app-detalle-gerente>-->
         </div>
       </div>
     </div>

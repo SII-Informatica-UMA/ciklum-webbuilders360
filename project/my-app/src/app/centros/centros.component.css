@@ -7,7 +7,7 @@ body{
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    background: url(fondo.jpg);
+    background: url(../fondo.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     height: 100vh;

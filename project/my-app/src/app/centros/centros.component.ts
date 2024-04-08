@@ -14,11 +14,11 @@ import { EnviarMensaje } from '../enviar-mensaje/enviar.mensaje.component';
 import { LeerMensajeComponent } from '../leer-mensaje/leer-mensaje.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-centros',
+  templateUrl: './centros.component.html',
+  styleUrls: ['./centros.component.css']
 })
-export class AppComponent implements OnInit {
+export class CentrosComponent implements OnInit {
 
   // booleano provisional
   admin: boolean = false;

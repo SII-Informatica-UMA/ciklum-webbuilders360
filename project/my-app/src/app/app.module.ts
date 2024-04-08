@@ -10,10 +10,11 @@ import { FormularioCentroComponent } from './formulario-centro/formulario-centro
 import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.component';
 import { FormularioGerenteComponent } from './formulario-gerente/formulario-gerente.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { CentrosComponent } from './centros/centros.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    CentrosComponent,
     DetalleCentroComponent,
     DetalleGerenteComponent,
     FormularioCentroComponent,
@@ -27,6 +28,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     NoopAnimationsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [CentrosComponent]
 })
 export class AppModule { }
