@@ -6,7 +6,12 @@ import { EntrenadorDTO } from "./entrenador.dto";
 import { UsuarioDTO } from "./usuario.dto";
 import { ClienteDTO } from "./cliente.dto";
 import { TiposDestinatarios } from "./tipos.destinatarios";
+import { Injectable } from "@angular/core";
+import { UsuariosService } from "./services/usuarios.service";
 
+@Injectable({
+    providedIn: 'root'
+})
 export class DestinatarioService {
     private clienteURL: string = 'http://localhost:8080/cliente?centro=';
     private entrenadorURL: string = 'http://localhost:8080/entrenador?centro=';
@@ -17,18 +22,17 @@ export class DestinatarioService {
     private centros: Map<number, string> = new Map(); // TODO Añadir funcionalidad con los centros
     private nombres: string[] = [];
 
-    constructor(private http: HttpClient, centrosID: number[]) {
-        this.inicializarArrays(centrosID);
+    constructor(private http: HttpClient, private usuariosService: UsuariosService) {
+        this.inicializarArrays();
     }
 
-    private async inicializarArrays(centrosID: number[]) {
-        for (let centroID of centrosID) {
-            let [clientesDTO, entrenadoresDTO] =
-                await Promise.all([firstValueFrom(this.http.get<ClienteDTO[]>(this.clienteURL + centroID.toString())),
-                                   firstValueFrom(this.http.get<EntrenadorDTO[]>(this.entrenadorURL + centroID.toString()))]);
-            this.procesarClientesDTO(clientesDTO);
-            this.procesarEntrenadoresDTO(entrenadoresDTO);
-        }
+    private async inicializarArrays() {
+        let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
+        let [clientesDTO, entrenadoresDTO] =
+            await Promise.all([firstValueFrom(this.http.get<ClienteDTO[]>(this.clienteURL + centroId)),
+                               firstValueFrom(this.http.get<EntrenadorDTO[]>(this.entrenadorURL + centroId))]);
+        this.procesarClientesDTO(clientesDTO);
+        this.procesarEntrenadoresDTO(entrenadoresDTO);
     }
 
     private async procesarClientesDTO(clientesDTO: ClienteDTO[]) {

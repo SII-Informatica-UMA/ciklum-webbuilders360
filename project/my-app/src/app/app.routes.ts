@@ -4,6 +4,7 @@ import { ForgottenPasswordComponent } from './forgotten-password/forgotten-passw
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ListadoUsuarioComponent } from './listado-usuario/listado-usuario.component';
 import { PrincipalComponent } from './principal/principal.component';
+import { CentrosComponent } from './centros/centros.component';
 
 export const routes: Routes = [
   {

@@ -7,28 +7,25 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { MensajeDTO } from "./mensaje.dto";
 import { DestinatarioDTO } from "./destinatario.dto";
 import { MensajePOST } from "./mensaje.post";
+import { Injectable } from "@angular/core";
+import { UsuariosService } from "./services/usuarios.service";
 
+@Injectable({
+    providedIn: 'root'
+})
 export class MensajeService {
-    private baseURL: string = 'http://localhost:8080/mensaje/centro';
-    private destinatarioService: DestinatarioService;
+    private baseURL: string = 'http://localhost:8080/mensaje/centro/';
+    private baseURLPorId: string = 'http://localhost:8080/mensaje/centro/';
+    private baseURLPorCentro: string = 'http://localhost:8080/mensaje/centro?centro=';
 
-    constructor(private http: HttpClient, private centrosID: number[]) {
-        console.log("1")
-        this.destinatarioService = new DestinatarioService(http, centrosID);
-        console.log("5")
-    }
+    constructor(private http: HttpClient,
+                private usuariosService: UsuariosService,
+                private destinatarioService: DestinatarioService) {}
 
     public async getMensajes(): Promise<Mensaje[]> {
-        console.log("2")
-        let mensajes: Mensaje[] = [];
-        console.log("3")
-        for (let centroID of this.centrosID) {
-            let mensajesDTO: MensajeDTO[] =
-                await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURL + "?centro=" + centroID.toString()));
-            mensajes = mensajes.concat(this.procesarMensajesDTO(mensajesDTO));
-        }
-        console.log("4")
-        return mensajes;
+        let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
+        let mensajesDTO: MensajeDTO[] = await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURLPorCentro + centroId));
+        return this.procesarMensajesDTO(mensajesDTO);
     }
 
     private procesarMensajesDTO(mensajesDTO: MensajeDTO[]): Mensaje[] {
@@ -57,7 +54,7 @@ export class MensajeService {
     }
 
     public eliminarMensaje(id: number) {
-        this.http.delete(this.baseURL + '/' + id);
+        this.http.delete(this.baseURLPorId + id);
     }
 
     public async enviarMensaje(asunto: string, destinatarios: string[], copia: string[], copiaOculta: string[],
