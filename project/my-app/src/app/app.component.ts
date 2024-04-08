@@ -179,4 +179,16 @@ export class AppComponent implements OnInit {
     this.mensajesService.eliminarMensaje(mensaje.getIdMensaje());
   }
 
+
+  mostrarDetallesMensaje(mensaje: Mensaje): void{
+    let ref = this.modalService.open(LeerMensaje);
+    ref.componentInstance.mensaje = mensaje;
+    
+    /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA
+    ref.componentInstance.mensajeEliminado.subscribe((idGerente: number) => {
+      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
+    });*/
+  }
 }

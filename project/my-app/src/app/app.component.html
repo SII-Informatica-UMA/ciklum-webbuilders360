@@ -57,22 +57,18 @@
         <div class="content">
           <h1>Lista de mensajes</h1>
           <div class="list-group">
-            <button *ngFor="let gerente of gerentes"
+            <button *ngFor="let mensaje of mensajes"
               class="list-group-item list-group-item-action"
-              (click)="elegirGerente(gerente)"
-              [class.active]="gerente === gerenteElegido">{{gerente.id}}</button>
+              (click)="elegirMensaje(mensaje)"
+              [class.active]="mensaje === mensajeElegido">{{mensaje.asunto}}</button>
           </div>
           <br>
-          <button type="button" class="btn" (click)="aniadirGerente()">AÑADIR</button>
+          <button type="button" class="btn" (click)="aniadirMensaje()">AÑADIR</button>
         </div>
-        <div class="content" *ngIf="gerenteElegido">
-          <app-detalle-gerente [gerente]="gerenteElegido"
-            (gerenteEditado)="gerenteEditado($event)"
-            (gerenteEliminado)="eliminarGerente($event)"
-            ></app-detalle-gerente>
-          <leer-mensaje>
-            
-          </leer-mensaje>
+        <div class="content" *ngIf="mensajeElegido">
+          <leer-mensaje  [mensaje]="mensajeElegido"
+          (mensajeEliminado)="eliminarMensaje($event)"
+          ></leer-mensaje>
         </div>
       </div>
     </ng-template>
