@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './formulario-usuario.component.html',
-  styleUrl: './formulario-usuario.component.css'
+  styleUrls: ['./formulario-usuario.component.css']
 })
 export class FormularioUsuarioComponent {
   accion?: "Añadir" | "Editar";

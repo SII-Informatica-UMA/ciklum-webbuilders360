@@ -12,7 +12,7 @@ import { FormularioUsuarioComponent } from '../formulario-usuario/formulario-usu
   standalone: true,
   imports: [CommonModule],
   templateUrl: './listado-usuario.component.html',
-  styleUrl: './listado-usuario.component.css'
+  styleUrls: ['./listado-usuario.component.css']
 })
 export class ListadoUsuarioComponent {
   usuarios: Usuario [] = [];

@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './forgotten-password.component.html',
-  styleUrl: './forgotten-password.component.css'
+  styleUrls: ['./forgotten-password.component.css']
 })
 export class ForgottenPasswordComponent {
   mensaje?: string;

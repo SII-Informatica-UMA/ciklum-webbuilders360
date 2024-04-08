@@ -44,9 +44,7 @@ export class CentrosComponent implements OnInit {
     private gerentesService: GerentesService, 
     private modalService: NgbModal, 
     private mensajesService: MensajeService) {
-      
-      console.log("*");
-    }
+  }
 
   async ngOnInit(): Promise<void> {
     this.centros = this.centrosService.getCentros();
