@@ -11,7 +11,7 @@ import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.compo
 import { Mensaje } from './mensaje';
 import { MensajeService } from './mensaje.service';
 import { EnviarMensaje } from './enviar-mensaje/enviar.mensaje.component';
-import { LeerMensaje } from './leer-mensaje/leer-mensaje.component';
+import { LeerMensajeComponent } from './leer-mensaje/leer-mensaje.component';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +41,9 @@ export class AppComponent implements OnInit {
   mensajeSeleccionado?: Mensaje;
 
   constructor(private centrosService: CentrosService, private gerentesService: GerentesService, 
-    private modalService: NgbModal, private mensajesService: MensajeService) { }
+    private modalService: NgbModal, private mensajesService: MensajeService) {
+      console.log("*");
+    }
 
   async ngOnInit(): Promise<void> {
     this.centros = this.centrosService.getCentros();

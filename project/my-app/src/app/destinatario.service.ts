@@ -1,6 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom} from 'rxjs';
 import { Destinatario } from "./destinatario";
+import { DestinatarioDTO } from "./destinatario.dto";
+import { EntrenadorDTO } from "./entrenador.dto";
+import { UsuarioDTO } from "./usuario.dto";
+import { ClienteDTO } from "./cliente.dto";
+import { TiposDestinatarios } from "./tipos.destinatarios";
 
 export class DestinatarioService {
     private clienteURL: string = 'http://localhost:8080/cliente?centro=';

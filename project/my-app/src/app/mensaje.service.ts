@@ -4,22 +4,30 @@ import { Mensaje } from "./mensaje";
 import { Destinatario } from "./destinatario";
 import { DestinatarioService } from "./destinatario.service";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { MensajeDTO } from "./mensaje.dto";
+import { DestinatarioDTO } from "./destinatario.dto";
+import { MensajePOST } from "./mensaje.post";
 
 export class MensajeService {
     private baseURL: string = 'http://localhost:8080/mensaje/centro';
     private destinatarioService: DestinatarioService;
 
     constructor(private http: HttpClient, private centrosID: number[]) {
+        console.log("1")
         this.destinatarioService = new DestinatarioService(http, centrosID);
+        console.log("5")
     }
 
     public async getMensajes(): Promise<Mensaje[]> {
+        console.log("2")
         let mensajes: Mensaje[] = [];
+        console.log("3")
         for (let centroID of this.centrosID) {
             let mensajesDTO: MensajeDTO[] =
                 await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURL + "?centro=" + centroID.toString()));
             mensajes = mensajes.concat(this.procesarMensajesDTO(mensajesDTO));
         }
+        console.log("4")
         return mensajes;
     }
 
