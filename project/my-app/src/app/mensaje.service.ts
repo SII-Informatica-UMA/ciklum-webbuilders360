@@ -3,6 +3,7 @@ import { firstValueFrom, Observable, map } from 'rxjs';
 import { Mensaje } from "./mensaje";
 import { Destinatario } from "./destinatario";
 import { DestinatarioService } from "./destinatario.service";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 export class MensajeService {
     private baseURL: string = 'http://localhost:8080/mensaje/centro';

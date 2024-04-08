@@ -9,7 +9,7 @@
         </div>
         <div>
             Destinatario: <ul>
-                <li *ngFor="let destinatario of getMensaje().getDestinatarios()">
+                <li *ngFor="let destinatario of mensaje.getDestinatarios()">
                     {{destinatario.getNombre()}}
                 </li>
             </ul>
@@ -17,24 +17,21 @@
         <hr>
         <div>
             Copia: <ul>
-                <li *ngFor="let destinatario of getMensaje().getCopia()">
+                <li *ngFor="let destinatario of mensaje.getCopia()">
                     {{destinatario.getNombre()}}
                 </li>
             </ul>
         </div>
         <hr>
         <div>
-            Asunto: {{getMensaje().getAsunto()}}
+            Asunto: {{mensaje?.getAsunto()}}
         </div>
         <hr>
         <div>
             Mensaje:
         </div>
         <div>
-            {{getMensaje().getContenido()}}
-        </div>
-        <div>
-            <button (click)="eliminarMensaje()">Eliminar</button>
+            {{mensaje?.getContenido()}}
         </div>
     </body>
 </html>

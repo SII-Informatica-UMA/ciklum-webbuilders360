@@ -8,6 +8,10 @@ import { FormularioCentroComponent } from './formulario-centro/formulario-centro
 import { FormularioGerenteComponent } from './formulario-gerente/formulario-gerente.component';
 import { DetalleCentroComponent } from './detalle-centro/detalle-centro.component';
 import { DetalleGerenteComponent } from './detalle-gerente/detalle-gerente.component';
+import { Mensaje } from './mensaje';
+import { MensajeService } from './mensaje.service';
+import { EnviarMensaje } from './enviar-mensaje/enviar.mensaje.component';
+import { LeerMensaje } from './leer-mensaje/leer.mensaje.component';
 
 @Component({
   selector: 'app-root',
@@ -31,12 +35,18 @@ export class AppComponent implements OnInit {
 
   isButtonDisabled: boolean = true;
 
-  constructor(private centrosService: CentrosService, private gerentesService: GerentesService, 
-    private modalService: NgbModal) { }
+  mensajes: Mensaje[] = [];
+  mensajeElegido?: Mensaje;
+  mensajeSelect: boolean = false;
+  mensajeSeleccionado?: Mensaje;
 
-  ngOnInit(): void {
+  constructor(private centrosService: CentrosService, private gerentesService: GerentesService, 
+    private modalService: NgbModal, private mensajesService: MensajeService) { }
+
+  async ngOnInit(): Promise<void> {
     this.centros = this.centrosService.getCentros();
     this.gerentes = this.gerentesService.getGerentes();
+    this.mensajes = await this.mensajesService.getMensajes();
   }
 
 
@@ -153,5 +163,20 @@ export class AppComponent implements OnInit {
 
 
 // MENSAJES
+
+  elegirMensaje(mensaje: Mensaje): void {
+    //this.gerenteElegido = gerente;
+    this.mensajeSeleccionado = mensaje;
+    this.mensajeSelect = true;
+  }
+
+  aniadirMensaje(): void {
+    let ref = this.modalService.open(EnviarMensaje);
+    ref.result.then(() => {}, (reason) => {});
+  }
+
+  public eliminarMensaje(mensaje: Mensaje): void {
+    this.mensajesService.eliminarMensaje(mensaje.getIdMensaje());
+  }
 
 }

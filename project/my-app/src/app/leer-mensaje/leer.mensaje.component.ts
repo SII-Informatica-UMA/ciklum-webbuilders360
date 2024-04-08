@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Mensaje } from '../mensaje';
 import { Destinatario } from '../destinatario';
 import { MensajeService } from "../mensaje.service";
@@ -11,15 +11,7 @@ import { MensajeService } from "../mensaje.service";
 })
 
 export class LeerMensaje {
-    constructor(private mensaje: Mensaje, private mensajeService: MensajeService) {
+    @Input() mensaje?: Mensaje;
 
-    }
-
-    public getMensaje(): Mensaje {
-        return this.mensaje;
-    }
-
-    public eliminarMensaje(): void {
-        this.mensajeService.eliminarMensaje(this.mensaje.getIdMensaje());
-    }
+    constructor() {}
 }
