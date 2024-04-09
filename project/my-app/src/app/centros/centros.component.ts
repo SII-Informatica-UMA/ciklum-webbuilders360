@@ -16,17 +16,15 @@ import { CommonModule } from '@angular/common';
 import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
 
+
 @Component({
   selector: 'app-centros',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LeerMensajeComponent, DetalleCentroComponent, DetalleGerenteComponent],
   templateUrl: './centros.component.html',
   styleUrls: ['./centros.component.css']
 })
 export class CentrosComponent implements OnInit {
-
-  // booleano provisional
-  admin: boolean = false;
 
   centros: Centro [] = [];
   centroElegido?: Centro;
@@ -217,8 +215,11 @@ export class CentrosComponent implements OnInit {
     ref.result.then(() => {}, (reason) => {});
   }
 
-  public eliminarMensaje(mensaje: number): void {
+  public async eliminarMensaje(mensaje: number): Promise<void> {
     this.mensajesService.eliminarMensaje(mensaje);
+    this.mensajes = await this.mensajesService.getMensajes();
+    this.mensajeElegido = undefined;
+    this.modalService.dismissAll();
   }
 
 
