@@ -52,8 +52,11 @@ export class CentrosComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.centros = this.centrosService.getCentros();
-    this.gerentes = this.gerentesService.getGerentes();
-    this.mensajes = await this.mensajesService.getMensajes();
+    if (this.esAdmin()) {
+      this.gerentes = this.gerentesService.getGerentes();
+    } else {
+      this.mensajes = await this.mensajesService.getMensajes();
+    }
   }
 
 
