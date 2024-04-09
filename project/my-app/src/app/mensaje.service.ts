@@ -22,8 +22,7 @@ export class MensajeService {
                 private destinatarioService: DestinatarioService) {}
 
     public async getMensajes(): Promise<Mensaje[]> {
-        //let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
-        let centroId: string = "1";
+        let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
         let mensajesDTO: MensajeDTO[] = await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURLPorCentro + centroId));
         return this.procesarMensajesDTO(mensajesDTO);
     }
