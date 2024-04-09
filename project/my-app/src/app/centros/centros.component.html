@@ -14,11 +14,11 @@
       <br>
       <button type="button" class="btn" (click)="aniadirCentro()">AÑADIR</button>
     </div>
-    <div class="content" *ngIf="centroElegido"><!--
+    <div class="content" *ngIf="centroElegido">
       <app-detalle-centro [centro]="centroElegido"
         (centroEditado)="centroEditado($event)"
         (centroEliminado)="eliminarCentro($event)"
-        ></app-detalle-centro>-->
+        ></app-detalle-centro>
     </div>
   </div>
 
@@ -38,11 +38,11 @@
         <br>
         <button type="button" class="btn" (click)="aniadirGerente()">AÑADIR</button>
       </div>
-      <div class="content" *ngIf="gerenteElegido"><!--
+      <div class="content" *ngIf="gerenteElegido">
         <app-detalle-gerente [gerente]="gerenteElegido"
           (gerenteEditado)="gerenteEditado($event)"
           (gerenteEliminado)="eliminarGerente($event)"
-          ></app-detalle-gerente>-->
+          ></app-detalle-gerente>
       </div>
     </div>
   </div>
@@ -59,10 +59,10 @@
         <br>
         <button type="button" class="btn" (click)="aniadirMensaje()">AÑADIR</button>
       </div>
-      <div class="content" *ngIf="mensajeElegido"><!--
+      <div class="content" *ngIf="mensajeElegido">
         <app-leer-mensaje  [mensaje]="mensajeElegido"
         (mensajeEliminado)="eliminarMensaje($event)"
-        ></leer-mensaje>-->
+        ></app-leer-mensaje>
       </div>
     </div>
   </ng-template>

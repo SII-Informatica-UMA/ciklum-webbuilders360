@@ -22,7 +22,7 @@ export class LeerMensajeComponent {
 
     constructor(private gerentesService: GerentesService, private modalService: NgbModal, public modal: NgbActiveModal) { }
 
-    eliminarGerente(): void {
+    eliminarMensaje(): void {
         this.gerenteEliminado.emit(this.mensaje?.getIdMensaje());
         this.modal.close();
     }
