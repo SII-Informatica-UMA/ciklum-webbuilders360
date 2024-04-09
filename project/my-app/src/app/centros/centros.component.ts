@@ -13,6 +13,8 @@ import { MensajeService } from '../mensaje.service';
 import { EnviarMensaje } from '../enviar-mensaje/enviar.mensaje.component';
 import { LeerMensajeComponent } from '../leer-mensaje/leer-mensaje.component';
 import { CommonModule } from '@angular/common';
+import { UsuariosService } from '../services/usuarios.service';
+import { Rol } from '../entities/login';
 
 @Component({
   selector: 'app-centros',
@@ -22,9 +24,6 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./centros.component.css']
 })
 export class CentrosComponent implements OnInit {
-
-  // booleano provisional
-  admin: boolean = false;
 
   centros: Centro [] = [];
   centroElegido?: Centro;
@@ -46,7 +45,8 @@ export class CentrosComponent implements OnInit {
   constructor(private centrosService: CentrosService, 
     private gerentesService: GerentesService, 
     private modalService: NgbModal, 
-    private mensajesService: MensajeService) {
+    private mensajesService: MensajeService,
+    private usuariosService: UsuariosService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -57,7 +57,7 @@ export class CentrosComponent implements OnInit {
 
 
   esAdmin(): boolean {
-    return this.admin;
+    return this.usuariosService.rolCentro?.rol == Rol.ADMINISTRADOR;
   }
 
 // CENTROS
