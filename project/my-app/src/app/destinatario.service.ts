@@ -19,7 +19,7 @@ export class DestinatarioService {
     private clientesID2Nombre: Map<number, string> = new Map();
     private entrenadoresID2Nombre: Map<number, string> = new Map();
     private nombre2Info: Map<string, DestinatarioDTO> = new Map();
-    private centros: Map<number, string> = new Map(); // TODO Añadir funcionalidad con los centros
+    private centros: Map<number, string> = new Map();
     private nombres: string[] = [];
 
     constructor(private http: HttpClient, private usuariosService: UsuariosService) {
@@ -42,7 +42,7 @@ export class DestinatarioService {
             let nombre: string = this.procesarNombreUsuario(usuarioDTO)
             this.clientesID2Nombre.set(clienteDTO.idUsuario, nombre);
             this.nombre2Info.set(nombre, {id: clienteDTO.id, tipo: TiposDestinatarios.CLIENTE})
-
+            this.procesarCentros();
         }
     }
 
@@ -53,6 +53,14 @@ export class DestinatarioService {
             let nombre: string = this.procesarNombreUsuario(usuarioDTO)
             this.entrenadoresID2Nombre.set(entrenadorDTO.idUsuario, nombre);
             this.nombre2Info.set(nombre, {id: entrenadorDTO.id, tipo: TiposDestinatarios.ENTRENADOR})
+        }
+    }
+
+    private procesarCentros(): void {
+        let nombre: string | undefined = this.usuariosService.rolCentro?.nombreCentro;
+        let id: number | undefined = this.usuariosService.rolCentro?.centro;
+        if (nombre !== undefined && id !== undefined) {
+            this.nombre2Info.set(nombre, {id: id, tipo: TiposDestinatarios.CENTRO});
         }
     }
 
@@ -98,7 +106,7 @@ export class DestinatarioService {
     }
 
     public nombres2DestinatariosDTO(nombres: string[]): DestinatarioDTO[] {
-        // TODO Añadir funcionalidad para centros y añadir mensaje de error (en caso de que no se compruebe antes que los nombres son correctos)
+        // TODO Añadir mensaje de error (en caso de que no se compruebe antes que los nombres son correctos)
         let destinatariosDTO: DestinatarioDTO[] = [];
         for (let nombre of nombres) {
             let destinatarioDTO = this.nombre2Info.get(nombre);
