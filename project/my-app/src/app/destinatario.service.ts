@@ -27,12 +27,14 @@ export class DestinatarioService {
     }
 
     private async inicializarArrays() {
-        let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
-        let [clientesDTO, entrenadoresDTO] =
-            await Promise.all([firstValueFrom(this.http.get<ClienteDTO[]>(this.clienteURL + centroId)),
-                               firstValueFrom(this.http.get<EntrenadorDTO[]>(this.entrenadorURL + centroId))]);
-        this.procesarClientesDTO(clientesDTO);
-        this.procesarEntrenadoresDTO(entrenadoresDTO);
+        let centroId: number | undefined = this.usuariosService._rolCentro?.centro;
+        if (centroId !== undefined) {
+            let [clientesDTO, entrenadoresDTO] =
+                await Promise.all([firstValueFrom(this.http.get<ClienteDTO[]>(this.clienteURL + centroId.toString())),
+                                   firstValueFrom(this.http.get<EntrenadorDTO[]>(this.entrenadorURL + centroId.toString()))]);
+            this.procesarClientesDTO(clientesDTO);
+            this.procesarEntrenadoresDTO(entrenadoresDTO);
+        }
     }
 
     private async procesarClientesDTO(clientesDTO: ClienteDTO[]) {

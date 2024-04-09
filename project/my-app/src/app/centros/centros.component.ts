@@ -43,11 +43,11 @@ export class CentrosComponent implements OnInit {
   mensajeSelect: boolean = false;
   mensajeSeleccionado?: Mensaje;
 
-  constructor(private centrosService: CentrosService, 
-    private gerentesService: GerentesService, 
-    private modalService: NgbModal, 
-    private mensajesService: MensajeService,
-    private usuariosService: UsuariosService) {
+  constructor(private centrosService: CentrosService,
+              private gerentesService: GerentesService,
+              private modalService: NgbModal,
+              private mensajesService: MensajeService,
+              private usuariosService: UsuariosService) {
   }
 
   async ngOnInit(): Promise<void> {

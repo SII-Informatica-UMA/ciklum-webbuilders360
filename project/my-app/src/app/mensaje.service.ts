@@ -22,9 +22,15 @@ export class MensajeService {
                 private destinatarioService: DestinatarioService) {}
 
     public async getMensajes(): Promise<Mensaje[]> {
-        let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
-        let mensajesDTO: MensajeDTO[] = await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURLPorCentro + centroId));
-        return this.procesarMensajesDTO(mensajesDTO);
+        let centroId: number | undefined = this.usuariosService._rolCentro?.centro;
+        if (centroId !== undefined) {
+            let mensajesDTO: MensajeDTO[] =
+                await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURLPorCentro + centroId.toString()));
+            return this.procesarMensajesDTO(mensajesDTO);
+        } else {
+            //TODO Excepción
+            return [];
+        }
     }
 
     private procesarMensajesDTO(mensajesDTO: MensajeDTO[]): Mensaje[] {
