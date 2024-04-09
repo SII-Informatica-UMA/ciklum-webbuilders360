@@ -15,11 +15,11 @@
       <button type="button" class="btn" (click)="aniadirCentro()">AÑADIR</button>
       <button type="button" class="btn" (click)="detallesCentro()">DETALLES DEL CENTRO</button>
     </div>
-    <div class="content" *ngIf="centroElegido"><!--z
+    <div class="content" *ngIf="centroElegido">
       <app-detalle-centro [centro]="centroElegido"
         (centroEditado)="centroEditado($event)"
         (centroEliminado)="eliminarCentro($event)"
-        ></app-detalle-centro>-->
+        ></app-detalle-centro>
     </div>
   </div>
 

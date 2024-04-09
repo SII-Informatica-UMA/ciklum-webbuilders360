@@ -6,6 +6,7 @@ export class Mensaje {
                        private destinatarios: Destinatario[],
                        private copia: Destinatario[],
                        private copiaOculta: Destinatario[],
+                       private remitente: Destinatario,
                        private contenido: string,
                        private idMensaje: number) {}
     
@@ -23,6 +24,10 @@ export class Mensaje {
 
     public getCopiaOculta(): Destinatario[] {
         return this.copiaOculta;
+    }
+
+    public getRemitente(): Destinatario {
+        return this.remitente;
     }
 
     public getContenido(): string {

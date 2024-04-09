@@ -5,5 +5,6 @@ export interface MensajePOST {
     destinatarios: DestinatarioDTO[],
     copia: DestinatarioDTO[],
     copiaOculta: DestinatarioDTO[],
+    remitente: DestinatarioDTO,
     contenido: string,
 }

@@ -1,9 +1,8 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { firstValueFrom, Observable, map } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { firstValueFrom } from 'rxjs';
 import { Mensaje } from "./mensaje";
 import { Destinatario } from "./destinatario";
 import { DestinatarioService } from "./destinatario.service";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { MensajeDTO } from "./mensaje.dto";
 import { DestinatarioDTO } from "./destinatario.dto";
 import { MensajePOST } from "./mensaje.post";
@@ -23,7 +22,8 @@ export class MensajeService {
                 private destinatarioService: DestinatarioService) {}
 
     public async getMensajes(): Promise<Mensaje[]> {
-        let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
+        //let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
+        let centroId: string = "1";
         let mensajesDTO: MensajeDTO[] = await firstValueFrom(this.http.get<MensajeDTO[]>(this.baseURLPorCentro + centroId));
         return this.procesarMensajesDTO(mensajesDTO);
     }
@@ -37,12 +37,20 @@ export class MensajeService {
     }
 
     private mensajeDTO2Mensaje(mensajeDTO: MensajeDTO): Mensaje {
-        return new Mensaje(mensajeDTO.asunto,
-            this.procesarDestinatariosDTO(mensajeDTO.destinatarios),
-            this.procesarDestinatariosDTO(mensajeDTO.copia),
-            this.procesarDestinatariosDTO(mensajeDTO.copiaOculta),
-            mensajeDTO.contenido,
-            mensajeDTO.idMensaje);
+        let nombre: string | undefined = this.usuariosService.rolCentro?.nombreCentro;
+        if (nombre !== undefined) {
+            let remitente: DestinatarioDTO = this.destinatarioService.nombre2DestinatarioDTO(nombre);
+            return new Mensaje(mensajeDTO.asunto,
+                this.procesarDestinatariosDTO(mensajeDTO.destinatarios),
+                this.procesarDestinatariosDTO(mensajeDTO.copia),
+                this.procesarDestinatariosDTO(mensajeDTO.copiaOculta),
+                this.destinatarioService.destinatarioDTO2Destinatario(remitente),
+                mensajeDTO.contenido,
+                mensajeDTO.idMensaje);
+        } else {
+            //TODO Excepción
+            return new Mensaje("", [], [], [], new Destinatario(-1, "", ""), "", -1);
+        }
     }
 
     private procesarDestinatariosDTO(destinatariosDTO: DestinatarioDTO[]): Destinatario[] {
@@ -57,12 +65,18 @@ export class MensajeService {
         this.http.delete(this.baseURLPorId + id);
     }
 
-    public async enviarMensaje(asunto: string, destinatarios: string[], copia: string[], copiaOculta: string[],
-        contenido: string): Promise<Mensaje> {
+    public async enviarMensaje(asunto: string,
+                               destinatarios: string[],
+                               copia: string[],
+                               copiaOculta: string[],
+                               remitente: string,
+                               contenido: string): Promise<Mensaje> {
+
             let mensajePOST: MensajePOST = {asunto: asunto,
                                             destinatarios: this.destinatarioService.nombres2DestinatariosDTO(destinatarios),
                                             copia: this.destinatarioService.nombres2DestinatariosDTO(copia),
                                             copiaOculta: this.destinatarioService.nombres2DestinatariosDTO(copiaOculta),
+                                            remitente: this.destinatarioService.nombre2DestinatarioDTO(remitente),
                                             contenido: contenido};
             let mensajeDTO: MensajeDTO = await firstValueFrom(this.http.post<MensajeDTO>(this.baseURL, mensajePOST));
             return this.mensajeDTO2Mensaje(mensajeDTO);

@@ -27,7 +27,8 @@ export class DestinatarioService {
     }
 
     private async inicializarArrays() {
-        let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
+        //let centroId: string | undefined = this.usuariosService._rolCentro?.centro?.toString();
+        let centroId: string = "1";
         let [clientesDTO, entrenadoresDTO] =
             await Promise.all([firstValueFrom(this.http.get<ClienteDTO[]>(this.clienteURL + centroId)),
                                firstValueFrom(this.http.get<EntrenadorDTO[]>(this.entrenadorURL + centroId))]);
@@ -57,8 +58,10 @@ export class DestinatarioService {
     }
 
     private procesarCentros(): void {
-        let nombre: string | undefined = this.usuariosService.rolCentro?.nombreCentro;
-        let id: number | undefined = this.usuariosService.rolCentro?.centro;
+        //let nombre: string | undefined = this.usuariosService.rolCentro?.nombreCentro;
+        //let id: number | undefined = this.usuariosService.rolCentro?.centro;
+        let nombre: string = "Centro";
+        let id: number = 1;
         if (nombre !== undefined && id !== undefined) {
             this.nombre2Info.set(nombre, {id: id, tipo: TiposDestinatarios.CENTRO});
         }
@@ -115,5 +118,15 @@ export class DestinatarioService {
             }
         }
         return [];
+    }
+
+    public nombre2DestinatarioDTO(nombre: string): DestinatarioDTO {
+        let destinatarioDTO = this.nombre2Info.get(nombre);
+            if (destinatarioDTO !== undefined) {
+                return destinatarioDTO;
+            } else {
+                //TODO Excepción
+                return {id: -1, tipo: TiposDestinatarios.CENTRO};
+            }
     }
 }

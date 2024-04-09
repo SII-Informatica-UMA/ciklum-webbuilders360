@@ -5,6 +5,7 @@ export interface MensajeDTO {
     destinatarios: DestinatarioDTO[],
     copia: DestinatarioDTO[],
     copiaOculta: DestinatarioDTO[],
+    remitente: DestinatarioDTO,
     contenido: string,
     idMensaje: number
 }

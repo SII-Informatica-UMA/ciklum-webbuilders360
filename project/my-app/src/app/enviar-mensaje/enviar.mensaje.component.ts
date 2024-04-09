@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgFor } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UsuariosService } from '../services/usuarios.service';
 
 @Component({
     selector: 'enviar-mensaje',
@@ -35,7 +36,10 @@ export class EnviarMensaje {
     myControlCopiaOculta = new FormControl('');
     filteredOptionsCopiaOculta: string[];
 
-    public constructor(public modal: NgbActiveModal, private mensajeService: MensajeService) {
+    public constructor(public modal: NgbActiveModal,
+                       private mensajeService: MensajeService,
+                       private usuariosService: UsuariosService) {
+
         this.nombresDestinatarios = mensajeService.getNombresDestinatarios();
         this.filteredOptionsDestinatario = this.nombresDestinatarios.slice();
         this.filteredOptionsCopia = this.nombresDestinatarios.slice();
@@ -43,7 +47,15 @@ export class EnviarMensaje {
     }
 
     public async enviarMensaje() {
-        this.mensajeService.enviarMensaje(this.asunto, this.destinatarios, this.copia, this.copiaOculta, this.contenido);
+        let remitente: string | undefined = this.usuariosService._rolCentro?.nombreCentro;
+        if (remitente !== undefined) {
+            this.mensajeService.enviarMensaje(this.asunto,
+                                              this.destinatarios,
+                                              this.copia,
+                                              this.copiaOculta,
+                                              remitente,
+                                              this.contenido);
+        }
         this.modal.close();
       }
 

@@ -45,7 +45,7 @@ export class UsuariosService {
   }
 
   private completarConRoles(usuarioSesion: UsuarioSesion): Observable<UsuarioSesion> {
-    // TODO: acceder a lo sotros servicios (o simular) para completar con los roles necesarios
+    // TODO: acceder a los otros servicios (o simular) para completar con los roles necesarios
     return of(usuarioSesion);
   }
 
