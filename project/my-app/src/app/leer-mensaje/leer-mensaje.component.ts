@@ -1,10 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Mensaje } from '../mensaje';
-import { Destinatario } from '../destinatario';
-import { MensajeService } from "../mensaje.service";
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GerentesService } from '../gerentes.service';
-import { Gerente } from '../gerente';
 import { CommonModule } from '@angular/common';
 
 
