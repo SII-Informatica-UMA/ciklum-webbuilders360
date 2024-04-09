@@ -1,3 +1,4 @@
+<body>
 <div class="container">
   <div class="centros-ctr">
     <div class="content">
@@ -7,14 +8,14 @@
           class="list-group-item list-group-item-action"
           (click)="elegirCentro(centro)"
           [class.active]="centro === centroSeleccionado"
-          (dblclick)="mostrarDetallesCentro(centro)"
-          [class.active]="centro === centroElegido">{{centro.nombre}}
+          (dblclick)="mostrarDetallesCentro(centro)" >{{centro.nombre}}
         </button>
       </div>
       <br>
       <button type="button" class="btn" (click)="aniadirCentro()">AÑADIR</button>
+      <button type="button" class="btn" (click)="detallesCentro()">DETALLES DEL CENTRO</button>
     </div>
-    <div class="content" *ngIf="centroElegido"><!--
+    <div class="content" *ngIf="centroElegido"><!--z
       <app-detalle-centro [centro]="centroElegido"
         (centroEditado)="centroEditado($event)"
         (centroEliminado)="eliminarCentro($event)"
@@ -31,12 +32,12 @@
             class="list-group-item list-group-item-action"
             (click)="elegirGerente(gerente)"
             [class.active]="gerente === gerenteSeleccionado"
-            (dblclick)="mostrarDetallesGerente(gerente)"
-            [class.active]="gerente === gerenteElegido">{{gerente.id}}
+            (dblclick)="mostrarDetallesGerente(gerente)" >{{gerente.id}}
           </button>
         </div>
         <br>
         <button type="button" class="btn" (click)="aniadirGerente()">AÑADIR</button>
+      <button type="button" class="btn" (click)="detallesGerente()">DETALLES DEL GERENTE</button>
       </div>
       <div class="content" *ngIf="gerenteElegido"><!--
         <app-detalle-gerente [gerente]="gerenteElegido"
@@ -68,3 +69,4 @@
   </ng-template>
 </div>
 <button id="asociarBtn" type="button" class="btn" [disabled]="isButtonDisabled" (click)="asociar()" *ngIf="esAdmin(); else null">ASOCIAR</button>
+</body>

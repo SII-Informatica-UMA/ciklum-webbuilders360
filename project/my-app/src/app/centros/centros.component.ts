@@ -13,6 +13,8 @@ import { MensajeService } from '../mensaje.service';
 import { EnviarMensaje } from '../enviar-mensaje/enviar.mensaje.component';
 import { LeerMensajeComponent } from '../leer-mensaje/leer-mensaje.component';
 import { CommonModule } from '@angular/common';
+import { Rol } from '../entities/login';
+import { UsuariosService } from '../services/usuarios.service';
 
 @Component({
   selector: 'app-centros',
@@ -46,7 +48,8 @@ export class CentrosComponent implements OnInit {
   constructor(private centrosService: CentrosService, 
     private gerentesService: GerentesService, 
     private modalService: NgbModal, 
-    private mensajesService: MensajeService) {
+    private mensajesService: MensajeService,
+    private usuariosService: UsuariosService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -57,7 +60,7 @@ export class CentrosComponent implements OnInit {
 
 
   esAdmin(): boolean {
-    return this.admin;
+    return this.usuariosService.rolCentro?.rol==Rol.ADMINISTRADOR;
   }
 
 // CENTROS
@@ -72,6 +75,23 @@ export class CentrosComponent implements OnInit {
   mostrarDetallesCentro(centro: Centro): void{
     let ref = this.modalService.open(DetalleCentroComponent);
     ref.componentInstance.centro = centro;
+    /*AÑADIDO PARA EDITAR DATOS*/
+    ref.componentInstance.centroEditado.subscribe((centroEditado: Centro) => {
+      this.centrosService.editarCentro(centroEditado); // Actualizar el centro editado en el servicio
+      this.centros = this.centrosService.getCentros(); // Actualizar la lista de centros en el componente
+      this.centroElegido = this.centros.find(c => c.idCentro === centroEditado.idCentro); // Actualizar el centro elegido
+    });
+    /*AÑADIDO PARA ELIMINAR EL ELEMENTO DE LA LISTA*/
+    ref.componentInstance.centroEliminado.subscribe((idCentro: number) => {
+      this.centrosService.eliminarcCentro(idCentro); // Eliminar el centro del servicio
+      this.centros = this.centrosService.getCentros(); // Actualizar la lista de centros en el componente
+      this.centroElegido = undefined; // Limpiar el centro elegido si fue eliminado
+    });
+  }
+
+  detallesCentro(): void{
+    let ref = this.modalService.open(DetalleCentroComponent);
+    ref.componentInstance.centro = this.centroSeleccionado;
     /*AÑADIDO PARA EDITAR DATOS*/
     ref.componentInstance.centroEditado.subscribe((centroEditado: Centro) => {
       this.centrosService.editarCentro(centroEditado); // Actualizar el centro editado en el servicio
@@ -123,6 +143,23 @@ export class CentrosComponent implements OnInit {
   mostrarDetallesGerente(gerente: Gerente): void{
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
+    /*AÑADIDO PARA EDITAR DETALLES*/
+    ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
+      this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
+      this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      this.gerenteElegido = this.gerentes.find(c => c.idUsuario === gerenteEditado.idUsuario); // Actualizar el centro elegido
+    });
+    /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA*/
+    ref.componentInstance.gerenteEliminado.subscribe((idGerente: number) => {
+      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
+    });
+  }
+
+  detallesGerente(): void{
+    let ref = this.modalService.open(DetalleGerenteComponent);
+    ref.componentInstance.gerente = this.gerenteSeleccionado;
     /*AÑADIDO PARA EDITAR DETALLES*/
     ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio

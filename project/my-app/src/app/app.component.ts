@@ -9,7 +9,7 @@ import { UsuariosService } from './services/usuarios.service';
   standalone: true,
   imports: [RouterOutlet, CommonModule, RouterLink, FormsModule, TitleCasePipe],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./centros/centros.component.css']
 })
 export class AppComponent {
   _rolIndex: number = 0
