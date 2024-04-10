@@ -1,18 +1,24 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Gerente } from '../gerente';
+import { Centro } from '../centro';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
 import { GerentesService } from '../gerentes.service';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-detalle-gerente',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './detalle-gerente.component.html',
   styleUrls: ['./detalle-gerente.component.css']
 })
 export class DetalleGerenteComponent {
   @Input() gerente?: Gerente;
+  @Input() centrosAsociados? : Centro[];
   @Output() gerenteEditado = new EventEmitter<Gerente>();
   @Output() gerenteEliminado = new EventEmitter<number>();
 

@@ -12,6 +12,11 @@
       <label class="col-md-3" for="empresa">Empresa:</label>
       <span class="col-md-9 offset-2 offset-md-0">{{gerente?.empresa}}</span>
     </div>
+    <div class="row" id="centrosAsociados">
+      <label class="col-md-3" for="centrosAsociados">Centros Asociados:</label>
+      <button *ngFor="let centro of centrosAsociados">{{centro.nombre}}
+      </button>
+    </div>
     <br>
     <!--
   <div class="row" id="nombre">

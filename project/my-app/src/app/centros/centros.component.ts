@@ -146,8 +146,10 @@ export class CentrosComponent implements OnInit {
   }
 
   mostrarDetallesGerente(gerente: Gerente): void{
+    const centrosAsociados = this.getCentrosAsociados();
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
+    ref.componentInstance.centrosAsociados = centrosAsociados;
     /*AÑADIDO PARA EDITAR DETALLES*/
     ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
@@ -210,6 +212,16 @@ export class CentrosComponent implements OnInit {
         }
       }
     }
+  }
+
+  getCentrosAsociados(): Centro[]{
+    const centrosAsociados: Centro[] = [];
+    this.asociacion.forEach((g, c) =>{
+      if(g === this.gerenteSeleccionado){
+        centrosAsociados.push(c);
+      }
+    });
+    return centrosAsociados;
   }
 
 
