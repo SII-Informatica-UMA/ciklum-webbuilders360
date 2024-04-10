@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Centro } from '../centro';
+import { Gerente } from '../gerente';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormularioCentroComponent } from '../formulario-centro/formulario-centro.component';
@@ -13,6 +14,7 @@ import { CentrosService } from '../centros.service';
 })
 export class DetalleCentroComponent {
   @Input() centro?: Centro;
+  @Input() gerente?: Gerente;
   @Output() centroEditado = new EventEmitter<Centro>();
   @Output() centroEliminado = new EventEmitter<number>();
 
@@ -32,5 +34,6 @@ export class DetalleCentroComponent {
     this.centroEliminado.emit(this.centro?.idCentro);
     this.modal.close();
   }
+
 }
 

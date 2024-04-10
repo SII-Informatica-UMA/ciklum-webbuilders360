@@ -36,6 +36,7 @@ export class CentrosComponent implements OnInit {
   gerenteSelect: boolean = false;
   gerenteSeleccionado?: Gerente;
 
+  asociacion: Map<Centro, Gerente> = new Map<Centro, Gerente>;
   isButtonDisabled: boolean = true;
 
   mensajes: Mensaje[] = [];
@@ -54,6 +55,7 @@ export class CentrosComponent implements OnInit {
     this.centros = this.centrosService.getCentros();
     if (this.esAdmin()) {
       this.gerentes = this.gerentesService.getGerentes();
+      this.asociacion;
     } else {
       this.mensajes = await this.mensajesService.getMensajes();
     }
@@ -74,8 +76,10 @@ export class CentrosComponent implements OnInit {
   }
 
   mostrarDetallesCentro(centro: Centro): void{
+    const asociado = this.asociacion.get(centro);
     let ref = this.modalService.open(DetalleCentroComponent);
     ref.componentInstance.centro = centro;
+    ref.componentInstance.gerente = asociado;
     /*AÑADIDO PARA EDITAR DATOS*/
     ref.componentInstance.centroEditado.subscribe((centroEditado: Centro) => {
       this.centrosService.editarCentro(centroEditado); // Actualizar el centro editado en el servicio
@@ -199,11 +203,16 @@ export class CentrosComponent implements OnInit {
   }
   
   asociar(): void {
-   if(!this.isButtonDisabled){
-    
-   }
-  
+    if(!this.isButtonDisabled){
+      if(this.centroSeleccionado && this.gerenteSeleccionado){
+        if(!this.asociacion.has(this.centroSeleccionado)){
+          this.asociacion.set(this.centroSeleccionado, this.gerenteSeleccionado);
+        }
+      }
+    }
   }
+
+
 
 
 // MENSAJES
