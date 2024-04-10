@@ -14,7 +14,7 @@ export class GerentesService {
     {idUsuario: 2, empresa: 'Paco SL', id: 456},
     {idUsuario: 3, empresa: 'Marta SL', id: 678}
   ];
-
+  /*
   constructor(private httpClient: HttpClient) { }
 
   getGerentes(): Observable<Gerente []> {
@@ -30,14 +30,14 @@ export class GerentesService {
       "idUsuario": gerente.idUsuario,
       "empresa": gerente.empresa
     });
-    /*
+    //Esta parte de abajo tambien estaba comentada
     .pipe(
       catchError(error => {
         if (error.status === 404) {
           // Aquí se maneja el error 404
           console.error('Recurso no encontrado:', error);
         };
-    */
+    
   }
 
   editarGerente(gerente: Gerente) {
@@ -56,4 +56,28 @@ export class GerentesService {
   getGerente(id: number): Observable<Gerente> {
     return this.httpClient.get<Gerente>(BACKEND_URI + '/gerente/' + id);
   }
+  */
+
+  //Parte sin backend
+constructor(){ }
+
+getGerentes(): Gerente [] {
+  return this.gerentes;
+}
+
+addGerente(gerente: Gerente) {
+  gerente.idUsuario = this.gerentes.length + 1;
+  this.gerentes.push(gerente);
+}
+
+editarGerente(gerente: Gerente) {
+  let indice = this.gerentes.findIndex(c => c.idUsuario == gerente.idUsuario);
+  this.gerentes[indice] = gerente;
+}
+
+eliminargGerente(id: number) {
+  let indice = this.gerentes.findIndex(c => c.idUsuario == id);
+  this.gerentes.splice(indice, 1);
+}
+
 }

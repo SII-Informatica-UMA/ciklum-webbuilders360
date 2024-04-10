@@ -14,7 +14,7 @@ export class CentrosService {
     {idCentro: 2, nombre: 'AnaGimnasio', direccion: 'c/calle 321'},
     {idCentro: 3, nombre: 'PacoGym', direccion: 'c/calle 4'}
   ];
-
+  /* CON EL BACKEND
   constructor(private httpClient: HttpClient) { }
 
   getCentros(gerente?: number): Observable<Centro[]> {
@@ -23,7 +23,7 @@ export class CentrosService {
       params = params.append('gerente', (gerente ?? '').toString()); 
     }
     return this.httpClient.get<Centro[]>(BACKEND_URI + '/centro', { params });
-}
+  }
 
 
   addCentro(centro: Centro): Observable<Centro> {
@@ -50,5 +50,26 @@ export class CentrosService {
 
   getCentro(id: number): Observable<Centro> {
     return this.httpClient.get<Centro>(BACKEND_URI + '/centro/' + id);
+  }
+  */
+  constructor() { }
+
+  getCentros(): Centro [] {
+    return this.centros;
+  }
+
+  addCentro(centro: Centro) {
+    centro.idCentro = this.centros.length + 1;
+    this.centros.push(centro);
+  }
+
+  editarCentro(centro: Centro) {
+    let indice = this.centros.findIndex(c => c.idCentro == centro.idCentro);
+    this.centros[indice] = centro;
+  }
+
+  eliminarcCentro(id: number) {
+    let indice = this.centros.findIndex(c => c.idCentro == id);
+    this.centros.splice(indice, 1);
   }
 }
