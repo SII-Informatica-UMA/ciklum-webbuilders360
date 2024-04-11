@@ -3,6 +3,7 @@ import { Centro } from './centro';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BACKEND_URI } from './config/config';
+import { Gerente } from './gerente';
 
 
 @Injectable({
@@ -58,6 +59,10 @@ export class CentrosService {
         "idGerente": idGerente
       }
     )
+  }
+
+  getGerenteAsociado(idCentro: number): Observable<Gerente | undefined> {
+    return this.httpClient.get<Gerente>(BACKEND_URI + '/centros/' + idCentro + '/gerente')
   }
 
   quitarAsociacionCentroGerente(idCentro: number, idGerente: number): void {

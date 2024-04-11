@@ -75,7 +75,8 @@ export class MensajeService {
                                copia: string[],
                                copiaOculta: string[],
                                remitente: string,
-                               contenido: string): Promise<Mensaje> {
+                               contenido: string,
+                               centroId: number): Promise<Mensaje> {
 
             let mensajePOST: MensajePOST = {asunto: asunto,
                                             destinatarios: await this.destinatarioService.nombres2DestinatariosDTO(destinatarios),
@@ -83,7 +84,7 @@ export class MensajeService {
                                             copiaOculta: await this.destinatarioService.nombres2DestinatariosDTO(copiaOculta),
                                             remitente: await this.destinatarioService.nombre2DestinatarioDTO(remitente),
                                             contenido: contenido};
-            let mensajeDTO: MensajeDTO = await firstValueFrom(this.http.post<MensajeDTO>(this.baseURL, mensajePOST));
+            let mensajeDTO: MensajeDTO = await firstValueFrom(this.http.post<MensajeDTO>(this.baseURLPorCentro + centroId, mensajePOST));
             return this.mensajeDTO2Mensaje(mensajeDTO);
     }
 
@@ -106,7 +107,7 @@ export class MensajeService {
     }
     */
 
-    public async getNombresDestinatarios(): Promise<readonly string[]> {
+    public async getNombresDestinatarios(): Promise<Set<string>> {
         return await this.destinatarioService.getNombresDestinatarios();
     }
 }
