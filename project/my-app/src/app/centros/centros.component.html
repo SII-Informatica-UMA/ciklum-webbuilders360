@@ -70,4 +70,5 @@
   </ng-template>
 </div>
 <button id="asociarBtn" type="button" class="btn" [disabled]="isButtonDisabled" (click)="asociar()" *ngIf="esAdmin(); else null">ASOCIAR</button>
+<button id="desAsociarBtn" type="button" class="btn" [disabled]="isButtonDesDisabled" (click)="desAsociar()" *ngIf="esAdmin(); else null">DESASOCIAR</button>
 </body>

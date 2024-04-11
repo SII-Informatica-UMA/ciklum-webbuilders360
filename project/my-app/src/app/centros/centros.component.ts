@@ -41,6 +41,7 @@ export class CentrosComponent implements OnInit {
   asociacion: Map<Centro, Gerente> = new Map<Centro, Gerente>;
   asociacionRealizada: Boolean = false;
   isButtonDisabled: boolean = true;
+  isButtonDesDisabled: boolean = true;
 
   mensajes: Mensaje[] = [];
   mensajeElegido?: Mensaje;
@@ -90,6 +91,7 @@ export class CentrosComponent implements OnInit {
     //this.centroElegido = centro;
     this.centroSeleccionado = centro;
     this.centroSelect = true;
+    this.isButtonDesDisabled = false;
     this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
   }
 
@@ -266,6 +268,16 @@ export class CentrosComponent implements OnInit {
       this.mostrarModalAsociacion('Asociación realizada entre el gerente y el centro seleccionado');
     }else{
       this.mostrarModalAsociacion('Error en la asociacion');
+    }
+  }
+
+  desAsociar(): void{
+    if(!this.isButtonDesDisabled){
+      if(this.centroSeleccionado){
+        if(this.asociacion.has(this.centroSeleccionado)){
+          this.asociacion.delete(this.centroSeleccionado);
+        }
+      }
     }
   }
 
