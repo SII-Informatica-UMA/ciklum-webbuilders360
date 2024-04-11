@@ -281,6 +281,9 @@ export class CentrosComponent implements OnInit {
       if(this.centroSeleccionado){
         if(this.asociacion.has(this.centroSeleccionado)){
           this.asociacion.delete(this.centroSeleccionado);
+          this.mostrarModalAsociacion('Desasociacion produciada con éxito');
+        }else{
+          this.mostrarModalAsociacion('Error en la desasosiacion: el centro no tiene ningún gerente asignado');
         }
       }
     }
