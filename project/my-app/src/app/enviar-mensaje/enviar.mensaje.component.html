@@ -5,8 +5,8 @@
     <div class="row">
       <label class="col-md-3">Destinatario:</label>
       <form class="example-form">
-        <div *ngFor="let input of destinatarios; let i = index">
-          <mat-form-field class="example-full-width">
+        <div  *ngFor="let input of destinatarios; let i = index">
+          <mat-form-field class="example-full-width" >
             <input #inputDestinatario
                   type="text"
                   placeholder="Destinatario"
@@ -22,7 +22,7 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
-        <button  (click)="addInputDestinatario()">Añadir</button>
+        <button class="btn" (click)="addInputDestinatario()">Añadir</button>
       </form>
     </div>
     <hr>
@@ -46,7 +46,7 @@
                     </mat-autocomplete>
                   </mat-form-field>
                 </div>
-                <button (click)="addInputCopia()">Añadir</button>
+                <button class="btn" (click)="addInputCopia()">Añadir</button>
               </form>
       </div>
       <hr>
@@ -70,24 +70,24 @@
                     </mat-autocomplete>
                   </mat-form-field>
                 </div>
-                <button (click)="addInputCopiaOculta()">Añadir</button>
+                <button class="btn" (click)="addInputCopiaOculta()">Añadir</button>
               </form>
       </div>
       <hr>
       <div class="row">
         <label>Asusnto:</label>
-        <input type = "text" [(ngModel)] = "asunto">
+        <input class="asunto" type = "text" [(ngModel)] = "asunto">
       </div>
       <hr>
       <div class="row">
         <label>Mensaje:</label>
       </div>
       <div>
-        <input type = "text" [(ngModel)] = "contenido">
+        <input class= "cnt" type = "text" [(ngModel)] = "contenido">
          </div>
          <div class="modal-footer">
           <div class="row">
-        <button (click)="enviarMensaje()">Enviar</button>
+        <button class="btn" (click)="enviarMensaje()">Enviar</button>
           </div>
             </div>
  </div>
