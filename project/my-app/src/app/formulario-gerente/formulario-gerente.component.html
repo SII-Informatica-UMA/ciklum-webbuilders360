@@ -9,11 +9,13 @@
   </div>
   <div class="list-group">
     <label for="usuarios">Usuario:</label>
-    <button *ngFor="let usuario of usuarios"
+    <div style="height: 60px; overflow-y: auto;">
+    <button style="height:30px; width: 100%;  border-width: 0px 0px 0.1px 0px; border-color: rgb(244, 244, 244);" *ngFor="let usuario of usuarios"
         class="list-group-item list-group-item-action"
         (click)="elegirUsuario(usuario)"
         [class.active]="usuario === usuarioSeleccionado">{{usuario.nombre}}
     </button>
+    </div>
 </div>
 </div>
 <div class="modal-footer">
