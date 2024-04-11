@@ -8,7 +8,9 @@ export class Mensaje {
                        private copiaOculta: Destinatario[],
                        private remitente: Destinatario,
                        private contenido: string,
-                       private idMensaje: number) {}
+                       private idMensaje: number) {
+                        console.log(remitente);
+                       }
     
     public getAsunto(): string {
         return this.asunto;

@@ -23,7 +23,7 @@ export class DestinatarioService {
     private nombres: string[] = [];
 
     constructor(private http: HttpClient, private usuariosService: UsuariosService) {
-        this.inicializarArrays();
+        
     }
 
     private async inicializarArrays() {
@@ -32,8 +32,9 @@ export class DestinatarioService {
             let [clientesDTO, entrenadoresDTO] =
                 await Promise.all([firstValueFrom(this.http.get<ClienteDTO[]>(this.clienteURL + centroId.toString())),
                                    firstValueFrom(this.http.get<EntrenadorDTO[]>(this.entrenadorURL + centroId.toString()))]);
-            this.procesarClientesDTO(clientesDTO);
-            this.procesarEntrenadoresDTO(entrenadoresDTO);
+            await this.procesarClientesDTO(clientesDTO);
+            await this.procesarEntrenadoresDTO(entrenadoresDTO);
+            this.procesarCentros();
         }
     }
 
@@ -44,7 +45,6 @@ export class DestinatarioService {
             let nombre: string = this.procesarNombreUsuario(usuarioDTO)
             this.clientesID2Nombre.set(clienteDTO.idUsuario, nombre);
             this.nombre2Info.set(nombre, {id: clienteDTO.id, tipo: TiposDestinatarios.CLIENTE})
-            this.procesarCentros();
         }
     }
 
@@ -62,6 +62,7 @@ export class DestinatarioService {
         let nombre: string | undefined = this.usuariosService.rolCentro?.nombreCentro;
         let id: number | undefined = this.usuariosService.rolCentro?.centro;
         if (nombre !== undefined && id !== undefined) {
+            this.centros.set(id, nombre);
             this.nombre2Info.set(nombre, {id: id, tipo: TiposDestinatarios.CENTRO});
         }
     }
@@ -72,18 +73,22 @@ export class DestinatarioService {
         return nombre;
     }
 
-    public destinatarioDTO2Destinatario(destinatarioDTO: DestinatarioDTO): Destinatario {
+    public async destinatarioDTO2Destinatario(destinatarioDTO: DestinatarioDTO): Promise<Destinatario> {
+        await this.inicializarArrays();
         switch(destinatarioDTO.tipo) {
             case TiposDestinatarios.CLIENTE:
-                return this.getClienteDestinatario(destinatarioDTO.id);
+                return await this.getClienteDestinatario(destinatarioDTO.id);
             case TiposDestinatarios.ENTRENADOR:
-                return this.getEntrenadorDestinatario(destinatarioDTO.id);
+                return await this.getEntrenadorDestinatario(destinatarioDTO.id);
+            case TiposDestinatarios.CENTRO:
+                return await this.getCentroDestinatario(destinatarioDTO.id);
             default:
                 return new Destinatario(-1, "", ""); // TODO cambiar por mensaje de error
         }
     }
 
-    public getClienteDestinatario(id: number): Destinatario {
+    private async getClienteDestinatario(id: number): Promise<Destinatario> {
+        await this.inicializarArrays();
         let aux = this.clientesID2Nombre.get(id);
         if (aux == undefined) {
             aux = "";
@@ -91,7 +96,8 @@ export class DestinatarioService {
         return new Destinatario(id, aux, TiposDestinatarios.CLIENTE);
     }
 
-    public getEntrenadorDestinatario(id: number): Destinatario {
+    private async getEntrenadorDestinatario(id: number): Promise<Destinatario> {
+        await this.inicializarArrays();
         let aux = this.entrenadoresID2Nombre.get(id);
         if (aux == undefined) {
             aux = "";
@@ -99,15 +105,28 @@ export class DestinatarioService {
         return new Destinatario(id, aux, TiposDestinatarios.ENTRENADOR);
     }
 
-    public destinatario2DestinatarioDTO(destinatario: Destinatario): DestinatarioDTO {
+    private async getCentroDestinatario(id: number): Promise<Destinatario> {
+        await this.inicializarArrays();
+        let aux = this.centros.get(id);
+        console.log(this.centros.size);
+        if (aux == undefined) {
+            aux = "";
+        }
+        return new Destinatario(id, aux, TiposDestinatarios.CENTRO);
+    }
+
+    public async destinatario2DestinatarioDTO(destinatario: Destinatario): Promise<DestinatarioDTO> {
+        await this.inicializarArrays();
         return {id: destinatario.getID(), tipo: destinatario.getTipo()};
     }
 
-    public getNombresDestinatarios(): readonly string[] {
+    public async getNombresDestinatarios(): Promise<readonly string[]> {
+        await this.inicializarArrays();
         return this.nombres;
     }
 
-    public nombres2DestinatariosDTO(nombres: string[]): DestinatarioDTO[] {
+    public async nombres2DestinatariosDTO(nombres: string[]): Promise<DestinatarioDTO[]> {
+        await this.inicializarArrays();
         // TODO Añadir mensaje de error (en caso de que no se compruebe antes que los nombres son correctos)
         let destinatariosDTO: DestinatarioDTO[] = [];
         for (let nombre of nombres) {
@@ -119,7 +138,8 @@ export class DestinatarioService {
         return [];
     }
 
-    public nombre2DestinatarioDTO(nombre: string): DestinatarioDTO {
+    public async nombre2DestinatarioDTO(nombre: string): Promise<DestinatarioDTO> {
+        await this.inicializarArrays();
         let destinatarioDTO = this.nombre2Info.get(nombre);
             if (destinatarioDTO !== undefined) {
                 return destinatarioDTO;

@@ -33,23 +33,23 @@ export class MensajeService {
         }
     }
 
-    private procesarMensajesDTO(mensajesDTO: MensajeDTO[]): Mensaje[] {
+    private async procesarMensajesDTO(mensajesDTO: MensajeDTO[]): Promise<Mensaje[]> {
         let mensajes: Mensaje[] = [];
         for (let mensajeDTO of mensajesDTO) {
-            mensajes.push(this.mensajeDTO2Mensaje(mensajeDTO));
+            mensajes.push(await this.mensajeDTO2Mensaje(mensajeDTO));
         }
         return mensajes;
     }
 
-    private mensajeDTO2Mensaje(mensajeDTO: MensajeDTO): Mensaje {
+    private async mensajeDTO2Mensaje(mensajeDTO: MensajeDTO): Promise<Mensaje> {
         let nombre: string | undefined = this.usuariosService.rolCentro?.nombreCentro;
         if (nombre !== undefined) {
-            let remitente: DestinatarioDTO = this.destinatarioService.nombre2DestinatarioDTO(nombre);
+            let remitente: DestinatarioDTO = await this.destinatarioService.nombre2DestinatarioDTO(nombre);
             return new Mensaje(mensajeDTO.asunto,
-                this.procesarDestinatariosDTO(mensajeDTO.destinatarios),
-                this.procesarDestinatariosDTO(mensajeDTO.copia),
-                this.procesarDestinatariosDTO(mensajeDTO.copiaOculta),
-                this.destinatarioService.destinatarioDTO2Destinatario(remitente),
+                await this.procesarDestinatariosDTO(mensajeDTO.destinatarios),
+                await this.procesarDestinatariosDTO(mensajeDTO.copia),
+                await this.procesarDestinatariosDTO(mensajeDTO.copiaOculta),
+                await this.destinatarioService.destinatarioDTO2Destinatario(remitente),
                 mensajeDTO.contenido,
                 mensajeDTO.idMensaje);
         } else {
@@ -58,10 +58,10 @@ export class MensajeService {
         }
     }
 
-    private procesarDestinatariosDTO(destinatariosDTO: DestinatarioDTO[]): Destinatario[] {
+    private async procesarDestinatariosDTO(destinatariosDTO: DestinatarioDTO[]): Promise<Destinatario[]> {
         let destinatarios: Destinatario[] = [];
         for (let destinatarioDTO of destinatariosDTO) {
-            destinatarios.push(this.destinatarioService.destinatarioDTO2Destinatario(destinatarioDTO));
+            destinatarios.push(await this.destinatarioService.destinatarioDTO2Destinatario(destinatarioDTO));
         }
         return destinatarios;
     }
@@ -78,10 +78,10 @@ export class MensajeService {
                                contenido: string): Promise<Mensaje> {
 
             let mensajePOST: MensajePOST = {asunto: asunto,
-                                            destinatarios: this.destinatarioService.nombres2DestinatariosDTO(destinatarios),
-                                            copia: this.destinatarioService.nombres2DestinatariosDTO(copia),
-                                            copiaOculta: this.destinatarioService.nombres2DestinatariosDTO(copiaOculta),
-                                            remitente: this.destinatarioService.nombre2DestinatarioDTO(remitente),
+                                            destinatarios: await this.destinatarioService.nombres2DestinatariosDTO(destinatarios),
+                                            copia: await this.destinatarioService.nombres2DestinatariosDTO(copia),
+                                            copiaOculta: await this.destinatarioService.nombres2DestinatariosDTO(copiaOculta),
+                                            remitente: await this.destinatarioService.nombre2DestinatarioDTO(remitente),
                                             contenido: contenido};
             let mensajeDTO: MensajeDTO = await firstValueFrom(this.http.post<MensajeDTO>(this.baseURL, mensajePOST));
             return this.mensajeDTO2Mensaje(mensajeDTO);
@@ -95,17 +95,18 @@ export class MensajeService {
                 copiaOculta: this.destinatarios2DestinatariosDTO(mensaje.getCopiaOculta()),
                 contenido: mensaje.getContenido()}
     }
-    */
+    
 
-    public destinatarios2DestinatariosDTO(destinatarios: Destinatario[]): DestinatarioDTO[] {
+    private async destinatarios2DestinatariosDTO(destinatarios: Destinatario[]): Promise<DestinatarioDTO[]> {
         let destinatariosDTO: DestinatarioDTO[] = [];
         for (let destinatario of destinatarios) {
-            destinatariosDTO.push(this.destinatarioService.destinatario2DestinatarioDTO(destinatario));
+            destinatariosDTO.push(await this.destinatarioService.destinatario2DestinatarioDTO(destinatario));
         }
         return destinatariosDTO;
     }
+    */
 
-    public getNombresDestinatarios(): readonly string[] {
-        return this.destinatarioService.getNombresDestinatarios();
+    public async getNombresDestinatarios(): Promise<readonly string[]> {
+        return await this.destinatarioService.getNombresDestinatarios();
     }
 }

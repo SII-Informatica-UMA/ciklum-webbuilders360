@@ -22,25 +22,28 @@ export class EnviarMensaje {
     destinatarios: string[] = [""];
     copia: string[] = [""];
     copiaOculta: string[] = [""];
-    nombresDestinatarios: readonly string[];
+    nombresDestinatarios: readonly string[] = [];
 
     @ViewChild('inputDestinatario') inputDestinatario!: ElementRef<HTMLInputElement>;
     myControlDestinatario = new FormControl('');
-    filteredOptionsDestinatario: string[];
+    filteredOptionsDestinatario: string[] = [];
 
     @ViewChild('inputCopia') inputCopia!: ElementRef<HTMLInputElement>;
     myControlCopia = new FormControl('');
-    filteredOptionsCopia: string[];
+    filteredOptionsCopia: string[] = [];
 
     @ViewChild('inputCopiaOculta') inputCopiaOculta!: ElementRef<HTMLInputElement>;
     myControlCopiaOculta = new FormControl('');
-    filteredOptionsCopiaOculta: string[];
+    filteredOptionsCopiaOculta: string[] =  [];
 
     public constructor(public modal: NgbActiveModal,
                        private mensajeService: MensajeService,
                        private usuariosService: UsuariosService) {
+        this.cargarDestinatarios();
+    }
 
-        this.nombresDestinatarios = mensajeService.getNombresDestinatarios();
+    private async cargarDestinatarios() {
+        this.nombresDestinatarios = await this.mensajeService.getNombresDestinatarios();
         this.filteredOptionsDestinatario = this.nombresDestinatarios.slice();
         this.filteredOptionsCopia = this.nombresDestinatarios.slice();
         this.filteredOptionsCopiaOculta = this.nombresDestinatarios.slice();
@@ -49,7 +52,7 @@ export class EnviarMensaje {
     public async enviarMensaje() {
         let remitente: string | undefined = this.usuariosService._rolCentro?.nombreCentro;
         if (remitente !== undefined) {
-            this.mensajeService.enviarMensaje(this.asunto,
+            await this.mensajeService.enviarMensaje(this.asunto,
                                               this.destinatarios,
                                               this.copia,
                                               this.copiaOculta,
