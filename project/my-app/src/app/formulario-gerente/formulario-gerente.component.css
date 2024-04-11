@@ -1,3 +1,12 @@
 button.list-group-item.list-group-item-action.active{
     background-color: rgb(91, 134, 153);
 }
+.btn:hover{
+    background-color: rgb(91, 134, 153);
+    color:white;
+    border-color:white;
+}
+
+.btn{
+   color: black;
+}
