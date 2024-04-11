@@ -7,6 +7,8 @@ import { FormularioGerenteComponent } from '../formulario-gerente/formulario-ger
 import { GerentesService } from '../gerentes.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Usuario } from '../entities/usuario';
+import { UsuariosService } from '../services/usuarios.service';
 
 
 @Component({
@@ -18,12 +20,25 @@ import { CommonModule } from '@angular/common';
 })
 export class DetalleGerenteComponent {
   @Input() gerente?: Gerente;
+  @Input() usuario?: Usuario;
   @Input() centrosAsociados? : Centro[];
   @Output() gerenteEditado = new EventEmitter<Gerente>();
   @Output() gerenteEliminado = new EventEmitter<number>();
 
-  constructor(private gerentesService: GerentesService, private modalService: NgbModal, public modal: NgbActiveModal) { }
+  constructor(private gerentesService: GerentesService, private modalService: NgbModal, public modal: NgbActiveModal,
+    private usuariosService: UsuariosService
+  ) { }
 
+  async ngOnInit(): Promise<void> {
+    let usuarios: Usuario [] = [];
+    this.usuariosService.getUsuarios().subscribe(users => {
+      usuarios = users;
+    })
+    if (this.gerente){
+      this.buscarUsuario(this.gerente?.idUsuario, usuarios);
+    }
+    
+  }
   editarGerente(): void {
     let ref = this.modalService.open(FormularioGerenteComponent);
     ref.componentInstance.accion = "Editar";
@@ -38,5 +53,11 @@ export class DetalleGerenteComponent {
   eliminarGerente(): void {
     this.gerenteEliminado.emit(this.gerente?.idUsuario);
     this.modal.close();
+  }
+
+  buscarUsuario(idUsuario: number, users: Usuario[]): void {
+    for (let i=0; i<users.length;i++) {
+      if (idUsuario==users[i].id) this.usuario=users[i];
+    }
   }
 }

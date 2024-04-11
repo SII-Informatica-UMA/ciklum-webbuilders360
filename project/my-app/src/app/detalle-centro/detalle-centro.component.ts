@@ -5,6 +5,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormularioCentroComponent } from '../formulario-centro/formulario-centro.component';
 import { CentrosService } from '../centros.service';
+import { Usuario } from '../entities/usuario';
 
 @Component({
   selector: 'app-detalle-centro',
@@ -15,6 +16,7 @@ import { CentrosService } from '../centros.service';
 export class DetalleCentroComponent {
   @Input() centro?: Centro;
   @Input() gerente?: Gerente;
+  @Input() usuario?: Usuario;
   @Output() centroEditado = new EventEmitter<Centro>();
   @Output() centroEliminado = new EventEmitter<number>();
 

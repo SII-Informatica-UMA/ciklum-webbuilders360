@@ -95,7 +95,7 @@ body{
     box-shadow: 15px 15px 15px rgba(0,0,0,0.3); 
 }
 
-.list-group-item:focus, .list-group-item:active {
+.list-group-item:focus, .list-group-item-action.active{
     background: rgb(91, 134, 153);
     border-color: rgb(91, 134, 153) ;
     color:white;
@@ -154,6 +154,12 @@ body{
     backdrop-filter: blur(2px);
     
 } 
+
+.btn#desAsociarBtn{
+    width: 1020px;
+    background-color: transparent rgb(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+}
 
 .btn:hover{
     color: rgb(91, 134, 153);

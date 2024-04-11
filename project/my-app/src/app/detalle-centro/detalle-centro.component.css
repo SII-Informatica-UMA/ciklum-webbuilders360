@@ -2,3 +2,12 @@ button.col-auto.btn.btn-outline-primary {
     margin-top: 10px;
 }
 
+.btn:hover{
+    background-color: rgb(91, 134, 153);
+    color:white;
+    border-color:white;
+}
+
+.btn{
+   color: black;
+}

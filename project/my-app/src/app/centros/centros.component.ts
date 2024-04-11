@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
 import { AsociacionComponent } from '../asociacion/asociacion.component';
+import { Usuario } from '../entities/usuario';
 
 
 @Component({
@@ -40,11 +41,15 @@ export class CentrosComponent implements OnInit {
   asociacion: Map<Centro, Gerente> = new Map<Centro, Gerente>;
   asociacionRealizada: Boolean = false;
   isButtonDisabled: boolean = true;
+  isButtonDesDisabled: boolean = true;
 
   mensajes: Mensaje[] = [];
   mensajeElegido?: Mensaje;
   mensajeSelect: boolean = false;
   mensajeSeleccionado?: Mensaje;
+
+  usuarios: Usuario[] = [];
+  usuario?: Usuario;
 
   constructor(private centrosService: CentrosService,
               private gerentesService: GerentesService,
@@ -58,6 +63,7 @@ export class CentrosComponent implements OnInit {
     //this.gerentes = this.gerentesService.getGerentes();
     // Hecho con el backend
     this.actualizarCentros();
+    this.actualizarUsuarios();
     if (this.esAdmin()) {
       //this.gerentes = this.gerentesService.getGerentes();
       this.actualizarGerentes();
@@ -85,6 +91,7 @@ export class CentrosComponent implements OnInit {
     //this.centroElegido = centro;
     this.centroSeleccionado = centro;
     this.centroSelect = true;
+    this.isButtonDesDisabled = false;
     this.isButtonDisabled=!(this.centroSelect&&this.gerenteSelect);
   }
 
@@ -174,9 +181,11 @@ export class CentrosComponent implements OnInit {
 
   mostrarDetallesGerente(gerente: Gerente): void{
     const centrosAsociados = this.getCentrosAsociados();
+    const usuarioGerente = this.buscarUsuario();
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
     ref.componentInstance.centrosAsociados = centrosAsociados;
+    ref.componentInstance.usuario = usuarioGerente;
     /*AÑADIDO PARA EDITAR DETALLES*/
     ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
@@ -186,7 +195,7 @@ export class CentrosComponent implements OnInit {
     });
     /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA*/
     ref.componentInstance.gerenteEliminado.subscribe((idGerente: number) => {
-      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      this.gerentesService.eliminargGerente(gerente.id); // Eliminar el centro del servicio
       //this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
       this.actualizarGerentes(); // Actualizar con el backend
       this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
@@ -195,9 +204,11 @@ export class CentrosComponent implements OnInit {
 
   detallesGerente(): void{
     const centrosAsociados = this.getCentrosAsociados();
+    const usuarioGerente = this.buscarUsuario();
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = this.gerenteSeleccionado;
     ref.componentInstance.centrosAsociados = centrosAsociados;
+    ref.componentInstance.usuario = usuarioGerente;
     /*AÑADIDO PARA EDITAR DETALLES*/
     ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
@@ -207,8 +218,10 @@ export class CentrosComponent implements OnInit {
     });
     /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA*/
     ref.componentInstance.gerenteEliminado.subscribe((idGerente: number) => {
-      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      if(this.gerenteSeleccionado){
+        this.gerentesService.eliminargGerente(this.gerenteSeleccionado?.id); // Eliminar el centro del servicio
       //this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      }
       this.actualizarGerentes(); // Actualizar con el backend
       this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
     });
@@ -258,6 +271,16 @@ export class CentrosComponent implements OnInit {
     }
   }
 
+  desAsociar(): void{
+    if(!this.isButtonDesDisabled){
+      if(this.centroSeleccionado){
+        if(this.asociacion.has(this.centroSeleccionado)){
+          this.asociacion.delete(this.centroSeleccionado);
+        }
+      }
+    }
+  }
+
   mostrarModalAsociacion(mensaje: String): void{
     let ref = this.modalService.open(AsociacionComponent);
     ref.componentInstance.mensaje = mensaje;
@@ -281,9 +304,7 @@ export class CentrosComponent implements OnInit {
     return gerenteAsociado;
   }
 
-
 // MENSAJES
-
   elegirMensaje(mensaje: Mensaje): void {
     this.mensajeSeleccionado = mensaje;
     this.mensajeSelect = true;
@@ -305,5 +326,21 @@ export class CentrosComponent implements OnInit {
   mostrarDetallesMensaje(mensaje: Mensaje): void{
     let ref = this.modalService.open(LeerMensajeComponent);
     ref.componentInstance.mensaje = mensaje;
+  }
+
+  actualizarUsuarios() {
+    this.usuariosService.getUsuarios().subscribe(usuarios => {
+      this.usuarios = usuarios;
+    });
+  }
+
+  buscarUsuario(): Usuario | undefined {
+    let usuarioBuscado: Usuario | undefined;
+    for (let i=0;i<this.usuarios.length;i++) {
+      if (this.usuarios[i].id==this.gerenteSeleccionado?.idUsuario) {
+        usuarioBuscado = this.usuarios[i];
+      }
+    }
+    return usuarioBuscado;
   }
 }

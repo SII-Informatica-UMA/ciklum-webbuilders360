@@ -1,0 +1,51 @@
+.row{
+    padding:0px;
+    position:relative;
+    overflow: auto;
+    width: 100%;
+    display:flex;
+}
+
+.row label{
+    flex:left;
+    width: 25%;
+}
+
+.row form{
+    flex:right;
+    width: 75%;
+}
+
+
+
+
+mat-form-field, mat-form-field div{
+    height: 60px;
+    width: 100%;
+    
+}
+
+div.mat-mdc-form-field-flex{
+    height: 60px;
+    width: 100%;
+   
+}
+
+.btn:hover{
+    background-color: rgb(91, 134, 153);
+    color:white;
+    border-color:white;
+}
+
+.btn{
+    flex:right;
+   color: black;
+}
+
+.modal-body{
+    position:relative;
+    display:column;
+    align-items: center;
+    justify-items: center;
+}
+
