@@ -1,0 +1,18 @@
+.modal-body{
+    position:relative;
+    display:flex;
+    justify-content: center;
+    text-align: center;
+}
+
+div#mensajeAsociacion.row{
+   width:100%;
+}
+.modal-content{
+    position:relative;
+    display:flex;
+}
+
+.modal-header{
+    flex:right;
+}
