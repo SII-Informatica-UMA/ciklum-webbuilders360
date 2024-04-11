@@ -6,8 +6,15 @@
   <div class="form-group">
       <label for="empresa">Empresa:</label>
       <input class="form-control" id="empresa" [(ngModel)]="gerente.empresa" placeholder="empresa">
-
   </div>
+  <div class="list-group">
+    <label for="usuarios">Usuario:</label>
+    <button *ngFor="let usuario of usuarios"
+        class="list-group-item list-group-item-action"
+        (click)="elegirUsuario(usuario)"
+        [class.active]="usuario === usuarioSeleccionado">{{usuario.nombre}}
+    </button>
+</div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="guardarGerente()">Guardar  <i class="bi bi-save"></i></button>

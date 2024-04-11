@@ -186,7 +186,7 @@ export class CentrosComponent implements OnInit {
     });
     /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA*/
     ref.componentInstance.gerenteEliminado.subscribe((idGerente: number) => {
-      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      this.gerentesService.eliminargGerente(gerente.id); // Eliminar el centro del servicio
       //this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
       this.actualizarGerentes(); // Actualizar con el backend
       this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
@@ -207,8 +207,10 @@ export class CentrosComponent implements OnInit {
     });
     /*AÑADIDO PARA BORRAR EL ELEMENTO DE LA LISTA*/
     ref.componentInstance.gerenteEliminado.subscribe((idGerente: number) => {
-      this.gerentesService.eliminargGerente(idGerente); // Eliminar el centro del servicio
+      if(this.gerenteSeleccionado){
+        this.gerentesService.eliminargGerente(this.gerenteSeleccionado?.id); // Eliminar el centro del servicio
       //this.gerentes = this.gerentesService.getGerentes(); // Actualizar la lista de centros en el componente
+      }
       this.actualizarGerentes(); // Actualizar con el backend
       this.gerenteElegido = undefined; // Limpiar el centro elegido si fue eliminado
     });
