@@ -55,7 +55,8 @@
           <button *ngFor="let mensaje of mensajes"
             class="list-group-item list-group-item-action"
             (click)="elegirMensaje(mensaje)"
-            [class.active]="mensaje === mensajeElegido">{{mensaje.asunto}}</button>
+            [class.active]="mensaje === mensajeElegido"
+            (dblclick)="mostrarDetallesMensaje(mensaje)" >{{mensaje.asunto}}</button>
         </div>
         <br>
         <button type="button" class="btn" (click)="aniadirMensaje()">AÑADIR</button>
