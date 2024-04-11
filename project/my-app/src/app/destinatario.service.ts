@@ -20,7 +20,7 @@ export class DestinatarioService {
     private entrenadoresID2Nombre: Map<number, string> = new Map();
     private nombre2Info: Map<string, DestinatarioDTO> = new Map();
     private centros: Map<number, string> = new Map();
-    private nombres: string[] = [];
+    private nombres: Set<string> = new Set<string>();
 
     constructor(private http: HttpClient, private usuariosService: UsuariosService) {
         
@@ -69,7 +69,7 @@ export class DestinatarioService {
 
     private procesarNombreUsuario(usuarioDTO: UsuarioDTO): string {
         let nombre: string = (usuarioDTO.nombre + " " + usuarioDTO.apellido1 + " " + usuarioDTO.apellido2).trim();
-        this.nombres.push(nombre);
+        this.nombres.add(nombre);
         return nombre;
     }
 
@@ -120,7 +120,7 @@ export class DestinatarioService {
         return {id: destinatario.getID(), tipo: destinatario.getTipo()};
     }
 
-    public async getNombresDestinatarios(): Promise<readonly string[]> {
+    public async getNombresDestinatarios(): Promise<Set<string>> {
         await this.inicializarArrays();
         return this.nombres;
     }
