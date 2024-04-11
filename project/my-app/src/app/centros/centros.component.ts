@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
 import { AsociacionComponent } from '../asociacion/asociacion.component';
+import { Usuario } from '../entities/usuario';
 
 
 @Component({
@@ -46,6 +47,9 @@ export class CentrosComponent implements OnInit {
   mensajeSelect: boolean = false;
   mensajeSeleccionado?: Mensaje;
 
+  usuarios: Usuario[] = [];
+  usuario?: Usuario;
+
   constructor(private centrosService: CentrosService,
               private gerentesService: GerentesService,
               private modalService: NgbModal,
@@ -58,6 +62,7 @@ export class CentrosComponent implements OnInit {
     //this.gerentes = this.gerentesService.getGerentes();
     // Hecho con el backend
     this.actualizarCentros();
+    this.actualizarUsuarios();
     if (this.esAdmin()) {
       //this.gerentes = this.gerentesService.getGerentes();
       this.actualizarGerentes();
@@ -177,6 +182,7 @@ export class CentrosComponent implements OnInit {
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
     ref.componentInstance.centrosAsociados = centrosAsociados;
+    ref.componentInstance.usuario = this.usuario;
     /*AÑADIDO PARA EDITAR DETALLES*/
     ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
@@ -307,5 +313,19 @@ export class CentrosComponent implements OnInit {
   mostrarDetallesMensaje(mensaje: Mensaje): void{
     let ref = this.modalService.open(LeerMensajeComponent);
     ref.componentInstance.mensaje = mensaje;
+  }
+
+
+
+  actualizarUsuarios() {
+    this.usuariosService.getUsuarios().subscribe(usuarios => {
+      this.usuarios = usuarios;
+    });
+  }
+
+  buscarUsuario() {
+    for (let i=0;i<this.usuarios.length;i++) {
+      if (this.usuarios[i].id==this.gerenteSeleccionado?.idUsuario) this.usuario=this.usuarios[i];
+    }
   }
 }
