@@ -1,34 +1,46 @@
+
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Detalles de {{gerente?.idUsuario}}</h4>
+  <h4 class="modal-title" id="modal-basic-title">Detalles del gerente {{usuario?.nombre}} {{usuario?.apellido1}} {{usuario?.apellido2}}</h4>
   <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button>
 </div>
-<div class="modal-body">
-  <div class="form-group">
+<div class="modal-body ">
+  <div class="form-group" style="height: 30vh;">
     <div class="row" id="idUsuario">
       <label class="col-md-3" for="idUsuario">ID usuario:</label>
       <span class="col-md-9 offset-2 offset-md-0">{{gerente?.idUsuario}}</span>
     </div>
+    <div class="row" id="nombreUsuario">
+      <label class="col-md-3" for="nombreUsuario">Nombre:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{usuario?.nombre}} {{usuario?.apellido1}} {{usuario?.apellido2}}</span>
+    </div>
+
     <div class="row" id="empresa">
       <label class="col-md-3" for="empresa">Empresa:</label>
       <span class="col-md-9 offset-2 offset-md-0">{{gerente?.empresa}}</span>
     </div>
+    <div class="row" id="centrosAsociados" >
+      <label class="col-md-3" for="centrosAsociados">Centros Asociados:</label>
+      <div style="height: 120px; overflow-y: auto;" class="list-group" class="col-md-9 offset-2 offset-md-0">
+      <button  style="height:30px; width: 100%; background-color: white; border-width: 0px 0px 0.1px 0px ; border-color: rgb(244, 244, 244);"
+      *ngFor="let centro of centrosAsociados"
+      class="list-group-item list-group-item-action">{{centro.nombre}}
+      </button></div>
+
+      <div class="list-group">
+        <button style="color: black;" *ngFor="let centro of centrosAsociados"
+          class="list-group-item list-group-item-action">---{{centro.nombre}}---
+        </button>
+      </div>
+    </div>
     <br>
-    <!--
-  <div class="row" id="nombre">
-    <label class="col-md-3" for="nombre">Nombre:</label>
-    <span class="col-md-9 offset-2 offset-md-0">{{gerente?.nombre}} {{gerente?.apellido1}} {{gerente?.apellido2}}</span>
   </div>
-  <div class="row" id="email">
-    <label class="col-md-3" for="email">Email:</label>
-    <span class="col-md-9 offset-2 offset-md-0">{{gerente?.email}}</span>
-  </div>
-  -->
+
 <div class="modal-footer">
 
 
 
 <div class="row">
-  <button class="col-auto btn btn-outline-primary" (click)="eliminarGerente()">Eliminar <i class="bi bi-trash-fill"></i></button>
+  <button class="col-auto btn " (click)="eliminarGerente()">Eliminar <i class="bi bi-trash-fill"></i></button>
   <div class="col-1"></div>
-  <button class="col-auto btn btn-outline-primary" (click)="editarGerente()">Editar <i class="bi bi-pencil-fill"></i></button>
+  <button class="col-auto btn " (click)="editarGerente()">Editar <i class="bi bi-pencil-fill"></i></button>
 </div>

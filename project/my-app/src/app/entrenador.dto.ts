@@ -1,4 +1,4 @@
-interface EntrenadorDTO {
+export interface EntrenadorDTO {
     idUsuario: number,
     telefono: string,
     direccion: string,

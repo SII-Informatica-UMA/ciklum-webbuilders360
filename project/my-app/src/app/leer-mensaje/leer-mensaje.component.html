@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button> <!-- Botón de cierre -->
+            </div>
+            <div>
+                Remitente: {{mensaje?.getRemitente()?.getNombre()}}
+            </div>
+            <div>
+                Destinatario: <ul>
+                    <li *ngFor="let destinatario of mensaje?.getDestinatarios()">
+                        {{destinatario.getNombre()}}
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                Copia: <ul>
+                    <li *ngFor="let destinatario of mensaje?.getCopia()">
+                        {{destinatario.getNombre()}}
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                Asunto: {{mensaje?.getAsunto()}}
+            </div>
+            <hr>
+            <div>
+                Mensaje:
+            </div>
+            <div>
+                {{mensaje?.getContenido()}}
+            </div>
+        </div>
+    </div>
+</div>

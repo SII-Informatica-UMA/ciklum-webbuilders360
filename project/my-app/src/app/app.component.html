@@ -1,60 +1,27 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="app.component.css">
-  </head>
-  <body>
-  <div class="container">
-    <div class="centros-ctr">
-      <div class="contenido">
-        <h1>Lista de centros</h1>
-        <div class="list-group">
-          <button *ngFor="let centro of centros"
-            class="list-group-item list-group-item-action"
-            (click)="elegirCentro(centro)"
-            [class.active]="centro === centroElegido">{{centro.nombre}}</button>
-        </div>
-        <br>
-        <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirCentro()"></button>
-      </div>
-      <div class="contenido" *ngIf="centroElegido">
-        <app-detalle-centro [centro]="centroElegido"
-          (centroEditado)="centroEditado($event)"
-          (centroEliminado)="eliminarCentro($event)"
-          ></app-detalle-centro>
-      </div>
+<div class="container">
+  <div class="row">
+    <h3 class="col-6">Gestión de entrenamientos deportivos</h3>
+    <div class="col" *ngIf="usuarioSesion">
+      <p class="align-middle m-1">Bienvenido, {{usuarioSesion.nombre}}</p>
     </div>
-
-    <div *ngIf="esAdmin; else bloqueGerente">
-
-      <div class="gerentes-ctr">
-        <div class="contenido">
-          <h1>Lista de gerentes</h1>
-          <div class="list-group">
-            <button *ngFor="let gerente of gerentes"
-              class="list-group-item list-group-item-action"
-              (click)="elegirGerente(gerente)"
-              [class.active]="gerente === gerenteElegido">{{gerente.id}}</button>
-          </div>
-          <br>
-          <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirGerente()"></button>
-        </div>
-        <div class="contenido" *ngIf="gerenteElegido">
-          <app-detalle-gerente [gerente]="gerenteElegido"
-            (gerenteEditado)="gerenteEditado($event)"
-            (gerenteEliminado)="eliminarGerente($event)"
-            ></app-detalle-gerente>
-        </div>
-      </div>
-      <button type="button" class="btn" (click)="asociar()">ASOCIAR</button>
+    <div class="col-2" >
+      <select *ngIf="usuarioSesion" class="form-select" [(ngModel)]="rolIndex">
+        <option *ngFor="let rol of usuarioSesion.roles, let i = index" [value]="i" >{{rol.rol | titlecase}} {{rol.nombreCentro?'en '+rol.nombreCentro:''}}</option>
+      </select>
     </div>
-    <ng-template #bloqueGerente>
-      Mensajes aparecerían aquí
-    </ng-template>
-
-   
-
-   
+    <div class="col-2 m-1">
+      <a *ngIf="!usuarioSesion"  [routerLink]="'/login'"><button class="btn btn-primary">Iniciar sesión</button></a>
+      <button *ngIf="usuarioSesion"  class="btn btn-primary" (click)="logout()">Cerrar sesión</button>
+    </div>
   </div>
-  </body>
-</html>
+</div>
+
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <div class="collapse navbar-collapse">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" [routerLink]="'/'">Home</a>
+    </div>
+  </div>
+</nav>
+
+<router-outlet />

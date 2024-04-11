@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import  { Centro } from '../centro';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-formulario-centro',
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './formulario-centro.component.html',
   styleUrls: ['./formulario-centro.component.css']
 })

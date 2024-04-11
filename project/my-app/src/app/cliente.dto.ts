@@ -1,4 +1,4 @@
-interface ClienteDTO {
+export interface ClienteDTO {
     idUsuario: number,
     telefono: string,
     direccion: string,

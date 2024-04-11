@@ -2,10 +2,11 @@ import { Destinatario } from "./destinatario";
 
 export class Mensaje {
     
-    public constructor(private asunto: string,
+    public constructor(public asunto: string,
                        private destinatarios: Destinatario[],
                        private copia: Destinatario[],
                        private copiaOculta: Destinatario[],
+                       private remitente: Destinatario,
                        private contenido: string,
                        private idMensaje: number) {}
     
@@ -23,6 +24,10 @@ export class Mensaje {
 
     public getCopiaOculta(): Destinatario[] {
         return this.copiaOculta;
+    }
+
+    public getRemitente(): Destinatario {
+        return this.remitente;
     }
 
     public getContenido(): string {

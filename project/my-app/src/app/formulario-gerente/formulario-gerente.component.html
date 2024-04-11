@@ -6,11 +6,20 @@
   <div class="form-group">
       <label for="empresa">Empresa:</label>
       <input class="form-control" id="empresa" [(ngModel)]="gerente.empresa" placeholder="empresa">
-
   </div>
+  <div class="list-group">
+    <label for="usuarios">Usuario:</label>
+    <div style="height: 120px; overflow-y: auto;">
+    <button style="height:40px; width: 100%;  border-width: 0px 0px 0.1px 0px; border-color: rgb(244, 244, 244);" *ngFor="let usuario of usuarios"
+        class="list-group-item list-group-item-action"
+        (click)="elegirUsuario(usuario)"
+        [class.active]="usuario === usuarioSeleccionado">{{usuario.nombre}}
+    </button>
+    </div>
+</div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="guardarGerente()">Guardar</button>
+  <button type="button" class="btn " (click)="guardarGerente()">Guardar  <i class="bi bi-save"></i></button>
 </div>
 
 

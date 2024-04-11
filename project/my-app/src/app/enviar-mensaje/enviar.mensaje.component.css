@@ -1,0 +1,146 @@
+.row{
+    margin:3px;
+    display:flex;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.row .labelTexts{
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+
+.row label{
+    display: flex;
+    justify-content: left; 
+    align-items: left; 
+    width: 25%;
+}
+
+.row form{
+    flex:right;
+    width: 75%;
+}
+
+form div{
+    height: 40px;
+    position:relative;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.form-group{
+    position:relative;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.example-form{
+    padding:0px;
+    position:relative;
+    width: 100%;
+    display:flex;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.example-form div{
+    flex:top;
+    width: 80%;
+}
+
+.example-form button{
+    flex:bottom;
+    width: 20%;
+}
+
+.btn:hover{
+    background-color: rgb(91, 134, 153);
+    color:white;
+    border-color:white;
+}
+
+.btn{
+    height: 40px;
+    flex:right;
+   color: black;
+}
+
+.modal-body{
+    position:relative;
+    display:column center;
+    align-items: center;
+    justify-content: center;
+}
+
+.cnt{
+    height: 100px;
+    width: 100%;
+    
+}
+
+.asunto{
+    
+    width: 100%;
+}
+
+
+::ng-deep .mat-mdc-text-field-wrapper{
+    height:30px !important;
+    padding: 0px;
+    margin: 0px;
+}
+
+::ng-deep .mat-mdc-input-element{
+    top: -10px !important;
+    position:relative !important;
+}
+
+
+
+.example-listbox-container {
+    display: block;
+    width: 250px;
+    border: 1px solid black;
+  }
+  
+  .example-listbox-label {
+    display: block;
+    padding: 5px;
+  }
+  
+  .example-listbox {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .example-option {
+    position: relative;
+    padding: 5px 5px 5px 25px;
+  }
+  
+  .example-option[aria-selected='true']::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4Z"/></svg>'); /* stylelint-disable-line */
+    background-size: cover;
+    position: absolute;
+    left: 2px;
+  }
+  
+  .example-option:focus {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
