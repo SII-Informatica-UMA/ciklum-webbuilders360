@@ -32,7 +32,7 @@
             class="list-group-item list-group-item-action"
             (click)="elegirGerente(gerente)"
             [class.active]="gerente === gerenteSeleccionado"
-            (dblclick)="mostrarDetallesGerente(gerente)" >{{gerente.idUsuario}}
+            (dblclick)="mostrarDetallesGerente(gerente)" >{{getUsuarioGerente(gerente.idUsuario)?.apellido1}} {{getUsuarioGerente(gerente.idUsuario)?.apellido2}}, {{getUsuarioGerente(gerente.idUsuario)?.nombre}}
           </button>
         </div>
         <br>

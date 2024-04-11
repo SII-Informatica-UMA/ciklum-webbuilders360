@@ -256,12 +256,13 @@ export class CentrosComponent implements OnInit {
   asociar(): void {
     if(!this.isButtonDisabled){
       if(this.centroSeleccionado && this.gerenteSeleccionado){
-        if(!this.asociacion.has(this.centroSeleccionado)){
+        /*if(!this.asociacion.has(this.centroSeleccionado)){
           this.asociacion.set(this.centroSeleccionado, this.gerenteSeleccionado);
           this.asociacionRealizada = true;
         }else{
           this.asociacionRealizada = false;
-        }
+        }*/
+        this.asociacionRealizada = this.centrosService.asociarCentroGerente(this.centroSeleccionado.idCentro, this.gerenteSeleccionado.id).subscribe()!=undefined;
       }
     }
     if(this.asociacionRealizada){
@@ -274,9 +275,10 @@ export class CentrosComponent implements OnInit {
   desAsociar(): void{
     if(!this.isButtonDesDisabled){
       if(this.centroSeleccionado){
-        if(this.asociacion.has(this.centroSeleccionado)){
+        /*if(this.asociacion.has(this.centroSeleccionado)){
           this.asociacion.delete(this.centroSeleccionado);
-        }
+        }*/
+        this.centrosService.quitarAsociacionCentroGerente(this.centroSeleccionado.idCentro, this.getGerenteAsociado().id);
       }
     }
   }
@@ -287,21 +289,35 @@ export class CentrosComponent implements OnInit {
   }
 
   getCentrosAsociados(): Centro[]{
-    const centrosAsociados: Centro[] = [];
+/*    const centrosAsociados: Centro[] = [];
     this.asociacion.forEach((g, c) =>{
       if(g === this.gerenteSeleccionado){
         centrosAsociados.push(c);
       }
     });
     return centrosAsociados;
+*/
+    let centrosAsociados: Centro[] = [];
+    this.centrosService.getCentros(this.gerenteSeleccionado?.id).subscribe(centrosA => {
+      centrosAsociados = centrosA;
+    })
+    return centrosAsociados;
   }
 
-  getGerenteAsociado(): Gerente | undefined{
-    let gerenteAsociado: Gerente | undefined;
+  getGerenteAsociado(): Gerente {
+    /*let gerenteAsociado: Gerente | undefined;
     if(this.centroSeleccionado && this.asociacion.has(this.centroSeleccionado)){
       gerenteAsociado = this.asociacion.get(this.centroSeleccionado);
     }
     return gerenteAsociado;
+    */
+    let gerenteAsociado: Gerente = {idUsuario: 0, empresa: '', id: 0};
+    this.gerentesService.getGerente(this.centroSeleccionado?.idCentro).subscribe(gerente => {
+      gerenteAsociado = gerente;
+    });
+
+    return gerenteAsociado;
+
   }
 
 // MENSAJES
@@ -338,6 +354,16 @@ export class CentrosComponent implements OnInit {
     let usuarioBuscado: Usuario | undefined;
     for (let i=0;i<this.usuarios.length;i++) {
       if (this.usuarios[i].id==this.gerenteSeleccionado?.idUsuario) {
+        usuarioBuscado = this.usuarios[i];
+      }
+    }
+    return usuarioBuscado;
+  }
+
+  getUsuarioGerente(idUsuario: number): Usuario | undefined {
+    let usuarioBuscado: Usuario | undefined;
+    for (let i=0;i<this.usuarios.length;i++) {
+      if (this.usuarios[i].id==idUsuario) {
         usuarioBuscado = this.usuarios[i];
       }
     }

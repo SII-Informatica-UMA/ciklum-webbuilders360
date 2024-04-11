@@ -53,7 +53,7 @@ export class GerentesService {
     this.httpClient.delete<void>(BACKEND_URI + '/gerente/' + id).subscribe();
   }
 
-  getGerente(id: number): Observable<Gerente> {
+  getGerente(id?: number): Observable<Gerente> {
     return this.httpClient.get<Gerente>(BACKEND_URI + '/gerente/' + id);
   }
   
