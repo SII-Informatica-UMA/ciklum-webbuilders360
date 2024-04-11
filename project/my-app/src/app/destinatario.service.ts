@@ -108,7 +108,6 @@ export class DestinatarioService {
     private async getCentroDestinatario(id: number): Promise<Destinatario> {
         await this.inicializarArrays();
         let aux = this.centros.get(id);
-        console.log(this.centros.size);
         if (aux == undefined) {
             aux = "";
         }
