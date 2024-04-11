@@ -179,10 +179,11 @@ export class CentrosComponent implements OnInit {
 
   mostrarDetallesGerente(gerente: Gerente): void{
     const centrosAsociados = this.getCentrosAsociados();
+    const usuarioGerente = this.buscarUsuario();
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = gerente;
     ref.componentInstance.centrosAsociados = centrosAsociados;
-    ref.componentInstance.usuario = this.usuario;
+    ref.componentInstance.usuario = usuarioGerente;
     /*AÑADIDO PARA EDITAR DETALLES*/
     ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
@@ -201,9 +202,11 @@ export class CentrosComponent implements OnInit {
 
   detallesGerente(): void{
     const centrosAsociados = this.getCentrosAsociados();
+    const usuarioGerente = this.buscarUsuario();
     let ref = this.modalService.open(DetalleGerenteComponent);
     ref.componentInstance.gerente = this.gerenteSeleccionado;
     ref.componentInstance.centrosAsociados = centrosAsociados;
+    ref.componentInstance.usuario = usuarioGerente;
     /*AÑADIDO PARA EDITAR DETALLES*/
     ref.componentInstance.gerenteEditado.subscribe((gerenteEditado: Gerente) => {
       this.gerentesService.editarGerente(gerenteEditado); // Actualizar el centro editado en el servicio
@@ -289,9 +292,7 @@ export class CentrosComponent implements OnInit {
     return gerenteAsociado;
   }
 
-
 // MENSAJES
-
   elegirMensaje(mensaje: Mensaje): void {
     this.mensajeSeleccionado = mensaje;
     this.mensajeSelect = true;
@@ -315,17 +316,19 @@ export class CentrosComponent implements OnInit {
     ref.componentInstance.mensaje = mensaje;
   }
 
-
-
   actualizarUsuarios() {
     this.usuariosService.getUsuarios().subscribe(usuarios => {
       this.usuarios = usuarios;
     });
   }
 
-  buscarUsuario() {
+  buscarUsuario(): Usuario | undefined {
+    let usuarioBuscado: Usuario | undefined;
     for (let i=0;i<this.usuarios.length;i++) {
-      if (this.usuarios[i].id==this.gerenteSeleccionado?.idUsuario) this.usuario=this.usuarios[i];
+      if (this.usuarios[i].id==this.gerenteSeleccionado?.idUsuario) {
+        usuarioBuscado = this.usuarios[i];
+      }
     }
+    return usuarioBuscado;
   }
 }

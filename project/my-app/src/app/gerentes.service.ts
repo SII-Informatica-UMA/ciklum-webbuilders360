@@ -70,7 +70,7 @@ addGerente(gerente: Gerente) {
   this.gerentes.push(gerente);
 }
 
-editarGerente(gerente: Gerente) {
+ed itarGerente(gerente: Gerente) {
   let indice = this.gerentes.findIndex(c => c.idUsuario == gerente.idUsuario);
   this.gerentes[indice] = gerente;
 }
