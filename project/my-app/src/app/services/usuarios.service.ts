@@ -6,6 +6,10 @@ import * as jose from 'jose';
 
 import { Usuario } from "../entities/usuario";
 import { BackendService } from "./backend.service";
+import { Gerente } from "../gerente";
+import { Centro } from "../centro";
+import { CentrosService } from "../centros.service";
+import { GerentesService } from "../gerentes.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +17,9 @@ import { BackendService } from "./backend.service";
 export class UsuariosService {
   _rolCentro?: RolCentro;
 
-  constructor(private backend: BackendService) {}
+  constructor(private backend: BackendService,
+              private centroService: CentrosService,
+              private gerenteService: GerentesService) {}
 
   doLogin(login: Login): Observable<UsuarioSesion> {
     let jwtObs = this.backend.login(login.email, login.password);
@@ -32,7 +38,7 @@ export class UsuariosService {
     }));
     return usuarioSesion
     .pipe(concatMap(usuarioSesion=>this.completarConRoles(usuarioSesion)))
-    .pipe(map(usuarioSesion=>{
+    .pipe(map(usuarioSesion => {
       localStorage.setItem('usuario', JSON.stringify(usuarioSesion));
       if (usuarioSesion.roles.length > 0) {
         this.rolCentro = usuarioSesion.roles[0];
@@ -45,8 +51,49 @@ export class UsuariosService {
   }
 
   private completarConRoles(usuarioSesion: UsuarioSesion): Observable<UsuarioSesion> {
-    // TODO: acceder a los otros servicios (o simular) para completar con los roles necesarios
-    return of(usuarioSesion);
+    return this.getGerente(usuarioSesion)
+      .pipe(concatMap((gerente?: Gerente) => this.getCentros(gerente)))
+      .pipe(map((centros: Centro[]) => this.aniadirRolesGerente(usuarioSesion, centros)));
+  }
+
+  private getGerente(usuarioSesion: UsuarioSesion): Observable<Gerente | undefined> {
+    return this.gerenteService.getGerentes().pipe(map((gerentes: Gerente[]) => {
+      for (let gerente of gerentes) {
+        if (gerente.idUsuario == usuarioSesion.id) {
+          return gerente;
+        }
+      }
+      return undefined;
+    }));
+  }
+
+  private getCentros(gerente?: Gerente): Observable<Centro[]> {
+    if (gerente !== undefined) {
+      return this.centroService.getCentros(gerente.id);
+    } else {
+      return of([]);
+    }
+  }
+
+  private aniadirRolesGerente(usuarioSesion: UsuarioSesion, centros: Centro[]): UsuarioSesion {
+    centros.forEach(centro => {
+      usuarioSesion.roles.push({
+        rol: Rol.GERENTE,
+        centro: centro.idCentro,
+        nombreCentro: centro.nombre
+      })
+    })
+    return usuarioSesion;
+  }
+
+  private mapRoles(centros: Centro[]): RolCentro[] {
+    return centros.map((centro: Centro) => {
+        return {
+        rol: Rol.GERENTE,
+        centro: centro.idCentro,
+        nombreCentro: centro.nombre
+      }
+    });
   }
 
   private getUsuarioIdFromJwt(jwt: string): number {
@@ -100,7 +147,4 @@ export class UsuariosService {
   aniadirUsuario(usuario: Usuario): Observable<Usuario> {
     return this.backend.postUsuario(usuario);
   }
-
-
-
 }
