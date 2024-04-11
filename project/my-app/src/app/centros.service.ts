@@ -3,6 +3,7 @@ import { Centro } from './centro';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BACKEND_URI } from './config/config';
+import { Gerente } from './gerente';
 
 
 @Injectable({
@@ -52,7 +53,7 @@ export class CentrosService {
     return this.httpClient.get<Centro>(BACKEND_URI + '/centro/' + idCentro);
   }
 
-  asociarCentroGerente(idCentro: number, idGerente: number): Observable<Centro> {
+  /*asociarCentroGerente(idCentro: number, idGerente: number): Observable<Centro> {
     return this.httpClient.put<Centro>(BACKEND_URI + '/centro/' + idCentro + '/gerente',
       {
         "idGerente": idGerente
@@ -60,9 +61,13 @@ export class CentrosService {
     )
   }
 
+  getGerenteAsociado(idCentro: number): Observable<Gerente | undefined> {
+    return this.httpClient.get<Gerente>(BACKEND_URI + '/centros/' + idCentro + '/gerente')
+  }
+
   quitarAsociacionCentroGerente(idCentro: number, idGerente: number): void {
     this.httpClient.delete<void>(BACKEND_URI + '/centro/' + idCentro + '/gerente?gerente=' + idGerente).subscribe()
-  }
+  }*/
 
   /*
   constructor() { }
