@@ -19,6 +19,7 @@ import { AsociacionComponent } from '../asociacion/asociacion.component';
 import { Usuario } from '../entities/usuario';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs';
+import { map } from 'rxjs';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class CentrosComponent implements OnInit {
 
   gerentes: Gerente [] = [];
   gerenteElegido?: Gerente;
+  gerenteUsuario?: Gerente;
   gerenteSelect: boolean = false;
   gerenteSeleccionado?: Gerente;
 
@@ -71,8 +73,16 @@ export class CentrosComponent implements OnInit {
       //this.gerentes = this.gerentesService.getGerentes();
       this.actualizarGerentes();
       this.asociacion;
+      this.gerenteUsuario = undefined;
     } else {
       this.mensajes = await this.mensajesService.getMensajes();
+      this.gerentesService.getGerentes().pipe(map((gerentes: Gerente[]) => {
+        for (let gerente of gerentes) {
+          if (gerente.idUsuario == this.usuariosService.getUsuarioSesion()?.id) {
+            this.gerenteUsuario = gerente;
+          }
+        }
+      }))
     }
   }
 
@@ -83,9 +93,15 @@ export class CentrosComponent implements OnInit {
 // CENTROS
   // CON EL BACKEND
   actualizarCentros() {
-    this.centrosService.getCentros().subscribe(centros => {
-      this.centros = centros;
-    });
+    if(this.esAdmin()) {
+      this.centrosService.getCentros().subscribe(centros => {
+        this.centros = centros;
+      });
+    } else {
+      this.centrosService.getCentros(this.gerenteUsuario?.id).subscribe(centros => {
+        this.centros = centros;
+      });
+    }
   }
   
   elegirCentro(centro: Centro): void {
@@ -252,7 +268,7 @@ export class CentrosComponent implements OnInit {
     this.gerenteElegido = undefined;
     this.modalService.dismissAll();
   }
-  
+/*
   asociar(): void {
     if(!this.isButtonDisabled){
       if(this.centroSeleccionado && this.gerenteSeleccionado){
@@ -270,12 +286,12 @@ export class CentrosComponent implements OnInit {
       this.mostrarModalAsociacion('Error en la asociacion');
     }
   }
-
+*/
   mostrarModalAsociacion(mensaje: String): void{
     let ref = this.modalService.open(AsociacionComponent);
     ref.componentInstance.mensaje = mensaje;
   }
-
+/*
   desAsociar(): void{
     if(!this.isButtonDesDisabled){
       if(this.centroSeleccionado){
@@ -306,18 +322,19 @@ export class CentrosComponent implements OnInit {
     });
     return centrosAsociados;
   }
-
+*/
   //BACKEND
-  /* 
+   
   asociar(): void{
     if(!this.isButtonDisabled){
       if(this.centroSeleccionado && this.gerenteSeleccionado){
-        if(!this.asociacion.has(this.centroSeleccionado)){
-          this.asociarService.asociarCentroGerente(this.centroSeleccionado.idCentro, this.gerenteSeleccionado.id).subscribe();
+        /*if(!this.asociacion.has(this.centroSeleccionado)){
           this.asociacionRealizada = true;
         }else{
           this.asociacionRealizada = false;
-        }
+        }*/
+        this.asociacionRealizada=this.centrosService.asociarCentroGerente(this.centroSeleccionado.idCentro, this.gerenteSeleccionado.id).subscribe()!=undefined;
+        
       }
     }
     if(this.asociacionRealizada){
@@ -325,32 +342,39 @@ export class CentrosComponent implements OnInit {
     }else{
       this.mostrarModalAsociacion('Error en la asociacion');
     }
-  }*/
+    this.asociacionRealizada=false;
+  }
 
-  /*
+  
   desAsociar(): void{
     if(!this.isButtonDesDisabled){
       if(this.centroSeleccionado){
-        if(this.asociacion.has(this.centroSeleccionado)){
-          this.centrosService.quitarAsociacionCentroGerente(this.centroSeleccionado.idCentro, this.getGerenteAsociado());
+        /*if(this.asociacion.has(this.centroSeleccionado)){
+          this.centrosService.quitarAsociacionCentroGerente(this.centroSeleccionado.idCentro, this.getGerenteAsociado().id);
         }
-        
+        */
+        try{
+          this.centrosService.quitarAsociacionCentroGerente(this.centroSeleccionado.idCentro, this.getGerenteAsociado().id)!=undefined;
+          this.mostrarModalAsociacion('Desasociacion producida con éxito');
+          } catch(error) {
+          this.mostrarModalAsociacion('Error en la desasociacion: el centro no tiene ningún gerente asignado');
+        }
       }
     }
-  }*/
+  }
 
-  /*
-  getCentrosAsociados(): Observable<Centro[]>{
+  
+  getCentrosAsociados(): Centro[]{
     let centrosAsociados: Centro[] = [];
     this.centrosService.getCentros(this.gerenteSeleccionado?.id).subscribe(centrosA => {
       centrosAsociados = centrosA;
     })
     return centrosAsociados;
-  }*/
+  }
 
-  /*
-  getGerenteAsociado(): Observable<Gerente | undefined> {
-    let gerenteAsociado: Gerente | undefined;
+  
+  getGerenteAsociado(): Gerente {
+    /*let gerenteAsociado: Gerente | undefined;
     if(this.centroSeleccionado && this.asociacion.has(this.centroSeleccionado)){
       this.gerentesService.getGerente(this.centroSeleccionado?.idCentro).subscribe(gerente => {
         gerenteAsociado = gerente;
@@ -359,7 +383,14 @@ export class CentrosComponent implements OnInit {
       return of(undefined);
     }
     return of(gerenteAsociado);
-  }*/
+    */
+    let gerenteAsociado: Gerente = {idUsuario: 0, empresa: '', id: 0};
+    this.gerentesService.getGerente(this.centroSeleccionado?.idCentro).subscribe(gerente => {
+      gerenteAsociado = gerente;
+    });
+
+    return gerenteAsociado;
+  }
  
 
 // MENSAJES
@@ -410,5 +441,10 @@ export class CentrosComponent implements OnInit {
       }
     }
     return usuarioBuscado;
+  }
+
+  getIdUsuarioSesion(): number | undefined {
+    if(this.usuariosService.getUsuarioSesion()) return this.usuariosService.getUsuarioSesion()?.id;
+    else return undefined
   }
 }

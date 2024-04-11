@@ -53,7 +53,7 @@ export class CentrosService {
     return this.httpClient.get<Centro>(BACKEND_URI + '/centro/' + idCentro);
   }
 
-  /*asociarCentroGerente(idCentro: number, idGerente: number): Observable<Centro> {
+  asociarCentroGerente(idCentro: number, idGerente: number): Observable<Centro> {
     return this.httpClient.put<Centro>(BACKEND_URI + '/centro/' + idCentro + '/gerente',
       {
         "idGerente": idGerente
@@ -67,7 +67,7 @@ export class CentrosService {
 
   quitarAsociacionCentroGerente(idCentro: number, idGerente: number): void {
     this.httpClient.delete<void>(BACKEND_URI + '/centro/' + idCentro + '/gerente?gerente=' + idGerente).subscribe()
-  }*/
+  }
 
   /*
   constructor() { }

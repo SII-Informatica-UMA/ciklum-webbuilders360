@@ -13,7 +13,7 @@
         </div>
       <br>
       <button *ngIf="esAdmin()" type="button" class="btn" (click)="aniadirCentro()">AÑADIR</button>
-      <button type="button" class="btn" (click)="detallesCentro()">DETALLES DEL CENTRO</button>
+      <button [disabled]="!centroSeleccionado" type="button" class="btn" (click)="detallesCentro()">DETALLES DEL CENTRO</button>
     </div>
     <div class="content" *ngIf="centroElegido">
       <app-detalle-centro [centro]="centroElegido"
@@ -36,7 +36,8 @@
           </button>
         </div>
         <br>
-      <button type="button" class="btn" (click)="detallesGerente()">DETALLES DEL GERENTE</button>
+        <button type="button" class="btn" (click)="aniadirGerente()" *ngIf="esAdmin(); else null">AÑADIR</button>
+        <button [disabled]="!gerenteSeleccionado" type="button" class="btn" (click)="detallesGerente()">DETALLES DEL GERENTE</button>
       </div>
       <div class="content" *ngIf="gerenteElegido">
         <app-detalle-gerente [gerente]="gerenteElegido"
