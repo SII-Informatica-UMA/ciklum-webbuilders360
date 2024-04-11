@@ -17,18 +17,24 @@
 }
 
 
-
-
-mat-form-field, mat-form-field div{
-    height: 60px;
+.example-form{
+    padding:0px;
+    position:relative;
+    overflow: auto;
     width: 100%;
+    display:flex;
+    vertical-align: center;
     
 }
 
-div.mat-mdc-form-field-flex{
-    height: 60px;
-    width: 100%;
-   
+.example-form div{
+    flex:top;
+    width: 80%;
+}
+
+.example-form button{
+    flex:bottom;
+    width: 20%;
 }
 
 .btn:hover{
@@ -38,6 +44,7 @@ div.mat-mdc-form-field-flex{
 }
 
 .btn{
+    height: 40px;
     flex:right;
    color: black;
 }
@@ -49,3 +56,13 @@ div.mat-mdc-form-field-flex{
     justify-items: center;
 }
 
+.cnt{
+    height: 100px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.asunto{
+    
+    width: 100%;
+}
