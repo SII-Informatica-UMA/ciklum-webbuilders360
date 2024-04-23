@@ -3,33 +3,49 @@ package com.jpa.backend.entities;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.*;
+
+
+@Entity
 public class Mensaje {
     String asunto;
+    @OneToMany
     List<Destinatario> destinatarios;
+    @OneToMany
     List<Destinatario> copia;
+    @OneToMany
     List<Destinatario> copiaOculta;
+    @OneToOne
     Destinatario remitente;
     String contenido;
+    @Id
     Integer idMensaje;
 
+    @Column
     public String getAsunto() {
         return asunto;
     }
+    @Column
     public List<Destinatario> getCopia() {
         return copia;
     }
+    @Column
     public List<Destinatario> getCopiaOculta() {
         return copiaOculta;
     }
+    @Column
     public Destinatario getRemitente() {
         return remitente;
     }
+    @Column
     public String getContenido() {
         return contenido;
     }
+    @Column
     public Integer getIdMensaje() {
         return idMensaje;
     }
+    
     public void setAsunto(String asunto) {
         this.asunto = asunto;
     }
