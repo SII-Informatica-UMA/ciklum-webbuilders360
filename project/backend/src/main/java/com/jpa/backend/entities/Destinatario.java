@@ -1,8 +1,6 @@
 package com.jpa.backend.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -11,6 +9,7 @@ public class Destinatario {
     @Id
     @GeneratedValue
     private Integer id;
+    @Enumerated(EnumType.STRING)
     private Tipo tipo;
 
     public Integer getId() {
