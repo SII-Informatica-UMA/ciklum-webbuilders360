@@ -2,27 +2,19 @@ package com.jpa.backend.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
-@Entity
+@Embeddable
 public class Destinatario {
-    @Id
-    @GeneratedValue
-    private Integer id;
+    @Column(name = "id_destinatario")
+    private Long id;
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Tipo getTipo() {
-        return tipo;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public Tipo getTipo() { return tipo; }
+    public void setId(Long id) { this.id = id; }
 
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;

@@ -7,24 +7,24 @@ import java.util.Objects;
 
 @Entity
 public class Gerente {
-    private Integer idUsuario;
+    @Column(nullable = false)
+    private Long idUsuario;
     private String empresa;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue
+    private Long id;
     @OneToMany (mappedBy = "gerenteAsociado")
     private List<Centro> centrosAsociados;
 
-    @Column(nullable = false)
-    public Integer getIdUsuario() {return idUsuario;}
+    public Long getIdUsuario() {return idUsuario;}
     public String getEmpresa() {return empresa;}
 
-    public Integer getId() {return id;}
+    public Long getId() {return id;}
     public List<Centro> getCentrosAsociados() {return centrosAsociados;}
 
-    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario;}
+    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario;}
     public void setEmpresa(String empresa) {this.empresa = empresa;}
-    public void setId(Integer id) {this.id = id;}
+    public void setId(Long id) {this.id = id;}
     public void setCentrosAsociados(List<Centro> centrosAsociados) {
         this.centrosAsociados = centrosAsociados;
     }

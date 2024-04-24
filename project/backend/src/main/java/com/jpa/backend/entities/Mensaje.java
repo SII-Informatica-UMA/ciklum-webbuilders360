@@ -6,8 +6,11 @@ import java.util.Objects;
 import jakarta.persistence.*;
 
 
-@Entity
+
 public class Mensaje {
+    /*@Id
+    @GeneratedValue
+    private Long idMensaje;
     String asunto;
     @OneToMany
     @JoinColumn(name = "destinatarios_fk")
@@ -22,31 +25,23 @@ public class Mensaje {
     @JoinColumn(name = "remitente_fk")
     private Destinatario remitente;
     private String contenido;
-    @Id
-    private Integer idMensaje;
 
-    @Column
     public String getAsunto() {
         return asunto;
     }
-    @Column
     public List<Destinatario> getCopia() {
         return copia;
     }
-    @Column
     public List<Destinatario> getCopiaOculta() {
         return copiaOculta;
     }
-    @Column
     public Destinatario getRemitente() {
         return remitente;
     }
-    @Column
     public String getContenido() {
         return contenido;
     }
-    @Column
-    public Integer getIdMensaje() {
+    public Long getIdMensaje() {
         return idMensaje;
     }
     
@@ -68,9 +63,8 @@ public class Mensaje {
     public void setContenido(String contenido) {
         this.contenido = contenido;
     }
-    public void setIdMensaje(Integer idMensaje) {
-        this.idMensaje = idMensaje;
-    }
+    public void setIdMensaje(Long idMensaje) { this.idMensaje = idMensaje; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,4 +89,5 @@ public class Mensaje {
                 ", idMensaje=" + idMensaje +
                 '}';
     }
+     */
 }
