@@ -1,8 +1,6 @@
 package com.jpa.backend.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -11,31 +9,34 @@ public class Centro {
     private String nombre;
     private String direccion;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idCentro;
+    @ManyToOne
+    @JoinColumn(name = "gerente_id")
+    private Gerente gerenteAsociado;
 
     public String getNombre() {
         return nombre;
     }
-
     public String getDireccion() {
         return direccion;
     }
-
     public Integer getIdCentro() {
         return idCentro;
     }
+    public Gerente getGerenteAsociado(){return gerenteAsociado;}
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-
     public void setIdCentro(Integer idCentro) {
         this.idCentro = idCentro;
+    }
+    public void setGerenteAsociado(Gerente gerenteAsociado) {
+        this.gerenteAsociado = gerenteAsociado;
     }
 
     @Override

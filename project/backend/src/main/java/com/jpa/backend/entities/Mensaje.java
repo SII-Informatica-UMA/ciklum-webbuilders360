@@ -11,19 +11,19 @@ public class Mensaje {
     String asunto;
     @OneToMany
     @JoinColumn(name = "destinatarios_fk")
-    List<Destinatario> destinatarios;
+    private List<Destinatario> destinatarios;
     @OneToMany
     @JoinColumn(name = "copia_fk")
-    List<Destinatario> copia;
+    private List<Destinatario> copia;
     @OneToMany
     @JoinColumn(name = "copiaOculta_fk")
-    List<Destinatario> copiaOculta;
+    private List<Destinatario> copiaOculta;
     @OneToOne
     @JoinColumn(name = "remitente_fk")
-    Destinatario remitente;
-    String contenido;
+    private Destinatario remitente;
+    private String contenido;
     @Id
-    Integer idMensaje;
+    private Integer idMensaje;
 
     @Column
     public String getAsunto() {

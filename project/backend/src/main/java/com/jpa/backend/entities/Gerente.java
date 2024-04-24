@@ -1,41 +1,32 @@
 package com.jpa.backend.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Gerente {
     private Integer idUsuario;
     private String empresa;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @OneToMany (mappedBy = "gerenteAsociado")
+    private List<Centro> centrosAsociados;
 
     @Column(nullable = false)
-    public Integer getIdUsuario() {
-        return idUsuario;
-    }
+    public Integer getIdUsuario() {return idUsuario;}
+    public String getEmpresa() {return empresa;}
 
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
-    }
+    public Integer getId() {return id;}
+    public List<Centro> getCentrosAsociados() {return centrosAsociados;}
 
-    public String getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(String empresa) {
-        this.empresa = empresa;
-    }
-
-    @Id
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario;}
+    public void setEmpresa(String empresa) {this.empresa = empresa;}
+    public void setId(Integer id) {this.id = id;}
+    public void setCentrosAsociados(List<Centro> centrosAsociados) {
+        this.centrosAsociados = centrosAsociados;
     }
 
     @Override
