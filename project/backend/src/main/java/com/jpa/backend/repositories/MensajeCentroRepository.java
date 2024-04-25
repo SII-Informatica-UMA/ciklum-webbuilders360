@@ -11,20 +11,11 @@ import org.springframework.data.jpa.repository.*;
 
 public interface MensajeCentroRepository extends JpaRepository<MensajeCentro, Long> {
    
+    //Obtiene un mensaje de centro concreto
     MensajeCentro findById(long idMensaje);
 
-
-    @Query("SELECT m FROM MensajeCentro m WHERE m.centro.id = :centroId")
+    //Permite consultar todos los mensajes de un centro.
+    @Query("SELECT m FROM MensajeCentro m WHERE m.centro_id = :centroId")
     List<MensajeCentro> findAllByCentroId(long centroId);
-
-    @Transactional
-    @Modifying
-    @Query("INSERT INTO MensajeCentro (texto, destinatario) VALUES (:texto, :gerenteId)")
-    void createNewMessage(String texto, long gerenteId);
-
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM MensajeCentro m WHERE m.id = :idMensaje")
-    void deleteById(long idMnesaje);
-
+    
 }
