@@ -15,7 +15,7 @@ public interface MensajeCentroRepository extends JpaRepository<MensajeCentro, Lo
     MensajeCentro findById(long idMensaje);
 
     //Permite consultar todos los mensajes de un centro.
-    @Query("SELECT m FROM MensajeCentro m WHERE m.centro_id = :centroId")
+    @Query("SELECT m FROM MensajeCentro m WHERE m.centro = :centroId")
     List<MensajeCentro> findAllByCentroId(long centroId);
     
 }

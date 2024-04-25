@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface GerenteRepository extends JpaRepository<Gerente, Long> {
     Gerente findById(long id);
-    @Query("select c from Centro where c.id_gerente = :id")
+    @Query("select c from Centro c where c.gerenteAsociado = :id")
     List<Centro> centrosAsociados(@Param("id") Long id);
 
     void deleteById(long id);
