@@ -4,4 +4,5 @@ import com.jpa.backend.entities.MensajeCentro;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MensajeCentroRepository extends JpaRepository<MensajeCentro, Long> {
+    MensajeCentro findById(long id);
 }
