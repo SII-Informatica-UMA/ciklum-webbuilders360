@@ -10,6 +10,8 @@ import com.jpa.backend.repositories.MensajeCentroRepository;
 import com.jpa.backend.dtos.CentroDTO;
 import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.MensajeDTO;
+
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,11 +24,13 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -116,43 +120,47 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve un error al acceder a un gerente concreto")
 		public void errorConGerenteConcreto(){
-			var peticion = get("http", "localhost", port, "/gerente/1");
+			var peticion = get("http", "localhost", port, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		@Test
 		@DisplayName("devuelve un error al acceder a un mensaje concreto")
 		public void errorConMensajeConcreto(){
-			var peticion = get("http", "localhost", port, "/mensaje/1");
+			var peticion = get("http", "localhost", port, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		@Test
 		@DisplayName("devuelve un error al acceder a un centro concreto")
 		public void errorConCentroConcreto(){
-			var peticion = get("http", "localhost", port, "/centro/1");
+			var peticion = get("http", "localhost", port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 
 		@Test
-		@Disabled
 		@DisplayName("inserta correctamente un gerente")
+		@Transactional
 		public void insertaGerente(){
-			var gerente = GerenteDTO.builder()
+			var gerenteDTO = GerenteDTO.builder()
 					.empresa("GerentesS.L")
+					.idUsuario(1001L)
+					.centrosAsociados(new ArrayList<Centro>())
 					.build();
-			var peticion = post("http", "localhost", port, "/gerentes", gerente);
+			
+			var peticion = post("http", "localhost", port, "/gerentes", gerenteDTO);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			assertThat(respuesta.getHeaders().get("Location").get(0))
-					.startsWith("http://localhost"+port+"/gerentes");
+					.startsWith("http://localhost:"+port+"/gerentes");
 			List<Gerente> gerentesBD = gerenteRepo.findAll();
+			gerentesBD.size();
 			assertThat(gerentesBD).hasSize(1);
 			assertThat(respuesta.getHeaders().get("Location").get(0))
 					.endsWith("/"+gerentesBD.get(0).getId());
-			compruebaCampos(gerente.gerente(), gerentesBD.get(0));
+			compruebaCampos(gerenteDTO.gerente(), gerentesBD.get(0));
 		}
 
 		@Test
@@ -168,7 +176,7 @@ class BackendApplicationTests {
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			assertThat(respuesta.getHeaders().get("Location").get(0))
-					.startsWith("http://localhost"+port+"/centros");
+					.startsWith("http://localhost:"+port+"/centros");
 			List<Centro> centrosBD = centroRepo.findAll();
 			assertThat(centrosBD).hasSize(1);
 			assertThat(respuesta.getHeaders().get("Location").get(0))

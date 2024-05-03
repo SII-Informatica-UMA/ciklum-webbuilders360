@@ -7,9 +7,15 @@ import com.jpa.backend.repositories.MensajeCentroRepository;
 import com.jpa.backend.servicios.excepciones.EntidadExistenteException;
 import com.jpa.backend.servicios.excepciones.EntidadNoEncontradaException;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.stereotype.Service;
+
+@Service
+@Transactional
 public class DBService {
     private GerenteRepository gerenteRepo;
     private CentroRepository centroRepo;
@@ -30,7 +36,7 @@ public class DBService {
         if(gerente.isPresent()){
             return gerente.get();
         }else{
-            throw new NoSuchElementException();
+            throw new EntidadNoEncontradaException();
         }
     }
 
@@ -52,9 +58,9 @@ public class DBService {
         }
     }
 
-    public void actualizarGerente(Gerente ger){
-        if(gerenteRepo.existsById(ger.getId())){
-            gerenteRepo.save(ger);
+    public void actualizarGerente(Gerente gerente){
+        if(gerenteRepo.existsById(gerente.getId())){
+            gerenteRepo.save(gerente);
         }else{
             throw new EntidadNoEncontradaException();
         }

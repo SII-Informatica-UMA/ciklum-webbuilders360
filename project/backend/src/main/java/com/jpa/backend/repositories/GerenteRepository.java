@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GerenteRepository extends JpaRepository<Gerente, Long> {
-    Gerente findById(long id);
+    Optional<Gerente> findById(long id);
     @Query("select c from Centro c where c.gerenteAsociado = :id")
     List<Centro> centrosAsociados(@Param("id") Long id);
 

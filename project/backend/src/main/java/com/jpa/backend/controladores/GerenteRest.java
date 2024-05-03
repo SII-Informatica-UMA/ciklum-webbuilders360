@@ -25,6 +25,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.function.Function;
 
+@RestController
+@RequestMapping("/gerentes")
 public class GerenteRest {
 
     private DBService servicio;
