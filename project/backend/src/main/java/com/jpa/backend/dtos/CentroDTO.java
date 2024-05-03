@@ -1,10 +1,9 @@
-package dtos;
+package com.jpa.backend.dtos;
 
 import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Gerente;
 
 import java.net.URI;
-import java.util.List;
 import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package dtos;
+package com.jpa.backend.dtos;
 
 import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Gerente;

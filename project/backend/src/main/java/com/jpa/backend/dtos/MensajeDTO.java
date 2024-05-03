@@ -1,10 +1,9 @@
-package dtos;
+package com.jpa.backend.dtos;
 
 import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Destinatario;
 import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.entities.Tipo;
-import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GerenteRepository extends JpaRepository<Gerente, Long> {
     Gerente findById(long id);
@@ -14,4 +15,7 @@ public interface GerenteRepository extends JpaRepository<Gerente, Long> {
     List<Centro> centrosAsociados(@Param("id") Long id);
 
     void deleteById(long id);
+    //añadido para la T3
+    Optional<Gerente> findByIdUsuario(Long idUsuario);
+    boolean existsByIdUsuario(Long idUsuario);
 }

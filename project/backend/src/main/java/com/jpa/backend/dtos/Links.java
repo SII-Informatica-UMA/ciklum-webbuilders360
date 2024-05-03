@@ -1,4 +1,4 @@
-package dtos;
+package com.jpa.backend.dtos;
 
 import java.net.URI;
 
