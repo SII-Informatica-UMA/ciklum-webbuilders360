@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name= "mensaje_centro")
+@Table(name= "mensaje")
 public class MensajeCentro {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mensaje_centro_seq")
