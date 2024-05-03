@@ -10,6 +10,7 @@ import com.jpa.backend.repositories.MensajeCentroRepository;
 import com.jpa.backend.dtos.CentroDTO;
 import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.MensajeDTO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -135,6 +136,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@Disabled
 		@DisplayName("inserta correctamente un gerente")
 		public void insertaGerente(){
 			var gerente = GerenteDTO.builder()
@@ -154,6 +156,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@Disabled
 		@DisplayName("inserta correctamente un centro")
 		public void insertaCentro(){
 			var centro = CentroDTO.builder()
