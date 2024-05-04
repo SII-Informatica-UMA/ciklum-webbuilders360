@@ -145,8 +145,7 @@ class BackendApplicationTests {
 		public void insertaGerente(){
 			var gerenteDTO = GerenteDTO.builder()
 					.empresa("GerentesS.L")
-					.idUsuario(1001L)
-					.centrosAsociados(new ArrayList<Centro>())
+					//.idUsuario((long) 1001)
 					.build();
 			
 			var peticion = post("http", "localhost", port, "/gerentes", gerenteDTO);
@@ -181,6 +180,53 @@ class BackendApplicationTests {
 			assertThat(respuesta.getHeaders().get("Location").get(0))
 					.endsWith("/"+centrosBD.get(0).getIdCentro());
 			compruebaCampos(centro.centro(), centrosBD.get(0));
+		}
+
+		@Test
+		@DisplayName ("devuelve error al modificar un gerente que no existe")
+		public void modificarGerenteInexistente(){
+			var gerente = GerenteDTO.builder()
+					.empresa("EmpresaS.L.")
+					.build();
+			var peticion = put("http", "localhost", port, "/gerentes/1", gerente);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+		}
+
+		@Test
+		@DisplayName ("devuelve error al modificar un centro que no existe")
+		public void modificarCentroInexistente(){
+			var centro = CentroDTO.builder()
+					.nombre("Gym S.L.")
+					.direccion("C/24")
+					.build();
+			var peticion = put("http", "localhost", port, "/centros/1", centro);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+		}
+
+		@Test
+		@DisplayName("devuelve un error al eliminar un centro que no existe")
+		public void eliminarGerenteInexistente(){
+			var peticion = delete("http", "localhost", port, "/gerentes/1");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+		}
+
+		@Test
+		@DisplayName("devuelve un error al eliminar un centro que no existe")
+		public void eliminarCentroInexistente(){
+			var peticion = delete("http", "localhost", port, "/centros/1");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+		}
+
+		@Test
+		@DisplayName("devuelve un error al eliminar un mensaje que no existe")
+		public void eliminarMensajeInexistente(){
+			var peticion = delete("http", "localhost", port, "/mensajes/1");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 
 	}
