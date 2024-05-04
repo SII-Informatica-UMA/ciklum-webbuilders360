@@ -164,7 +164,6 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@Disabled
 		@DisplayName("inserta correctamente un centro")
 		public void insertaCentro(){
 			var centro = CentroDTO.builder()

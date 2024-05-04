@@ -1,5 +1,6 @@
 package com.jpa.backend.servicios;
 
+import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Gerente;
 import com.jpa.backend.repositories.CentroRepository;
 import com.jpa.backend.repositories.GerenteRepository;
@@ -27,6 +28,7 @@ public class DBService {
         this.mensajeRepo = mensajeRepo;
     }
 
+    //Gerente
     public List<Gerente> obtenerGerentes(){
         return gerenteRepo.findAll();
     }
@@ -65,5 +67,46 @@ public class DBService {
             throw new EntidadNoEncontradaException();
         }
     }
+
+    //Centro
+    public List<Centro> obtenerCentros(){
+        return centroRepo.findAll();
+    }
+
+    public Centro obtenerCentro(Long id){
+        var centro = centroRepo.findById(id);
+        if(centro.isPresent()){
+            return centro.get();
+        }else{
+            throw new EntidadNoEncontradaException();
+        }
+    }
+
+    public Long aniadirCentro(Centro c){
+        if(!centroRepo.existsByNombre(c.getNombre()) || !centroRepo.existsByDireccion(c.getDireccion())){
+            c.setIdCentro(null);
+            centroRepo.save(c);
+            return c.getIdCentro();
+        }else{
+            throw new EntidadExistenteException();
+        }
+    }
+
+    public void eliminarCentro(Long id){
+        if(centroRepo.existsById(id)){
+            centroRepo.deleteById(id);
+        }else{
+            throw new EntidadNoEncontradaException();
+        }
+    }
+
+    public void actualizarCentro(Centro centro){
+        if(centroRepo.existsById(centro.getIdCentro())){
+            centroRepo.save(centro);
+        }else{
+            throw new EntidadNoEncontradaException();
+        }
+    }
+
 
 }
