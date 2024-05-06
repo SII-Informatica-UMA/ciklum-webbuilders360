@@ -2,6 +2,7 @@ package com.jpa.backend.servicios;
 
 import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Gerente;
+import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.repositories.CentroRepository;
 import com.jpa.backend.repositories.GerenteRepository;
 import com.jpa.backend.repositories.MensajeCentroRepository;
@@ -103,6 +104,46 @@ public class DBService {
     public void actualizarCentro(Centro centro){
         if(centroRepo.existsById(centro.getIdCentro())){
             centroRepo.save(centro);
+        }else{
+            throw new EntidadNoEncontradaException();
+        }
+    }
+
+     //Mensaje
+     public List<MensajeCentro> obtenerMensajes(){
+        return mensajeRepo.findAll();
+    }
+
+    public MensajeCentro obtenerMensaje(Long id){
+        var mensajeCentro = mensajeRepo.findById(id);
+        if(mensajeCentro.isPresent()){
+            return mensajeCentro.get();
+        }else{
+            throw new EntidadNoEncontradaException();
+        }
+    }
+     
+    public Long aniadirMensajeCentro(MensajeCentro m){
+        if(m.getDestinatarios()!=null && m.getAsunto()!=null){
+            m.setId(null);
+            mensajeRepo.save(m);
+            return m.getId();
+        }else{
+            throw new EntidadExistenteException();
+        }
+    }
+    
+    public void eliminarMensajeCentro(Long id){
+        if(mensajeRepo.existsById(id)){
+            mensajeRepo.deleteById(id);
+        }else{
+            throw new EntidadNoEncontradaException();
+        }
+    }
+
+    public void actualizarMensajeCentro(MensajeCentro mensaje){
+        if(mensajeRepo.existsById(mensaje.getId())){
+            mensajeRepo.save(mensaje);
         }else{
             throw new EntidadNoEncontradaException();
         }
