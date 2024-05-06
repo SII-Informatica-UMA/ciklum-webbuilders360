@@ -26,17 +26,17 @@ public class MensajeCentro {
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "mensaje_centro_copia", joinColumns = @JoinColumn(name = "mensaje_centro_id"))
     @Column(name = "id_destinatario")
     private List<Destinatario> copias;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "mensaje_centro_copia_oculta", joinColumns = @JoinColumn(name = "mensaje_centro_id"))
     @Column(name = "id_destinatario")
     private List<Destinatario> copiasOcultas;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "mensaje_centro_destinatarios", joinColumns = @JoinColumn(name = "mensaje_centro_id"))
     @Column(name = "id_destinatario")
     private List<Destinatario> destinatarios;
