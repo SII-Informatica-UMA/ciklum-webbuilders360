@@ -168,7 +168,7 @@ class BackendApplicationTests {
 		public void insertaMensaje(){
 			var mensaje = MensajeDTO.builder()
 					.asunto("consulta")
-					//.destinatarios() Faltarían destinatario
+					.destinatarios(new ArrayList<>())
 					.build();
 			var peticion = post("http", "localhost", port, "/mensajes", mensaje);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
@@ -219,7 +219,7 @@ class BackendApplicationTests {
 		public void modificarMensajeInexistente(){
 			var mensaje = MensajeDTO.builder()
 					.asunto("consulta")
-					//.destinatarios() Faltarían destinatario	
+					.destinatarios(new ArrayList<>())
 					.build();
 			var peticion = put("http", "localhost", port, "/mensajes/1", mensaje);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
