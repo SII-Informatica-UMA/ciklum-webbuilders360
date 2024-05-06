@@ -2,6 +2,7 @@ package com.jpa.backend;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import com.jpa.backend.entities.Centro;
+import com.jpa.backend.entities.Destinatario;
 import com.jpa.backend.entities.Gerente;
 import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.repositories.CentroRepository;
@@ -161,6 +162,26 @@ class BackendApplicationTests {
 					.endsWith("/"+gerentesBD.get(0).getId());
 			compruebaCampos(gerenteDTO.gerente(), gerentesBD.get(0));
 		}
+		
+		@Test
+		@DisplayName("inserta correctamente un mensaje")
+		public void insertaMensaje(){
+			var mensaje = MensajeDTO.builder()
+					.asunto("consulta")
+					//.destinatarios() Faltarían destinatario
+					.build();
+			var peticion = post("http", "localhost", port, "/mensajes", mensaje);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+			assertThat(respuesta.getHeaders().get("Location").get(0))
+					.startsWith("http://localhost:"+port+"/mensajes");
+			List<MensajeCentro> mensajesBD = mensajeRepo.findAll();
+			assertThat(mensajesBD).hasSize(1);
+			assertThat(respuesta.getHeaders().get("Location").get(0))
+					.endsWith("/"+mensajesBD.get(0).getId());
+			compruebaCampos(mensaje.mensaje(), mensajesBD.get(0));
+		}
 
 		@Test
 		@DisplayName("inserta correctamente un centro")
@@ -194,6 +215,18 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@DisplayName ("devuelve error al modificar un mensaje que no existe")
+		public void modificarMensajeInexistente(){
+			var mensaje = MensajeDTO.builder()
+					.asunto("consulta")
+					//.destinatarios() Faltarían destinatario	
+					.build();
+			var peticion = put("http", "localhost", port, "/mensajes/1", mensaje);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+		}
+
+		@Test
 		@DisplayName ("devuelve error al modificar un centro que no existe")
 		public void modificarCentroInexistente(){
 			var centro = CentroDTO.builder()
@@ -206,7 +239,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("devuelve un error al eliminar un centro que no existe")
+		@DisplayName("devuelve un error al eliminar un gerente que no existe")
 		public void eliminarGerenteInexistente(){
 			var peticion = delete("http", "localhost", port, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, Void.class);
