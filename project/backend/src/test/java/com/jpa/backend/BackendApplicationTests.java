@@ -300,6 +300,11 @@ class BackendApplicationTests {
 			gym.setNombre("Gym");
 			gym.setDireccion("C/Malaga");
 			centroRepo.save(gym);
+
+			var gerente = new Gerente();
+			gerente.setEmpresa("EmpresaS.L.");
+			gerente.setIdUsuario(0L);
+			gerenteRepo.save(gerente);
 		}
 
 		@Test
@@ -315,7 +320,19 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("obtiene un producto concretamente")
+		@DisplayName("da error cuando se inserta un centro que ya existe")
+		public void insertaGerenteExistente(){
+			var gerente = GerenteDTO.builder()
+				.empresa("EmpresaS.L.")
+				.idUsuario(0L)
+				.build();
+			var peticion = post("http", "localhost", port, "/gerentes", gerente);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
+		}
+
+		@Test
+		@DisplayName("obtiene un centro concretamente")
 		public void errorConCentroConcreto(){
 			var peticion = get("http", "localhost", port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
@@ -325,18 +342,27 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@DisplayName("obtiene un gerente concretamente")
+		public void errorConGerenteConcreto(){
+			var peticion = get("http", "localhost", port, "/gerentes/1");
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().getEmpresa()).isEqualTo("EmpresaS.L.");
+			assertThat(respuesta.getBody().getIdUsuario()).isEqualTo(0L);
+		}
+
+		@Test
 		@DisplayName("modificar un centro correctamente")
 		public void modificarCentro(){
 			var centro = CentroDTO.builder()
 				.nombre("GymNuevo")
 				.direccion("C/Teatinos")
 				.build();
-			var peticion = post("http", "localhost", port, "/centros/1", centro);
+			var peticion = put("http", "localhost", port, "/centros/1", centro);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(centroRepo.findById(1L).getNombre()).isEqualTo("GymNuevo");
 			assertThat(centroRepo.findById(1L).getDireccion()).isEqualTo("C/Teatinos");
-
 		}
 
 		@Test
@@ -351,5 +377,18 @@ class BackendApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(centroRepo.count()).isEqualTo(1);
 		}
+
+		@Test
+		@DisplayName("obtiene un centro concreto")
+		public void obtenerCentroConcreto(){
+			var peticion = get("http", "localhost", port, "/centros/1");
+			var respuesta = restTemplate.exchange(peticion, 
+					new ParameterizedTypeReference<CentroDTO>() {});
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().getNombre()).isEqualTo("Gym");
+			assertThat(respuesta.getBody().getDireccion()).isEqualTo("C/Malaga");
+		}
+
+
 	}
 }
