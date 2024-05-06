@@ -1,6 +1,8 @@
 package com.jpa.backend;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Destinatario;
 import com.jpa.backend.entities.Gerente;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -97,16 +100,39 @@ class BackendApplicationTests {
 	private void compruebaCampos(Gerente expected, Gerente actual){
 		assertThat(actual.getIdUsuario()).isEqualTo(expected.getIdUsuario());
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
-		assertThat(actual.getCentrosAsociados()).isEqualTo(expected.getCentrosAsociados());
+		assertTrue(
+				new ArrayList<>(
+						actual.getCentrosAsociados() != null ? actual.getCentrosAsociados() : new ArrayList<>()
+				).equals(new ArrayList<>(
+						expected.getCentrosAsociados() != null ? expected.getCentrosAsociados() : new ArrayList<>()
+				)));
 	}
 
 	private void compruebaCampos(MensajeCentro expected, MensajeCentro actual){
 		assertThat(actual.getAsunto()).isEqualTo(expected.getAsunto());
 		assertThat(actual.getCentro()).isEqualTo(expected.getCentro());
 		assertThat(actual.getContenido()).isEqualTo(expected.getContenido());
-		assertThat(actual.getCopias()).isEqualTo(expected.getCopias());
-		assertThat(actual.getCopiasOcultas()).isEqualTo(expected.getCopiasOcultas());
-		assertThat(actual.getDestinatarios()).isEqualTo(expected.getDestinatarios());
+
+		assertTrue(
+				new ArrayList<>(
+						actual.getCopias() != null ? actual.getCopias() : new ArrayList<>()
+				).equals(new ArrayList<>(
+						expected.getCopias() != null ? expected.getCopias() : new ArrayList<>()
+				)));
+
+		assertTrue(
+				new ArrayList<>(
+						actual.getCopiasOcultas() != null ? actual.getCopiasOcultas() : new ArrayList<>()
+				).equals(new ArrayList<>(
+						expected.getCopiasOcultas() != null ? expected.getCopiasOcultas() : new ArrayList<>()
+				)));
+
+		assertTrue(
+			new ArrayList<>(
+					actual.getDestinatarios() != null ? actual.getDestinatarios() : new ArrayList<>()
+			).equals(new ArrayList<>(
+					expected.getDestinatarios() != null ? expected.getDestinatarios() : new ArrayList<>()
+		)));
 	}
 
 	private void compruebaCampos(Centro expected, Centro actual){
