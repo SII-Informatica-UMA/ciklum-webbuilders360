@@ -13,7 +13,7 @@ public class Gerente {
     @Id
     @GeneratedValue
     private Long id;
-    @OneToMany (mappedBy = "gerenteAsociado")
+    @OneToMany (mappedBy = "gerenteAsociado", fetch = FetchType.EAGER)
     private List<Centro> centrosAsociados;
 
     public Long getIdUsuario() {return idUsuario;}

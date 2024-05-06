@@ -13,7 +13,7 @@ public class Centro {
     @SequenceGenerator(name = "centro_seq", sequenceName = "centro_seq", allocationSize = 50)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_gerente", unique = true)
     private Gerente gerenteAsociado;
 

@@ -13,7 +13,7 @@ public class MensajeCentro {
     @SequenceGenerator(name = "mensaje_centro_seq", sequenceName = "mensaje_centro_seq", allocationSize = 50)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "centro_id")
     private Centro centro;
 

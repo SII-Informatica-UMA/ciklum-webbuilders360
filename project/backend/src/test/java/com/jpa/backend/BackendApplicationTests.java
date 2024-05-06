@@ -13,6 +13,7 @@ import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.MensajeDTO;
 
 import org.hibernate.Hibernate;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -146,7 +147,7 @@ class BackendApplicationTests {
 		public void insertaGerente(){
 			var gerenteDTO = GerenteDTO.builder()
 					.empresa("GerentesS.L")
-					//.idUsuario((long) 1001)
+					.idUsuario(0L)
 					.build();
 			
 			var peticion = post("http", "localhost", port, "/gerentes", gerenteDTO);
@@ -156,7 +157,6 @@ class BackendApplicationTests {
 			assertThat(respuesta.getHeaders().get("Location").get(0))
 					.startsWith("http://localhost:"+port+"/gerentes");
 			List<Gerente> gerentesBD = gerenteRepo.findAll();
-			gerentesBD.size();
 			assertThat(gerentesBD).hasSize(1);
 			assertThat(respuesta.getHeaders().get("Location").get(0))
 					.endsWith("/"+gerentesBD.get(0).getId());
@@ -262,5 +262,68 @@ class BackendApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 
+	}
+
+	@Nested
+	@DisplayName("cuando la base de datos tiene datos")
+	public class BaseDatosConDatos{
+		
+		@BeforeEach
+		public void insertarDatos(){
+			var gym = new Centro();
+			gym.setNombre("Gym");
+			gym.setDireccion("C/Malaga");
+			centroRepo.save(gym);
+		}
+
+		@Test
+		@DisplayName("da error cuando se inserta un centro que ya existe")
+		public void insertaCentroExistente(){
+			var centro = CentroDTO.builder()
+				.nombre("Gym")
+				.direccion("C/Malaga")
+				.build();
+			var peticion = post("http", "localhost", port, "/centros", centro);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
+		}
+
+		@Test
+		@DisplayName("obtiene un producto concretamente")
+		public void errorConCentroConcreto(){
+			var peticion = get("http", "localhost", port, "/centros/1");
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().getNombre()).isEqualTo("Gym");
+			assertThat(respuesta.getBody().getDireccion()).isEqualTo("C/Malaga");
+		}
+
+		@Test
+		@DisplayName("modificar un centro correctamente")
+		public void modificarCentro(){
+			var centro = CentroDTO.builder()
+				.nombre("GymNuevo")
+				.direccion("C/Teatinos")
+				.build();
+			var peticion = post("http", "localhost", port, "/centros/1", centro);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(centroRepo.findById(1L).getNombre()).isEqualTo("GymNuevo");
+			assertThat(centroRepo.findById(1L).getDireccion()).isEqualTo("C/Teatinos");
+
+		}
+
+		@Test
+		@DisplayName("eliminar un centro correctamente")
+		public void eliminarCentro(){
+			var centro = new Centro();
+			centro.setNombre("GymNuevo");
+			centro.setDireccion("C/Teatinos");
+			centroRepo.save(centro);
+			var peticion = delete("http", "localhost", port, "/centros/2");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(centroRepo.count()).isEqualTo(1);
+		}
 	}
 }
