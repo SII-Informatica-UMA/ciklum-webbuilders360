@@ -320,7 +320,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("da error cuando se inserta un centro que ya existe")
+		@DisplayName("da error cuando se inserta un gerente que ya existe")
 		public void insertaGerenteExistente(){
 			var gerente = GerenteDTO.builder()
 				.empresa("EmpresaS.L.")
@@ -379,6 +379,19 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@DisplayName("eliminar un gerente correctamente")
+		public void eliminarGerente(){
+			var gerente = new Gerente();
+			gerente.setEmpresa("EmpresaNuevaS.L.");
+			gerente.setIdUsuario(1L);
+			gerenteRepo.save(gerente);
+			var peticion = delete("http", "localhost", port, "/gerentes/2");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(gerenteRepo.count()).isEqualTo(1);
+		}
+
+		@Test
 		@DisplayName("obtiene un centro concreto")
 		public void obtenerCentroConcreto(){
 			var peticion = get("http", "localhost", port, "/centros/1");
@@ -389,6 +402,16 @@ class BackendApplicationTests {
 			assertThat(respuesta.getBody().getDireccion()).isEqualTo("C/Malaga");
 		}
 
+		@Test
+		@DisplayName("obtiene un gerente concreto")
+		public void obtenerGerenteConcreto(){
+			var peticion = get("http", "localhost", port, "/gerentes/1");
+			var respuesta = restTemplate.exchange(peticion, 
+					new ParameterizedTypeReference<GerenteDTO>() {});
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().getEmpresa()).isEqualTo("EmpresaS.L.");
+			assertThat(respuesta.getBody().getIdUsuario()).isEqualTo(0L);
+		}
 
 	}
 }
