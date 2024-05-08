@@ -36,6 +36,7 @@ import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -305,6 +306,12 @@ class BackendApplicationTests {
 			gerente.setEmpresa("EmpresaS.L.");
 			gerente.setIdUsuario(0L);
 			gerenteRepo.save(gerente);
+
+			//creo que le hace falta hacer un set de más atributos
+			var mensaje = new MensajeCentro();
+			mensaje.setAsunto("Prueba");
+			mensaje.setContenido("mensaje de prueba");
+			mensajeRepo.save(mensaje);
 		}
 
 		@Test
@@ -352,6 +359,16 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@DisplayName("obtiene un mensaje concretamente")
+		public void errorConMensajeConcreto(){
+			var peticion = get("http", "localhost", port, "/mensajes/1");
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().getAsunto()).isEqualTo("Prueba");
+			assertThat(respuesta.getBody().getContenido()).isEqualTo("mensaje de prueba");
+		}
+
+		@Test
 		@DisplayName("modificar un centro correctamente")
 		public void modificarCentro(){
 			var centro = CentroDTO.builder()
@@ -392,6 +409,19 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@DisplayName("eliminar un mensaje correctamente")
+		public void eliminarMensaje(){
+			var mensaje = new MensajeCentro();
+			mensaje.setAsunto("MensajeEliminar");
+			mensaje.setContenido("mensaje a eliminar");
+			mensajeRepo.save(mensaje);
+			var peticion = delete("http", "localhost", port, "/mensajes/2");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(mensajeRepo.count()).isEqualTo(1);
+		}
+
+		@Test
 		@DisplayName("obtiene un centro concreto")
 		public void obtenerCentroConcreto(){
 			var peticion = get("http", "localhost", port, "/centros/1");
@@ -412,6 +442,87 @@ class BackendApplicationTests {
 			assertThat(respuesta.getBody().getEmpresa()).isEqualTo("EmpresaS.L.");
 			assertThat(respuesta.getBody().getIdUsuario()).isEqualTo(0L);
 		}
+
+		@Test
+		@DisplayName("obtiene un mensaje concreto")
+		public void obtenerMensajeConcreto(){
+			var peticion = get("http", "localhost", port, "/mensajes/1");
+			var respuesta = restTemplate.exchange(peticion, 
+					new ParameterizedTypeReference<MensajeDTO>() {});
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().getAsunto()).isEqualTo("Prueba");
+			assertThat(respuesta.getBody().getContenido()).isEqualTo("mensaje de prueba");
+		}
+
+		@Test
+		@DisplayName("devuelve una lista de centros")
+		public void devuelveListaCentros() {
+			var peticion = get("http", "localhost",port, "/centros");
+
+			var respuesta = restTemplate.exchange(peticion,
+					new ParameterizedTypeReference<List<CentroDTO>>() {});
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().size()).isEqualTo(1);
+		}
+
+		@Test
+		@DisplayName("devuelve una lista de gerentes")
+		public void devuelveListaGerentes() {
+			var peticion = get("http", "localhost",port, "/gerentes");
+
+			var respuesta = restTemplate.exchange(peticion,
+					new ParameterizedTypeReference<List<GerenteDTO>>() {});
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().size()).isEqualTo(1);
+		}
+
+		@Test
+		@DisplayName("devuelve una lista de mensajes")
+		public void devuelveListaMensajes() {
+			var peticion = get("http", "localhost",port, "/mensajes");
+
+			var respuesta = restTemplate.exchange(peticion,
+					new ParameterizedTypeReference<List<MensajeDTO>>() {});
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody().size()).isEqualTo(1);
+		}
+
+		/*@Test
+		@DisplayName("asigna correctamente a un gerente dando ID de centro")
+		@Disabled
+		public void asignarGerenteIndicandoCentroConId() {
+
+			var centro = CentroDTO.builder().id(1L).build();
+			
+			// Preparamos el producto a insertar
+			var gerente = GerenteDTO.builder()
+					.empresa("EmpresaNV")
+					.centrosAsociados(Collections.singletonList(centro))
+					.build();
+			// Preparamos la petición con el ingrediente dentro
+			var peticion = post("http", "localhost",port, "/gerentes", gerente);
+
+			// Invocamos al servicio REST 
+			var respuesta = restTemplate.exchange(peticion,Void.class);
+
+			// Comprobamos el resultado
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+			assertThat(respuesta.getHeaders().get("Location").get(0))
+			.startsWith("http://localhost:"+port+"/gerentes");
+
+			List<Gerente> gerentesBD = gerenteRepo.findAll();
+			Gerente ger = gerentesBD.stream()
+									.filter(p->p.getEmpresa().equals("EmpresaNV"))
+									.findFirst()
+									.get();
+			assertThat(gerentesBD).hasSize(2);
+			assertThat(respuesta.getHeaders().get("Location").get(0))
+				.endsWith("/"+ger.getId());
+			compruebaCampos(gerente.gerente(), ger);
+		}*/
 
 	}
 }
