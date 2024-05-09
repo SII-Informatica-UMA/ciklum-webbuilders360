@@ -85,9 +85,9 @@ public class DBService {
 
     public Long aniadirCentro(Centro c){
         if(!centroRepo.existsByNombre(c.getNombre()) || !centroRepo.existsByDireccion(c.getDireccion())){
-            c.setIdCentro(null);
+            c.setId(null);
             centroRepo.save(c);
-            return c.getIdCentro();
+            return c.getId();
         }else{
             throw new EntidadExistenteException();
         }
@@ -102,7 +102,7 @@ public class DBService {
     }
 
     public void actualizarCentro(Centro centro){
-        if(centroRepo.existsById(centro.getIdCentro())){
+        if(centroRepo.existsById(centro.getId())){
             centroRepo.save(centro);
         }else{
             throw new EntidadNoEncontradaException();

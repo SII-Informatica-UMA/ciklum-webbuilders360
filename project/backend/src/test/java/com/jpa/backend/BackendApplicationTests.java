@@ -28,6 +28,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -38,6 +39,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("En el servicio de administracion")
@@ -55,6 +57,8 @@ class BackendApplicationTests {
 	private GerenteRepository gerenteRepo;
 	@Autowired
 	private MensajeCentroRepository mensajeRepo;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	private URI uri(String scheme, String host, int port, String ...paths) {
 		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
@@ -226,7 +230,7 @@ class BackendApplicationTests {
 			List<Centro> centrosBD = centroRepo.findAll();
 			assertThat(centrosBD).hasSize(1);
 			assertThat(respuesta.getHeaders().get("Location").get(0))
-					.endsWith("/"+centrosBD.get(0).getIdCentro());
+					.endsWith("/"+centrosBD.get(0).getId());
 			compruebaCampos(centro.centro(), centrosBD.get(0));
 		}
 
@@ -491,7 +495,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("asigna correctamente a un gerente dando ID de centro")
+		@DisplayName("asigna correctamente a un gerente dando el ID del centro")
 		public void asignarGerenteIndicandoCentroConId() {
 
 			var centroDTO = CentroDTO.builder().id(1L).build();
@@ -504,16 +508,20 @@ class BackendApplicationTests {
 					.centrosAsociados(Collections.singletonList(centro))
 					.idUsuario(1L)
 					.build();
+			List<Map<String,Object>> tablaCentro = jdbcTemplate.queryForList("SELECT * FROM Centro");
+			List<Map<String,Object>> tablaGerente = jdbcTemplate.queryForList("SELECT * FROM Gerente");
 			// Preparamos la petición con el centro dentro
 			var peticion = post("http", "localhost",port, "/gerentes", gerente);
 
 			// Invocamos al servicio REST 
 			var respuesta = restTemplate.exchange(peticion,Void.class);
+			List<Map<String,Object>> tablaCentro2 = jdbcTemplate.queryForList("SELECT * FROM Centro");
+			List<Map<String,Object>> tablaGerente2 = jdbcTemplate.queryForList("SELECT * FROM Gerente");
 
 			// Comprobamos el resultado
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			assertThat(respuesta.getHeaders().get("Location").get(0))
-			.startsWith("http://localhost:"+port+"/gerentes");
+				.startsWith("http://localhost:"+port+"/gerentes");
 
 			List<Gerente> gerentesBD = gerenteRepo.findAll();
 			Gerente ger = gerentesBD.stream()
@@ -521,7 +529,7 @@ class BackendApplicationTests {
 									.findFirst()
 									.get();
 			assertThat(gerentesBD).hasSize(2);
-			assertThat(respuesta.getHeaders().get("Location").get(0))
+			assertThat(respuesta.getHeaders().get("Location").getFirst())
 				.endsWith("/"+ger.getId());
 			compruebaCampos(gerente.gerente(), ger);
 		}

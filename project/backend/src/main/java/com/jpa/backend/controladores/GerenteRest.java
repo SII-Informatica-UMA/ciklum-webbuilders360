@@ -55,6 +55,7 @@ public class GerenteRest {
     @PostMapping
     public ResponseEntity<?> aniadirGerente(@RequestBody GerenteDTO gerente, UriComponentsBuilder uriBuilder){
         Long id = servicio.aniadirGerente(gerente.gerente());
+
         return ResponseEntity.created(gerenteUriBuilder(uriBuilder.build()).apply(id))
                 .build();
     }

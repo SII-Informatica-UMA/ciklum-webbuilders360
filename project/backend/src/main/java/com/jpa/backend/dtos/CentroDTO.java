@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 
 @Getter
 @Setter
@@ -28,21 +29,21 @@ public class CentroDTO {
     private Links links;
 
     public static CentroDTO fromCentro(Centro centro, Function<Long, URI> uriBuilder) {
-        var dto = new CentroDTO();
-        dto.setId(centro.getIdCentro());
+        CentroDTO dto = new CentroDTO();
+        dto.setId(centro.getId());
         dto.setNombre(centro.getNombre());
         dto.setDireccion(centro.getDireccion());
         dto.setGerenteAsociado(centro.getGerenteAsociado());
         dto.setLinks(
                 Links.builder()
-                        .self(uriBuilder.apply(centro.getIdCentro()))
+                        .self(uriBuilder.apply(centro.getId()))
                         .build());
         return dto;
     }
 
-    public Centro centro(){
-        var centro = new Centro();
-        centro.setIdCentro(id);
+    public Centro centro() {
+        Centro centro = new Centro();
+        centro.setId(id);
         centro.setDireccion(direccion);
         centro.setNombre(nombre);
         centro.setGerenteAsociado(gerenteAsociado);

@@ -69,7 +69,7 @@ public class CentroRest {
     @PutMapping("{id}")
     public void actualizarCentro(@PathVariable Long id, @RequestBody CentroDTO centro){
         Centro c = centro.centro();
-        c.setIdCentro(id);
+        c.setId(id);
         servicio.actualizarCentro(c);
     }
 
