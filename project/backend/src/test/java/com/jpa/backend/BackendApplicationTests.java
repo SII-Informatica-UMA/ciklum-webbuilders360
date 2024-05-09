@@ -490,13 +490,14 @@ class BackendApplicationTests {
 			assertThat(respuesta.getBody().size()).isEqualTo(1);
 		}
 
-		/*@Test
+		@Test
 		@DisplayName("asigna correctamente a un gerente dando ID de centro")
-		@Disabled
 		public void asignarGerenteIndicandoCentroConId() {
 
-			var centro = CentroDTO.builder().id(1L).build();
-			
+			var centroDTO = CentroDTO.builder().id(1L).build();
+
+			var centro = centroDTO.centro();
+
 			// Preparamos el producto a insertar
 			var gerente = GerenteDTO.builder()
 					.empresa("EmpresaNV")
@@ -522,7 +523,7 @@ class BackendApplicationTests {
 			assertThat(respuesta.getHeaders().get("Location").get(0))
 				.endsWith("/"+ger.getId());
 			compruebaCampos(gerente.gerente(), ger);
-		}*/
+		}
 
 	}
 }
