@@ -502,8 +502,9 @@ class BackendApplicationTests {
 			var gerente = GerenteDTO.builder()
 					.empresa("EmpresaNV")
 					.centrosAsociados(Collections.singletonList(centro))
+					.idUsuario(1L)
 					.build();
-			// Preparamos la petición con el ingrediente dentro
+			// Preparamos la petición con el centro dentro
 			var peticion = post("http", "localhost",port, "/gerentes", gerente);
 
 			// Invocamos al servicio REST 
