@@ -508,7 +508,7 @@ class BackendApplicationTests {
 
 			// Comprobamos el resultado
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-			assertThat(respuesta.getHeaders().get("Location").get(0))
+			assertThat(Objects.requireNonNull(respuesta.getHeaders().get("Location")).getFirst())
 				.startsWith("http://localhost:"+port+"/gerentes");
 
 			List<Gerente> gerentesBD = gerenteRepo.findAll();
