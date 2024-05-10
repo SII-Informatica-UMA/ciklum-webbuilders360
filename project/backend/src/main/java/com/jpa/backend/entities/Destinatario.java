@@ -3,9 +3,6 @@ package com.jpa.backend.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-import java.util.Objects;
-
 @Embeddable
 @Data
 public class Destinatario {

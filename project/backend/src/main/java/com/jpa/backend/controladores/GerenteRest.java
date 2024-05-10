@@ -29,7 +29,7 @@ import java.util.function.Function;
 @RequestMapping("/gerentes")
 public class GerenteRest {
 
-    private DBService servicio;
+    private final DBService servicio;
 
     public GerenteRest(DBService servicio){
         this.servicio = servicio;

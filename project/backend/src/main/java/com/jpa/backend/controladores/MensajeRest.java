@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.jpa.backend.dtos.CentroDTO;
 import com.jpa.backend.dtos.MensajeDTO;
-import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.servicios.DBService;
 import com.jpa.backend.servicios.excepciones.EntidadExistenteException;
@@ -31,7 +29,8 @@ import com.jpa.backend.servicios.excepciones.EntidadNoEncontradaException;
 @RequestMapping("/mensajes")
 public class MensajeRest {
 
-    private DBService servicio;
+    private final DBService servicio;
+
     public MensajeRest(DBService servicio){
         this.servicio = servicio;
     }

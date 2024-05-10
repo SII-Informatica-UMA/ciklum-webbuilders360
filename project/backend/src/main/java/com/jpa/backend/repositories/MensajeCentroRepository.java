@@ -2,8 +2,6 @@ package com.jpa.backend.repositories;
 
 import com.jpa.backend.entities.MensajeCentro;
 
-import jakarta.transaction.Transactional;
-
 import java.util.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name= "mensaje")
@@ -12,7 +11,7 @@ import java.util.Objects;
 public class MensajeCentro {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mensaje_centro_seq")
-    @SequenceGenerator(name = "mensaje_centro_seq", sequenceName = "mensaje_centro_seq", allocationSize = 50)
+    @SequenceGenerator(name = "mensaje_centro_seq", sequenceName = "mensaje_centro_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)

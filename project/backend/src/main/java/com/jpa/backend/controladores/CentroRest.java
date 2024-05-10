@@ -20,9 +20,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.jpa.backend.dtos.CentroDTO;
-import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.entities.Centro;
-import com.jpa.backend.entities.Gerente;
 import com.jpa.backend.servicios.DBService;
 import com.jpa.backend.servicios.excepciones.EntidadExistenteException;
 import com.jpa.backend.servicios.excepciones.EntidadNoEncontradaException;
@@ -30,7 +28,7 @@ import com.jpa.backend.servicios.excepciones.EntidadNoEncontradaException;
 @RestController
 @RequestMapping("/centros")
 public class CentroRest {
-     private DBService servicio;
+     private final DBService servicio;
 
     public CentroRest(DBService servicio){
         this.servicio = servicio;
