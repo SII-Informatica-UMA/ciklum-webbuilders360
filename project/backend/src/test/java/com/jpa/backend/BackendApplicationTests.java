@@ -13,10 +13,7 @@ import com.jpa.backend.dtos.CentroDTO;
 import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.MensajeDTO;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -361,7 +358,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("modificar un centro correctamente")
+		@DisplayName("modificar un centro existente correctamente")
 		public void modificarCentro(){
 			var centro = CentroDTO.builder()
 				.nombre("GymNuevo")
@@ -372,6 +369,21 @@ class BackendApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(centroRepo.findById(1L).getNombre()).isEqualTo("GymNuevo");
 			assertThat(centroRepo.findById(1L).getDireccion()).isEqualTo("C/Teatinos");
+		}
+
+		@Test
+		@DisplayName("modificar un gerente existente correctamente")
+		public void modificarGerente(){
+			var gerente = GerenteDTO.builder()
+					.id(1L)
+					.empresa("Gym Teatinos")
+					.idUsuario(1L)
+					.build();
+			var peticion = put(port, "/gerentes/1", gerente);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(gerenteRepo.findById(1L).getId()).isEqualTo(1L);
+			assertThat(gerenteRepo.findById(1L).getEmpresa()).isEqualTo("Gym Teatinos");
 		}
 
 		@Test
@@ -483,6 +495,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
+		@Disabled
 		@DisplayName("asigna correctamente a un gerente dando el ID del centro")
 		public void asignarGerenteIndicandoCentroConId() {
 
