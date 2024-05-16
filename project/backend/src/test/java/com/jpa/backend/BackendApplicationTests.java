@@ -305,7 +305,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("da error cuando se inserta un centro que ya existe")
+		@DisplayName("da error cuando se inserta un centro que ya existe (mismo nombre y direccion)")
 		public void insertaCentroExistente(){
 			var centro = CentroDTO.builder()
 				.nombre("Gym")
@@ -314,6 +314,18 @@ class BackendApplicationTests {
 			var peticion = post(port, "/centros", centro);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
+		}
+
+		@Test
+		@DisplayName("se inserta un centro correctamene cuando ya existe uno con mismo nombre y distinta direccion")
+		public void insertaCentroExistenteDistintaDireccion(){
+			var centro = CentroDTO.builder()
+					.nombre("Gym")
+					.direccion("C/Cordoba")
+					.build();
+			var peticion = post(port, "/centros", centro);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 		}
 
 		@Test
