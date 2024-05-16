@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.jpa.backend.entities.Centro;
+import com.jpa.backend.entities.Destinatario;
 import com.jpa.backend.entities.Gerente;
 import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.repositories.CentroRepository;
@@ -332,6 +333,20 @@ class BackendApplicationTests {
 			var mensaje = MensajeDTO.builder()
 					.asunto("Prueba")
 					.contenido("mensaje de prueba")
+					.build();
+			var peticion = post(port, "/mensajes", mensaje);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
+		}
+		@Test
+		@DisplayName("da error cuando se inserta un mensaje que sí tiene destinatarios")
+		public void insertaMensajeSinAsuntoNiDestinatarios(){
+			Destinatario dst = new Destinatario();
+			dst.setId(1L);
+			List<Destinatario> listaDst = new ArrayList<>();
+			listaDst.add(dst);
+			var mensaje = MensajeDTO.builder()
+					.destinatarios(new ArrayList<Destinatario>(listaDst))
 					.build();
 			var peticion = post(port, "/mensajes", mensaje);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
