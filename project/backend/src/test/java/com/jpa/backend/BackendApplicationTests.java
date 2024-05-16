@@ -356,6 +356,20 @@ class BackendApplicationTests {
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getAsunto()).isEqualTo("Prueba");
 			assertThat(respuesta.getBody().getContenido()).isEqualTo("mensaje de prueba");
 		}
+		@Test
+		@DisplayName("modificar un mensaje existente correctamente")
+		public void modificarMensaje(){
+			var mensaje = MensajeDTO.builder()
+					.id(1L)
+					.asunto("Duda entrenamiento")
+					.contenido("Duda sobre horarios")
+					.build();
+			var peticion = put(port, "/mensajes/1", mensaje);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(mensajeRepo.findById(1L).getId()).isEqualTo(1L);
+			assertThat(mensajeRepo.findById(1L).getAsunto()).isEqualTo("Duda entrenamiento");
+		}
 
 		@Test
 		@DisplayName("modificar un centro existente correctamente")
