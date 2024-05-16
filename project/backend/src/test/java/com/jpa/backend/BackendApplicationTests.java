@@ -326,6 +326,17 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
+		@Test
+		@DisplayName("da error cuando se inserta un mensaje que ya existe")
+		public void insertaMensajeExistente(){
+			var mensaje = MensajeDTO.builder()
+					.asunto("Prueba")
+					.contenido("mensaje de prueba")
+					.build();
+			var peticion = post(port, "/mensajes", mensaje);
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
+		}
 
 		@Test
 		@DisplayName("obtiene un centro concretamente")
