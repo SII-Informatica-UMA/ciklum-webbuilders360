@@ -14,6 +14,7 @@ import com.jpa.backend.dtos.CentroDTO;
 import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.MensajeDTO;
 
+import com.jpa.backend.security.JwtUtil;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,8 +66,8 @@ class BackendApplicationTests {
 		return ub.build();
 	}
 
-	private RequestEntity<Void> get(int port, String path) {
-		URI uri = uri(port, path);
+	private RequestEntity<Void> get(int port, String token, String path) {
+		URI uri = uri(port, token, path);
         return RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
 				.build();
@@ -134,26 +135,32 @@ class BackendApplicationTests {
 
 	@Nested
 	@DisplayName("cuando la base de datos esta vacía")
-	public class BasesDatosVacia{
+	public class BasesDatosVacia {
+		private static String token;
+		@BeforeAll
+		public static void getToken(){
+			//token = new JwtUtil().generateToken("admin");
+			token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MTY0NTM0MTF9.SSoy13VsqxTesT8Ax9XPXKQC1WHm8lP6i0bVULCsn0g";
+		}
 
 		@Test
 		@DisplayName("devuelve un error al acceder a un gerente concreto")
 		public void errorConGerenteConcreto(){
-			var peticion = get(port, "/gerentes/1");
+			var peticion = get(port,token, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		@Test
 		@DisplayName("devuelve un error al acceder a un mensaje concreto")
 		public void errorConMensajeConcreto(){
-			var peticion = get(port, "/mensajes/1");
+			var peticion = get(port, token,"/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		@Test
 		@DisplayName("devuelve un error al acceder a un centro concreto")
 		public void errorConCentroConcreto(){
-			var peticion = get(port, "/centros/1");
+			var peticion = get(port,token, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
@@ -284,7 +291,13 @@ class BackendApplicationTests {
 	@Nested
 	@DisplayName("cuando la base de datos tiene datos")
 	public class BaseDatosConDatos{
-		
+		private static String token;
+		@BeforeAll
+		public static void getToken(){
+			//token = new JwtUtil().generateToken("admin");
+			token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MTY0NTM0MTF9.SSoy13VsqxTesT8Ax9XPXKQC1WHm8lP6i0bVULCsn0g";
+		}
+
 		@BeforeEach
 		public void insertarDatos(){
 			var gym = new Centro();
@@ -368,7 +381,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un centro concretamente")
 		public void errorConCentroConcreto(){
-			var peticion = get(port, "/centros/1");
+			var peticion = get(port,token, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getNombre()).isEqualTo("Gym");
@@ -378,7 +391,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un gerente concretamente")
 		public void errorConGerenteConcreto(){
-			var peticion = get(port, "/gerentes/1");
+			var peticion = get(port, token, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getEmpresa()).isEqualTo("EmpresaS.L.");
@@ -388,7 +401,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un mensaje concretamente")
 		public void errorConMensajeConcreto(){
-			var peticion = get(port, "/mensajes/1");
+			var peticion = get(port, token, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getAsunto()).isEqualTo("Prueba");
@@ -480,7 +493,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un centro concreto")
 		public void obtenerCentroConcreto(){
-			var peticion = get(port, "/centros/1");
+			var peticion = get(port, token,"/centros/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -491,7 +504,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un gerente concreto")
 		public void obtenerGerenteConcreto(){
-			var peticion = get(port, "/gerentes/1");
+			var peticion = get(port, token, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -502,7 +515,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un mensaje concreto")
 		public void obtenerMensajeConcreto(){
-			var peticion = get(port, "/mensajes/1");
+			var peticion = get(port, token, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -513,7 +526,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve una lista de centros")
 		public void devuelveListaCentros() {
-			var peticion = get(port, "/centros");
+			var peticion = get(port,token, "/centros");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<CentroDTO>>() {});
@@ -525,7 +538,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve una lista de gerentes")
 		public void devuelveListaGerentes() {
-			var peticion = get(port, "/gerentes");
+			var peticion = get(port,token, "/gerentes");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<GerenteDTO>>() {});
@@ -537,7 +550,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve una lista de mensajes")
 		public void devuelveListaMensajes() {
-			var peticion = get(port, "/mensajes");
+			var peticion = get(port,token, "/mensajes");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<MensajeDTO>>() {});
