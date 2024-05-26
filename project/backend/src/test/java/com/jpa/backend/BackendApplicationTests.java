@@ -18,6 +18,7 @@ import com.jpa.backend.security.JwtUtil;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
@@ -25,6 +26,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
@@ -36,6 +40,7 @@ import java.util.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("En el servicio de administracion")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureMockMvc
 class BackendApplicationTests {
 
 	@Autowired
@@ -54,6 +59,21 @@ class BackendApplicationTests {
 
 	private static final String SCHEME = "http";
 	private static final String HOST = "localhost";
+
+	 @Autowired
+    private MockMvc mockMvc;
+	@Autowired
+	private JwtUtil jwtUtil;
+
+    /*private void setUp(){
+		String token = jwtUtil.generateToken("admin");
+
+        // Realiza una solicitud GET a un endpoint protegido, incluyendo el token JWT en el encabezado Authorization
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/protected-endpoint")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+	}*/
 
 	private URI uri(int port, String ...paths) {
 		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
@@ -136,16 +156,26 @@ class BackendApplicationTests {
 	@Nested
 	@DisplayName("cuando la base de datos esta vacía")
 	public class BasesDatosVacia {
-		private static String token;
+		/*private static String token;
 		@BeforeAll
 		public static void getToken(){
 			//token = new JwtUtil().generateToken("admin");
 			token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MTY0NTM0MTF9.SSoy13VsqxTesT8Ax9XPXKQC1WHm8lP6i0bVULCsn0g";
-		}
+		}*/
 
 		@Test
 		@DisplayName("devuelve un error al acceder a un gerente concreto")
 		public void errorConGerenteConcreto(){
+			String token = jwtUtil.generateToken("admin");
+			try {
+				mockMvc.perform(MockMvcRequestBuilders.get("/api/protected-endpoint")
+					.header("Authorization", "Bearer " + token)
+					.contentType(MediaType.APPLICATION_JSON))
+					.andExpect(MockMvcResultMatchers.status().isOk());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			var peticion = get(port,token, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
