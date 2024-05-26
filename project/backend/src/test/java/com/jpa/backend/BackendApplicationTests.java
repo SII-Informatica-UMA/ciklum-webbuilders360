@@ -24,12 +24,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -75,8 +81,14 @@ class BackendApplicationTests {
 	private JwtUtil jwtUtil;
 	private String token;
 
-    private void setUp(){
-		String token = jwtUtil.generateToken("admin");
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@BeforeEach
+  	private void setUp(){
+		// Generar token JWT
+        UserDetails userDetails = User.withUsername("user").password("password").roles("USER").build();
+        token = jwtUtil.generateToken(userDetails);
 
         // Realiza una solicitud GET a un endpoint protegido, incluyendo el token JWT en el encabezado Authorization
         /*try {
@@ -199,6 +211,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
+		
 		@Test
 		@DisplayName("devuelve un error al acceder a un mensaje concreto")
 		public void errorConMensajeConcreto(){
@@ -206,6 +219,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
+		
 		@Test
 		@DisplayName("devuelve un error al acceder a un centro concreto")
 		public void errorConCentroConcreto(){
@@ -290,19 +304,27 @@ class BackendApplicationTests {
 		@Test
     @DisplayName("devuelve error al modificar un gerente que no existe")
     public void modificarGerenteInexistente() throws Exception {
-         // Preparar los datos del gerente a modificar
-		GerenteDTO gerenteDTO = GerenteDTO.builder()
-		.empresa("EmpresaS.L.")
-		.build();
+        var gerente = new GerenteDTO();
+        gerente.setEmpresa("EmpresaS.L.");
 
-		ObjectMapper objectMapper = new ObjectMapper();
+        // Generar token JWT
+        UserDetails userDetails = User.withUsername("user").password("password").roles("USER").build();
+        String token = jwtUtil.generateToken(userDetails);
 
-	// Realizar la solicitud PUT al endpoint de modificación de gerente, incluyendo el token JWT en el encabezado de autorización
-		mockMvc.perform(MockMvcRequestBuilders.put("/gerentes/1")
-			.header("Authorization", "Bearer " + token)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(gerenteDTO)))
-			.andExpect(status().isNotFound());
+        // Crear headers con el token JWT
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + token);
+
+        // Convertir el objeto gerente a JSON
+        String gerenteJson = objectMapper.writeValueAsString(gerente);
+
+        // Crear la petición
+        HttpEntity<String> request = new HttpEntity<>(gerenteJson, headers);
+        ResponseEntity<Void> response = restTemplate.exchange("/gerentes/1", HttpMethod.PUT, request, Void.class);
+
+        // Verificar el resultado
+        assertThat(response.getStatusCode().value()).isEqualTo(404);
     }
 
 

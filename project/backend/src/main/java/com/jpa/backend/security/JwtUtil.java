@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.crypto.SecretKey;
+
 //import es.uma.informatica.sii.fitness.usuarios.entities.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,6 +56,9 @@ public class JwtUtil {
 
     @Value("${jwt.token.validity}")
     private long tokenValidity;
+
+    private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512); // Generar una clave segura
+
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -117,25 +122,27 @@ public class JwtUtil {
 //				.signWith(SignatureAlgorithm.HS512, secret).compact();
 //	}
 
-    /*private String doGenerateToken(Map<String, Object> claims, String subject) {
-        byte[] keyBytes = secret.getBytes();
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
+        /*byte[] keyBytes = secret.getBytes();
         Key key = Keys.hmacShaKeyFor(keyBytes);
-
-
-
         return Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
                 .signWith(key, SignatureAlgorithm.HS512).compact();
-    }*/
+        */
+        return Jwts.builder().setClaims(claims).setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
+                .signWith(secretKey, SignatureAlgorithm.HS512).compact();
+    }
 
-    @SuppressWarnings("deprecation")
+    /*@SuppressWarnings("deprecation")
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
-    }
+    }*/
 
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {

@@ -6,6 +6,8 @@ import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.repositories.CentroRepository;
 import com.jpa.backend.repositories.GerenteRepository;
 import com.jpa.backend.repositories.MensajeCentroRepository;
+import com.jpa.backend.security.JwtUtil;
+import com.jpa.backend.security.SecurityConfguration;
 import com.jpa.backend.servicios.excepciones.EntidadExistenteException;
 import com.jpa.backend.servicios.excepciones.EntidadNoEncontradaException;
 
@@ -13,7 +15,11 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,10 +29,21 @@ public class DBService {
     private CentroRepository centroRepo;
     private MensajeCentroRepository mensajeRepo;
 
-    public DBService(GerenteRepository gerenteRepo, CentroRepository centroRepo, MensajeCentroRepository mensajeRepo){
+    private final JwtUtil jwtUtil;
+    private final Logger log =Logger.getLogger(DBService.class.getName());
+
+    @Value("${baseURIOfFrontend:http://localhost:4200}")
+    private String baseURIOfFrontend;
+
+    @Value("${passwordresettoken.expiration:0}")
+    private long passwordResetTokenExpiration;
+
+    public DBService(GerenteRepository gerenteRepo, CentroRepository centroRepo, 
+                        MensajeCentroRepository mensajeRepo, JwtUtil jwtUtil){
         this.gerenteRepo = gerenteRepo;
         this.centroRepo = centroRepo;
         this.mensajeRepo = mensajeRepo;
+        this.jwtUtil = jwtUtil;
     }
 
     //Gerente
@@ -44,6 +61,9 @@ public class DBService {
     }
 
     public Long aniadirGerente(Gerente ger){
+        Optional<UserDetails> user = SecurityConfguration.getAuthenticatedUser();
+        user.ifPresent(u -> log.info("Usuario autenticado: " + u.getUsername()));
+
         if(!gerenteRepo.existsByIdUsuario(ger.getIdUsuario())){
             ger.setId(null);
             gerenteRepo.save(ger);
@@ -84,6 +104,9 @@ public class DBService {
     }
 
     public Long aniadirCentro(Centro c){
+        Optional<UserDetails> user = SecurityConfguration.getAuthenticatedUser();
+        user.ifPresent(u -> log.info("Usuario autenticado: " + u.getUsername()));
+        
         if(!centroRepo.existsByNombre(c.getNombre()) || !centroRepo.existsByDireccion(c.getDireccion())){
             c.setId(null);
             centroRepo.save(c);
