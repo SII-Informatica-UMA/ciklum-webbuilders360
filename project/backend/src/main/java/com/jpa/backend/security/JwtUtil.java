@@ -75,10 +75,15 @@ public class JwtUtil {
 //		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 //	}
 
-    private Claims getAllClaimsFromToken(String token) {
+    /*private Claims getAllClaimsFromToken(String token) {
         byte[] keyBytes = secret.getBytes();
         Key key = Keys.hmacShaKeyFor(keyBytes);
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }*/
+
+    @SuppressWarnings("deprecation")
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token).getBody();
     }
 
 
@@ -112,7 +117,7 @@ public class JwtUtil {
 //				.signWith(SignatureAlgorithm.HS512, secret).compact();
 //	}
 
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    /*private String doGenerateToken(Map<String, Object> claims, String subject) {
         byte[] keyBytes = secret.getBytes();
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
@@ -122,6 +127,14 @@ public class JwtUtil {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
                 .signWith(key, SignatureAlgorithm.HS512).compact();
+    }*/
+
+    @SuppressWarnings("deprecation")
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder().setClaims(claims).setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     //validate token

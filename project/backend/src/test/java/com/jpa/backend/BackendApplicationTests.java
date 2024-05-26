@@ -2,6 +2,8 @@ package com.jpa.backend;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Destinatario;
@@ -25,14 +27,21 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
+import org.springframework.test.web.servlet.ResultMatcher;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 import java.util.*;
@@ -64,16 +73,22 @@ class BackendApplicationTests {
     private MockMvc mockMvc;
 	@Autowired
 	private JwtUtil jwtUtil;
+	private String token;
 
-    /*private void setUp(){
+    private void setUp(){
 		String token = jwtUtil.generateToken("admin");
 
         // Realiza una solicitud GET a un endpoint protegido, incluyendo el token JWT en el encabezado Authorization
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/protected-endpoint")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-	}*/
+        /*try {
+			mockMvc.perform(MockMvcRequestBuilders.get("/api/protected-endpoint")
+			        .header("Authorization", "Bearer " + token)
+			        .contentType(MediaType.APPLICATION_JSON))
+			        .andExpect(MockMvcResultMatchers.status().isOk());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+	}
 
 	private URI uri(int port, String ...paths) {
 		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
@@ -86,16 +101,18 @@ class BackendApplicationTests {
 		return ub.build();
 	}
 
-	private RequestEntity<Void> get(int port, String token, String path) {
-		URI uri = uri(port, token, path);
+	private RequestEntity<Void> get(int port, String path) {
+		URI uri = uri(port, path);
         return RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer" + token)
 				.build();
 	}
 
 	private RequestEntity<Void> delete(int port, String path) {
 		URI uri = uri(port, path);
         return RequestEntity.delete(uri)
+		.header("Authorization", "Bearer" + token)
 				.build();
 	}
 
@@ -103,6 +120,7 @@ class BackendApplicationTests {
 		URI uri = uri(port, path);
         return RequestEntity.post(uri)
 				.contentType(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer" + token)
 				.body(object);
 	}
 
@@ -110,6 +128,7 @@ class BackendApplicationTests {
 		URI uri = uri(port, path);
         return RequestEntity.put(uri)
 				.contentType(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer" + token)
 				.body(object);
 	}
 
@@ -176,21 +195,21 @@ class BackendApplicationTests {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			var peticion = get(port,token, "/gerentes/1");
+			var peticion = get(port, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		@Test
 		@DisplayName("devuelve un error al acceder a un mensaje concreto")
 		public void errorConMensajeConcreto(){
-			var peticion = get(port, token,"/mensajes/1");
+			var peticion = get(port,"/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		@Test
 		@DisplayName("devuelve un error al acceder a un centro concreto")
 		public void errorConCentroConcreto(){
-			var peticion = get(port,token, "/centros/1");
+			var peticion = get(port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
@@ -257,7 +276,7 @@ class BackendApplicationTests {
 			compruebaCampos(centro.centro(), centrosBD.getFirst());
 		}
 
-		@Test
+		/*@Test
 		@DisplayName ("devuelve error al modificar un gerente que no existe")
 		public void modificarGerenteInexistente(){
 			var gerente = GerenteDTO.builder()
@@ -266,7 +285,26 @@ class BackendApplicationTests {
 			var peticion = put(port, "/gerentes/1", gerente);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		}
+		}*/
+
+		@Test
+    @DisplayName("devuelve error al modificar un gerente que no existe")
+    public void modificarGerenteInexistente() throws Exception {
+         // Preparar los datos del gerente a modificar
+		GerenteDTO gerenteDTO = GerenteDTO.builder()
+		.empresa("EmpresaS.L.")
+		.build();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+	// Realizar la solicitud PUT al endpoint de modificación de gerente, incluyendo el token JWT en el encabezado de autorización
+		mockMvc.perform(MockMvcRequestBuilders.put("/gerentes/1")
+			.header("Authorization", "Bearer " + token)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(gerenteDTO)))
+			.andExpect(status().isNotFound());
+    }
+
 
 		@Test
 		@DisplayName ("devuelve error al modificar un mensaje que no existe")
@@ -411,7 +449,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un centro concretamente")
 		public void errorConCentroConcreto(){
-			var peticion = get(port,token, "/centros/1");
+			var peticion = get(port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getNombre()).isEqualTo("Gym");
@@ -421,7 +459,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un gerente concretamente")
 		public void errorConGerenteConcreto(){
-			var peticion = get(port, token, "/gerentes/1");
+			var peticion = get(port, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getEmpresa()).isEqualTo("EmpresaS.L.");
@@ -431,7 +469,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un mensaje concretamente")
 		public void errorConMensajeConcreto(){
-			var peticion = get(port, token, "/mensajes/1");
+			var peticion = get(port,"/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getAsunto()).isEqualTo("Prueba");
@@ -523,7 +561,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un centro concreto")
 		public void obtenerCentroConcreto(){
-			var peticion = get(port, token,"/centros/1");
+			var peticion = get(port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -534,7 +572,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un gerente concreto")
 		public void obtenerGerenteConcreto(){
-			var peticion = get(port, token, "/gerentes/1");
+			var peticion = get(port, "gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -545,7 +583,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("obtiene un mensaje concreto")
 		public void obtenerMensajeConcreto(){
-			var peticion = get(port, token, "/mensajes/1");
+			var peticion = get(port, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -556,7 +594,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve una lista de centros")
 		public void devuelveListaCentros() {
-			var peticion = get(port,token, "/centros");
+			var peticion = get(port, "/centros");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<CentroDTO>>() {});
@@ -568,7 +606,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve una lista de gerentes")
 		public void devuelveListaGerentes() {
-			var peticion = get(port,token, "/gerentes");
+			var peticion = get(port, "/gerentes");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<GerenteDTO>>() {});
@@ -580,7 +618,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve una lista de mensajes")
 		public void devuelveListaMensajes() {
-			var peticion = get(port,token, "/mensajes");
+			var peticion = get(port, "/mensajes");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<MensajeDTO>>() {});
