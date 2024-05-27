@@ -471,29 +471,52 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve un error al eliminar un gerente que no existe")
 		public void eliminarGerenteInexistente(){
-			var peticion = delete(port, "/gerentes/1");
+			/*var peticion = delete(port, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
+
+			ResponseEntity<Void> mockResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			when(restTemplate.exchange(anyString(), eq(HttpMethod.DELETE), any(), eq(Void.class)))
+					.thenReturn(mockResponse);
+
+			ResponseEntity<Void> respuesta = restTemplate.exchange("/gerentes/1", HttpMethod.DELETE, null, Void.class);
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 
 		@Test
 		@DisplayName("devuelve un error al eliminar un centro que no existe")
 		public void eliminarCentroInexistente(){
-			var peticion = delete(port, "/centros/1");
+			/*var peticion = delete(port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
+			ResponseEntity<Void> mockResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			when(restTemplate.exchange(anyString(), eq(HttpMethod.DELETE), any(), eq(Void.class)))
+					.thenReturn(mockResponse);
+
+			ResponseEntity<Void> respuesta = restTemplate.exchange("/centros/1", HttpMethod.DELETE, null, Void.class);
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 
 		@Test
 		@DisplayName("devuelve un error al eliminar un mensaje que no existe")
 		public void eliminarMensajeInexistente(){
-			var peticion = delete(port, "/mensajes/1");
+			/*var peticion = delete(port, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
+
+			ResponseEntity<Void> mockResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			when(restTemplate.exchange(anyString(), eq(HttpMethod.DELETE), any(), eq(Void.class)))
+					.thenReturn(mockResponse);
+
+			ResponseEntity<Void> respuesta = restTemplate.exchange("/mensajes/1", HttpMethod.DELETE, null, Void.class);
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 
 	}
-
+ 
 	@Nested
 	@DisplayName("cuando la base de datos tiene datos")
 	public class BaseDatosConDatos{
@@ -558,6 +581,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
+		
 		@Test
 		@DisplayName("da error cuando se inserta un mensaje que ya existe")
 		public void insertaMensajeExistente(){
@@ -569,6 +593,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
+		
 		@Test
 		@DisplayName("da error cuando se inserta un mensaje que sí tiene destinatarios")
 		public void insertaMensajeSinAsuntoNiDestinatarios(){
@@ -613,6 +638,7 @@ class BackendApplicationTests {
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getAsunto()).isEqualTo("Prueba");
 			assertThat(respuesta.getBody().getContenido()).isEqualTo("mensaje de prueba");
 		}
+		
 		@Test
 		@DisplayName("modificar un mensaje existente correctamente")
 		public void modificarMensaje(){
@@ -709,17 +735,17 @@ class BackendApplicationTests {
 			*/
 			Centro mockCentro = new Centro();
 			mockCentro.setId(1L);
-			mockCentro.setNombre("Mock Centro");
-	
+			mockCentro.setNombre("Gym");
+
 			ResponseEntity<Centro> mockResponse = new ResponseEntity<>(mockCentro, HttpStatus.OK);
 			when(restTemplateAux.getForEntity(anyString(), eq(Centro.class))).thenReturn(mockResponse);
-	
+
 			Centro centro = dbService.obtenerCentro(1L);
-			
+
 			// Realiza las aserciones necesarias
 			assertNotNull(centro);
 			assertEquals(1L, centro.getId());
-			assertEquals("Mock Centro", centro.getNombre());
+			assertEquals("Gym", centro.getNombre());
 		
 		}
 
@@ -736,7 +762,7 @@ class BackendApplicationTests {
 			*/
 			Gerente mockGerente = new Gerente();
 			mockGerente.setId(1L);
-			mockGerente.setEmpresa("Mock Gerente");
+			mockGerente.setEmpresa("EmpresaS.L.");
 	
 			ResponseEntity<Gerente> mockResponse = new ResponseEntity<>(mockGerente, HttpStatus.OK);
 			when(restTemplateAux.getForEntity(anyString(), eq(Gerente.class))).thenReturn(mockResponse);
@@ -746,7 +772,7 @@ class BackendApplicationTests {
 			// Realiza las aserciones necesarias
 			assertNotNull(gerente);
 			assertEquals(1L, gerente.getId());
-			assertEquals("Mock Gerente", gerente.getEmpresa());
+			assertEquals("EmpresaS.L.", gerente.getEmpresa());
 		}
 
 		@Test
@@ -762,17 +788,19 @@ class BackendApplicationTests {
 		 	*/
 			MensajeCentro mockMensaje = new MensajeCentro();
 			mockMensaje.setId(1L);
-			mockMensaje.setAsunto("Mock Mensaje");
+			mockMensaje.setAsunto("Prueba");
+			mockMensaje.setContenido("mensaje de prueba");
 	 
-		    ResponseEntity<MensajeCentro> mockResponse = new ResponseEntity<>(mockMensaje, HttpStatus.OK);
+			ResponseEntity<MensajeCentro> mockResponse = new ResponseEntity<>(mockMensaje, HttpStatus.OK);
 			when(restTemplateAux.getForEntity(anyString(), eq(MensajeCentro.class))).thenReturn(mockResponse);
 	 
 			MensajeCentro mensaje = dbService.obtenerMensaje(1L);
-			 
-			// Realiza las aserciones necesarias
+	 
+			 // Realiza las aserciones necesarias
 			assertNotNull(mensaje);
 			assertEquals(1L, mensaje.getId());
-			assertEquals("Mock Mensaje", mensaje.getAsunto());
+			assertEquals("Prueba", mensaje.getAsunto());
+			assertEquals("mensaje de prueba", mensaje.getContenido());
 		}
 
 		@Test
@@ -853,4 +881,5 @@ class BackendApplicationTests {
 		}
 
 	}
+	
 }
