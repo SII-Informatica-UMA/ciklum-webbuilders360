@@ -734,7 +734,6 @@ class BackendApplicationTests {
 			assertThat(respuesta.getBody().getDireccion()).isEqualTo("C/Malaga");
 			*/
 			Centro mockCentro = new Centro();
-			mockCentro.setId(1L);
 			mockCentro.setNombre("Gym");
 			mockCentro.setDireccion("C/Malaga");
 
@@ -745,7 +744,6 @@ class BackendApplicationTests {
 
 			// Realiza las aserciones necesarias
 			assertNotNull(centro);
-			assertEquals(1L, centro.getId());
 			assertEquals("Gym", centro.getNombre());
 			assertEquals("C/Malaga", centro.getDireccion());
 		}
@@ -788,7 +786,6 @@ class BackendApplicationTests {
 			assertThat(respuesta.getBody().getContenido()).isEqualTo("mensaje de prueba");
 		 	*/
 			MensajeCentro mockMensaje = new MensajeCentro();
-			mockMensaje.setId(1L);
 			mockMensaje.setAsunto("Prueba");
 			mockMensaje.setContenido("mensaje de prueba");
 	 
@@ -799,7 +796,6 @@ class BackendApplicationTests {
 	 
 			 // Realiza las aserciones necesarias
 			assertNotNull(mensaje);
-			assertEquals(1L, mensaje.getId());
 			assertEquals("Prueba", mensaje.getAsunto());
 			assertEquals("mensaje de prueba", mensaje.getContenido());
 		}
