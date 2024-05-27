@@ -2,6 +2,9 @@ package com.jpa.backend;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,16 +20,25 @@ import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.MensajeDTO;
 
 import com.jpa.backend.security.JwtUtil;
+import com.jpa.backend.servicios.DBService;
+
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +54,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
@@ -56,9 +69,10 @@ import java.util.*;
 @DisplayName("En el servicio de administracion")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class BackendApplicationTests {
 
-	@Autowired
+	@Mock
 	private TestRestTemplate restTemplate;
 	@Value(value = "${local.server.port}")
 	private int port;
@@ -80,6 +94,29 @@ class BackendApplicationTests {
 	@Autowired
 	private JwtUtil jwtUtil;
 	private String token;
+
+	@MockBean
+    private RestTemplate restTemplateAux;
+
+    @Autowired
+    private DBService dbService = new DBService(gerenteRepo, centroRepo, mensajeRepo, restTemplateAux);
+
+    @Test
+    public void testObtenerGerente() {
+        Gerente mockGerente = new Gerente();
+        mockGerente.setId(1L);
+        mockGerente.setEmpresa("Mock Gerente");
+
+        ResponseEntity<Gerente> mockResponse = new ResponseEntity<>(mockGerente, HttpStatus.OK);
+        when(restTemplateAux.getForEntity(anyString(), eq(Gerente.class))).thenReturn(mockResponse);
+
+        Gerente gerente = dbService.obtenerGerente(1L);
+        
+        // Realiza las aserciones necesarias
+        assertNotNull(gerente);
+        assertEquals(1L, gerente.getId());
+        assertEquals("Mock Gerente", gerente.getEmpresa());
+    }
 
 	@Autowired
 	private ObjectMapper objectMapper;

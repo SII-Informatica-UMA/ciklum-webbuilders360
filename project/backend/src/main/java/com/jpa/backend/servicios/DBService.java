@@ -18,9 +18,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
@@ -29,7 +33,9 @@ public class DBService {
     private CentroRepository centroRepo;
     private MensajeCentroRepository mensajeRepo;
 
-    private final JwtUtil jwtUtil;
+    private final RestTemplate restTemplate;
+
+    //private final JwtUtil jwtUtil;
     private final Logger log =Logger.getLogger(DBService.class.getName());
 
     @Value("${baseURIOfFrontend:http://localhost:4200}")
@@ -38,12 +44,20 @@ public class DBService {
     @Value("${passwordresettoken.expiration:0}")
     private long passwordResetTokenExpiration;
 
-    public DBService(GerenteRepository gerenteRepo, CentroRepository centroRepo, 
+    /*public DBService(GerenteRepository gerenteRepo, CentroRepository centroRepo, 
                         MensajeCentroRepository mensajeRepo, JwtUtil jwtUtil){
         this.gerenteRepo = gerenteRepo;
         this.centroRepo = centroRepo;
         this.mensajeRepo = mensajeRepo;
         this.jwtUtil = jwtUtil;
+    }*/
+
+    public DBService(GerenteRepository gerenteRepo, CentroRepository centroRepo, 
+                         MensajeCentroRepository mensajeRepo, RestTemplate restTemplate){
+    this.gerenteRepo = gerenteRepo;
+    this.centroRepo = centroRepo;
+    this.mensajeRepo = mensajeRepo;
+    this.restTemplate = restTemplate;
     }
 
     //Gerente
@@ -51,14 +65,22 @@ public class DBService {
         return gerenteRepo.findAll();
     }
 
-    public Gerente obtenerGerente(Long id){
+    /*public Gerente obtenerGerente(Long id){
         var gerente = gerenteRepo.findById(id);
         if(gerente.isPresent()){
             return gerente.get();
         }else{
             throw new EntidadNoEncontradaException();
         }
+    }*/
+
+    public Gerente obtenerGerente(Long id){
+         ResponseEntity<Gerente> resp = 
+          restTemplate.getForEntity("http://localhost:8080/gerente/" + id, Gerente.class);
+
+        return resp.getStatusCode() == HttpStatus.OK ? resp.getBody() : null;
     }
+
 
     public Long aniadirGerente(Gerente ger){
         Optional<UserDetails> user = SecurityConfguration.getAuthenticatedUser();
@@ -106,7 +128,7 @@ public class DBService {
     public Long aniadirCentro(Centro c){
         Optional<UserDetails> user = SecurityConfguration.getAuthenticatedUser();
         user.ifPresent(u -> log.info("Usuario autenticado: " + u.getUsername()));
-        
+
         if(!centroRepo.existsByNombre(c.getNombre()) || !centroRepo.existsByDireccion(c.getDireccion())){
             c.setId(null);
             centroRepo.save(c);
