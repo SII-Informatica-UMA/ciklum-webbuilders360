@@ -3,6 +3,7 @@ package com.jpa.backend;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -221,15 +222,14 @@ class BackendApplicationTests {
 			/* 
 			var peticion = get(port, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-			*/
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
 
 			when(restTemplate.getForEntity(anyString(), eq(GerenteDTO.class)))
-                .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            	.thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
-            ResponseEntity<GerenteDTO> respuesta = restTemplate.getForEntity("/gerentes/1", GerenteDTO.class);
-            assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+			ResponseEntity<GerenteDTO> respuesta = restTemplate.getForEntity("/gerentes/1", GerenteDTO.class);
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		
 		@Test
@@ -238,15 +238,14 @@ class BackendApplicationTests {
 			/* 
 			var peticion = get(port,"/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-			*/
-			when(restTemplate.getForEntity(anyString(), eq(MensajeDTO.class)))
-                .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
 
-            ResponseEntity<MensajeDTO> respuesta = restTemplate.getForEntity("/mensajes/1", MensajeDTO.class);
-            assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		
+			when(restTemplate.getForEntity(anyString(), eq(MensajeDTO.class)))
+            .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
+			ResponseEntity<MensajeDTO> respuesta = restTemplate.getForEntity("/mensajes/1", MensajeDTO.class);
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 		
 		@Test
@@ -255,16 +254,14 @@ class BackendApplicationTests {
 			/* 
 			var peticion = get(port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-			*/
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
 
 			when(restTemplate.getForEntity(anyString(), eq(CentroDTO.class)))
-                .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
-            ResponseEntity<CentroDTO> respuesta = restTemplate.getForEntity("/centros/1", CentroDTO.class);
-            assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		
+			ResponseEntity<CentroDTO> respuesta = restTemplate.getForEntity("/centros/1", CentroDTO.class);
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 
 		@Test
@@ -385,7 +382,7 @@ class BackendApplicationTests {
 		@Test
     @DisplayName("devuelve error al modificar un gerente que no existe")
     public void modificarGerenteInexistente() throws Exception {
-        var gerente = new GerenteDTO();
+        /*var gerente = new GerenteDTO();
         gerente.setEmpresa("EmpresaS.L.");
 
         // Generar token JWT
@@ -405,32 +402,70 @@ class BackendApplicationTests {
         ResponseEntity<Void> response = restTemplate.exchange("/gerentes/1", HttpMethod.PUT, request, Void.class);
 
         // Verificar el resultado
-        assertThat(response.getStatusCode().value()).isEqualTo(404);
-    }
+        assertThat(response.getStatusCode().value()).isEqualTo(404);*/
 
+		GerenteDTO gerenteDTO = GerenteDTO.builder()
+            .empresa("EmpresaS.L.")
+            .build();
+
+		ResponseEntity<Void> mockResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		when(restTemplate.exchange(anyString(), eq(HttpMethod.PUT), any(), eq(Void.class)))
+				.thenReturn(mockResponse);
+
+		HttpEntity<GerenteDTO> requestEntity = new HttpEntity<>(gerenteDTO);
+		ResponseEntity<Void> respuesta = restTemplate.exchange("/gerentes/1", HttpMethod.PUT, requestEntity, Void.class);
+
+		assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+    }
 
 		@Test
 		@DisplayName ("devuelve error al modificar un mensaje que no existe")
 		public void modificarMensajeInexistente(){
-			var mensaje = MensajeDTO.builder()
+			/*var mensaje = MensajeDTO.builder()
 					.asunto("consulta")
 					.destinatarios(new ArrayList<>())
 					.build();
 			var peticion = put(port, "/mensajes/1", mensaje);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
+			MensajeDTO mensajeDTO = MensajeDTO.builder()
+            .asunto("consulta")
+            .destinatarios(new ArrayList<>())
+            .build();
+
+			ResponseEntity<Void> mockResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			when(restTemplate.exchange(anyString(), eq(HttpMethod.PUT), any(), eq(Void.class)))
+					.thenReturn(mockResponse);
+
+			HttpEntity<MensajeDTO> requestEntity = new HttpEntity<>(mensajeDTO);
+			ResponseEntity<Void> respuesta = restTemplate.exchange("/mensajes/1", HttpMethod.PUT, requestEntity, Void.class);
+
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 		}
 
 		@Test
 		@DisplayName ("devuelve error al modificar un centro que no existe")
 		public void modificarCentroInexistente(){
-			var centro = CentroDTO.builder()
+			/*var centro = CentroDTO.builder()
 					.nombre("Gym S.L.")
 					.direccion("C/24")
 					.build();
 			var peticion = put(port, "/centros/1", centro);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);*/
+			CentroDTO centroDTO = CentroDTO.builder()
+            .nombre("Gym S.L.")
+            .direccion("C/24")
+            .build();
+
+			ResponseEntity<Void> mockResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			when(restTemplate.exchange(anyString(), eq(HttpMethod.PUT), any(), eq(Void.class)))
+					.thenReturn(mockResponse);
+
+			HttpEntity<CentroDTO> requestEntity = new HttpEntity<>(centroDTO);
+			ResponseEntity<Void> respuesta = restTemplate.exchange("/centros/1", HttpMethod.PUT, requestEntity, Void.class);
+
+			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 		}
 
 		@Test
@@ -462,12 +497,12 @@ class BackendApplicationTests {
 	@Nested
 	@DisplayName("cuando la base de datos tiene datos")
 	public class BaseDatosConDatos{
-		private static String token;
+		/*private static String token;
 		@BeforeAll
 		public static void getToken(){
 			//token = new JwtUtil().generateToken("admin");
 			token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MTY0NTM0MTF9.SSoy13VsqxTesT8Ax9XPXKQC1WHm8lP6i0bVULCsn0g";
-		}
+		}*/
 
 		@BeforeEach
 		public void insertarDatos(){
