@@ -736,6 +736,7 @@ class BackendApplicationTests {
 			Centro mockCentro = new Centro();
 			mockCentro.setId(1L);
 			mockCentro.setNombre("Gym");
+			mockCentro.setDireccion("C/Malaga");
 
 			ResponseEntity<Centro> mockResponse = new ResponseEntity<>(mockCentro, HttpStatus.OK);
 			when(restTemplateAux.getForEntity(anyString(), eq(Centro.class))).thenReturn(mockResponse);
@@ -746,7 +747,7 @@ class BackendApplicationTests {
 			assertNotNull(centro);
 			assertEquals(1L, centro.getId());
 			assertEquals("Gym", centro.getNombre());
-		
+			assertEquals("C/Malaga", centro.getDireccion());
 		}
 
 		@Test
@@ -761,7 +762,7 @@ class BackendApplicationTests {
 			assertThat(respuesta.getBody().getIdUsuario()).isEqualTo(0L);
 			*/
 			Gerente mockGerente = new Gerente();
-			mockGerente.setId(1L);
+			mockGerente.setIdUsuario(0L);
 			mockGerente.setEmpresa("EmpresaS.L.");
 	
 			ResponseEntity<Gerente> mockResponse = new ResponseEntity<>(mockGerente, HttpStatus.OK);
@@ -771,7 +772,7 @@ class BackendApplicationTests {
 			
 			// Realiza las aserciones necesarias
 			assertNotNull(gerente);
-			assertEquals(1L, gerente.getId());
+			assertEquals(0L, gerente.getIdUsuario());
 			assertEquals("EmpresaS.L.", gerente.getEmpresa());
 		}
 
