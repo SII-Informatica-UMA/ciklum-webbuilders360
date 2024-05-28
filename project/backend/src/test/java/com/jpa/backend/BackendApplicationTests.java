@@ -110,7 +110,7 @@ class BackendApplicationTests {
 	private ObjectMapper objectMapper;
 
 	@BeforeEach
-  	private void setUp(){
+  	public void setUp(){
 		// Generar token JWT
         UserDetails userDetails = User.withUsername("user").password("password").roles("USER").build();
         token = jwtUtil.generateToken(userDetails);
