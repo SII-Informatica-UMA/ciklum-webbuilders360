@@ -65,20 +65,13 @@ public class DBService {
         return gerenteRepo.findAll();
     }
 
-    /*public Gerente obtenerGerente(Long id){
+    public Gerente obtenerGerente(Long id){
         var gerente = gerenteRepo.findById(id);
         if(gerente.isPresent()){
             return gerente.get();
         }else{
             throw new EntidadNoEncontradaException();
         }
-    }*/
-
-    public Gerente obtenerGerente(Long id){
-         ResponseEntity<Gerente> resp = 
-          restTemplate.getForEntity("http://localhost:8080/gerente/" + id, Gerente.class);
-
-        return resp.getStatusCode() == HttpStatus.OK ? resp.getBody() : null;
     }
 
 
@@ -117,7 +110,7 @@ public class DBService {
     }
 
     public Centro obtenerCentro(Long id){
-        var centro = centroRepo.findById(id);
+        Optional<Centro> centro = centroRepo.findById(id);
         if(centro.isPresent()){
             return centro.get();
         }else{
