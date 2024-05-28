@@ -6,7 +6,6 @@ import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.repositories.CentroRepository;
 import com.jpa.backend.repositories.GerenteRepository;
 import com.jpa.backend.repositories.MensajeCentroRepository;
-import com.jpa.backend.security.JwtUtil;
 import com.jpa.backend.security.SecurityConfguration;
 import com.jpa.backend.servicios.excepciones.EntidadExistenteException;
 import com.jpa.backend.servicios.excepciones.EntidadNoEncontradaException;
@@ -14,14 +13,10 @@ import com.jpa.backend.servicios.excepciones.EntidadNoEncontradaException;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -29,9 +24,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Transactional
 public class DBService {
-    private GerenteRepository gerenteRepo;
-    private CentroRepository centroRepo;
-    private MensajeCentroRepository mensajeRepo;
+    private final GerenteRepository gerenteRepo;
+    private final CentroRepository centroRepo;
+    private final MensajeCentroRepository mensajeRepo;
 
     private final RestTemplate restTemplate;
 
