@@ -28,7 +28,7 @@ public class GerenteDTO {
     @JsonProperty("_links")
     private Links links;
 
-    public static GerenteDTO fromGerente(Gerente gerente, Function<Long, URI> uriBuilder){
+    public static GerenteDTO fromGerente(Gerente gerente, Function<Long, URI> uriBuilder) { //TODO hacer con builder
         var dto = new GerenteDTO();
         dto.setId(gerente.getId());
         dto.setIdUsuario(gerente.getIdUsuario());
@@ -41,7 +41,7 @@ public class GerenteDTO {
         return dto;
     }
 
-    public Gerente gerente(){
+    public Gerente gerente() { //TODO hacer con builder
         var ger = new Gerente();
         ger.setId(id);
         ger.setIdUsuario(idUsuario);

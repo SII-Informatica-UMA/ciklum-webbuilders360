@@ -85,6 +85,4 @@ public class GerenteRest {
     @ExceptionHandler(EntidadExistenteException.class)
     @ResponseStatus(code = HttpStatus.CONFLICT)
     public void existente() {}
-
-
 }

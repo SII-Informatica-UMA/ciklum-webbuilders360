@@ -17,6 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+import static java.util.Collections.emptyList;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -48,7 +50,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = new User(username, "", Collections.EMPTY_LIST);
+            UserDetails userDetails = new User(username, "", emptyList());
 
             /*if (!jwtTokenUtil.isTokenExpired(jwtToken)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

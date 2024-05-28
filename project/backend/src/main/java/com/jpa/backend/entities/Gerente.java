@@ -8,12 +8,12 @@ import java.util.List;
 @Entity
 @Data
 public class Gerente {
-    @Column(nullable = false)
-    private Long idUsuario;
-    private String empresa;
     @Id
     @GeneratedValue
     private Long id;
-    @OneToMany (mappedBy = "gerenteAsociado", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @Column(nullable = false)
+    private Long idUsuario;
+    private String empresa;
+    @OneToMany (mappedBy = "gerenteAsociado", fetch = FetchType.EAGER, cascade = CascadeType.MERGE) //TODO cambiar relación
     private List<Centro> centrosAsociados;
 }

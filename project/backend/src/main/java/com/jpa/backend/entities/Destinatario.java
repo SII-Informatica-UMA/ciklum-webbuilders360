@@ -3,10 +3,11 @@ package com.jpa.backend.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Embeddable
+@Entity
 @Data
 public class Destinatario {
-    @Column(name = "id_destinatario")
+    @Id
+    @Column(name = "id_destinatario") //TODO revisar nombre columna Y es clave primaria?
     private Long id;
     @Enumerated(EnumType.STRING)
     private Tipo tipo;

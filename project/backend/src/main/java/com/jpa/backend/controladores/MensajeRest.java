@@ -39,7 +39,7 @@ public class MensajeRest {
     public List<MensajeDTO> obtenerTodosLosMensajes(UriComponentsBuilder uriBuilder){
         var mensajes = servicio.obtenerMensajes();
         return mensajes.stream()
-                .map(m->MensajeDTO.fromMensajes(m,
+                .map(m->MensajeDTO.fromMensaje(m,
                         mensajesUriBuilder(uriBuilder.build())))
                 .toList();
     }
@@ -63,7 +63,7 @@ public class MensajeRest {
      @GetMapping("{id}")
     public MensajeDTO obtenerMensajeCentro(@PathVariable Long id, UriComponentsBuilder uriBuilder){
         var mensaje = servicio.obtenerMensaje(id);
-        return MensajeDTO.fromMensajes(mensaje, mensajesUriBuilder(uriBuilder.build()));
+        return MensajeDTO.fromMensaje(mensaje, mensajesUriBuilder(uriBuilder.build()));
     }
 
     @PutMapping("{id}")

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Entity
-@Table(name= "mensaje")
+@Table(name = "mensaje")
 @Data
 public class MensajeCentro {
     @Id
@@ -18,14 +18,17 @@ public class MensajeCentro {
     @JoinColumn(name = "centro_id")
     private Centro centro;
 
-    //@Column(name = "id_destinatario")
-    private Long idDestinatario;
-
     private String asunto;
     private String contenido;
 
-    @Enumerated(EnumType.STRING)
-    private Tipo tipo;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_remitente")
+    private Destinatario remitente;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "mensaje_centro_destinatarios", joinColumns = @JoinColumn(name = "mensaje_centro_id"))
+    @Column(name = "id_destinatario")
+    private List<Destinatario> destinatarios;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "mensaje_centro_copia", joinColumns = @JoinColumn(name = "mensaje_centro_id"))
@@ -36,9 +39,4 @@ public class MensajeCentro {
     @CollectionTable(name = "mensaje_centro_copia_oculta", joinColumns = @JoinColumn(name = "mensaje_centro_id"))
     @Column(name = "id_destinatario")
     private List<Destinatario> copiasOcultas;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "mensaje_centro_destinatarios", joinColumns = @JoinColumn(name = "mensaje_centro_id"))
-    @Column(name = "id_destinatario")
-    private List<Destinatario> destinatarios;
 }

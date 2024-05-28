@@ -27,7 +27,7 @@ public class CentroDTO {
     @JsonProperty("_links")
     private Links links;
 
-    public static CentroDTO fromCentro(Centro centro, Function<Long, URI> uriBuilder) {
+    public static CentroDTO fromCentro(Centro centro, Function<Long, URI> uriBuilder) { //TODO hacer con builder
         CentroDTO dto = new CentroDTO();
         dto.setId(centro.getId());
         dto.setNombre(centro.getNombre());
@@ -40,7 +40,7 @@ public class CentroDTO {
         return dto;
     }
 
-    public Centro centro() {
+    public Centro centro() { //TODO hacer con builder
         Centro centro = new Centro();
         centro.setId(id);
         centro.setDireccion(direccion);

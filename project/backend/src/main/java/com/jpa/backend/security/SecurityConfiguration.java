@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfguration {
+public class SecurityConfiguration {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
