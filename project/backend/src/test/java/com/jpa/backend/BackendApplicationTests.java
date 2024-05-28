@@ -251,7 +251,7 @@ class BackendApplicationTests {
 					.direccion("C/24")
 					.build();
 
-			var peticion = post(port, "/gerentes", centroDTO);
+			var peticion = post(port, "/centros", centroDTO);
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
 
 			assertEquals(HttpStatus.CREATED, respuesta.getStatusCode());
