@@ -57,7 +57,7 @@ public class GerenteRest {
         Long id = servicio.aniadirGerente(gerente.gerente());
 
         return ResponseEntity.created(gerenteUriBuilder(uriBuilder.build()).apply(id))
-                .build();
+                .build();  
     }
 
     @GetMapping("{id}")

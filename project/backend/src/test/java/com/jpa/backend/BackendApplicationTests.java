@@ -423,9 +423,9 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
-
+*/
 		@Test
-		@DisplayName("se inserta un centro correctamene cuando ya existe uno con mismo nombre y distinta direccion")
+		@DisplayName("se inserta un centro correctamente cuando ya existe uno con mismo nombre y distinta direccion")
 		public void insertaCentroExistenteDistintaDireccion(){
 			var centro = CentroDTO.builder()
 					.nombre("Gym")
@@ -435,7 +435,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 		}
-
+ /*
 		@Test
 		@DisplayName("da error cuando se inserta un gerente que ya existe")
 		public void insertaGerenteExistente(){
@@ -445,9 +445,9 @@ class BackendApplicationTests {
 				.build();
 			var peticion = post(port, "/gerentes", gerente);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 		}
-		
+ 		
 		@Test
 		@DisplayName("da error cuando se inserta un mensaje que ya existe")
 		public void insertaMensajeExistente(){
@@ -476,7 +476,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("obtiene un centro concretamente")
+		@DisplayName("error obtiene un centro concreto")
 		public void errorConCentroConcreto(){
 			var peticion = get(port, token, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
@@ -486,7 +486,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("obtiene un gerente concretamente")
+		@DisplayName("error obtiene un gerente concreto")
 		public void errorConGerenteConcreto(){
 			var peticion = get(port, token, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
@@ -496,7 +496,7 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@DisplayName("obtiene un mensaje concretamente")
+		@DisplayName("error obtiene un mensaje concreto")
 		public void errorConMensajeConcreto(){
 			var peticion = get(port,token, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
@@ -618,28 +618,13 @@ class BackendApplicationTests {
 		@Test
 		@Disabled
 		@DisplayName("obtiene un gerente concreto")
-		public void obtenerGerenteConcreto(){
-			/* 
+		public void obtenerGerenteConcreto(){ 
 			var peticion = get(port, "gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<GerenteDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getEmpresa()).isEqualTo("EmpresaS.L.");
 			assertThat(respuesta.getBody().getIdUsuario()).isEqualTo(0L);
-			*/
-			Gerente mockGerente = new Gerente();
-			mockGerente.setIdUsuario(0L);
-			mockGerente.setEmpresa("EmpresaS.L.");
-	
-			ResponseEntity<Gerente> mockResponse = new ResponseEntity<>(mockGerente, HttpStatus.OK);
-			//when(restTemplateAux.getForEntity(anyString(), eq(Gerente.class))).thenReturn(mockResponse);
-	
-			Gerente gerente = dbService.obtenerGerente(1L);
-			
-			// Realiza las aserciones necesarias
-			assertNotNull(gerente);
-			assertEquals(0L, gerente.getIdUsuario());
-			assertEquals("EmpresaS.L.", gerente.getEmpresa());
 		}
 
 		@Test

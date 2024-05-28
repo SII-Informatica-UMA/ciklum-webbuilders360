@@ -5,7 +5,6 @@ import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Destinatario;
 import com.jpa.backend.entities.MensajeCentro;
 import lombok.*;
-import lombok.extern.jackson.Jacksonized;
 
 import java.net.URI;
 import java.util.List;
