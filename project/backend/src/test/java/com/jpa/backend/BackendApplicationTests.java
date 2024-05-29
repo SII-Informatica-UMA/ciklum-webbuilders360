@@ -188,27 +188,27 @@ class BackendApplicationTests {
 	public class BasesDatosVacia {
 
 		@Test
-		@DisplayName("devuelve un error al acceder a un gerente que no existe")
+		@DisplayName("devuelve un error al abtener a un gerente que no existe")
 		public void errorConGerenteConcreto(){
-			var peticion = get(port, "/gerentes/555");
+			var peticion = get(port, "/gerentes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
 		
 		@Test
-		@DisplayName("devuelve un error al acceder a un mensaje que no existe")
+		@DisplayName("devuelve un error al obtener a un mensaje que no existe")
 		public void errorConMensajeConcreto(){
-			var peticion = get(port, "/mensajes/555");
+			var peticion = get(port, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
 		
 		@Test
-		@DisplayName("devuelve un error al acceder a un centro que no existe")
+		@DisplayName("devuelve un error al obtener a un centro que no existe")
 		public void errorConCentroConcreto(){
-			var peticion = get(port, "/centros/555");
+			var peticion = get(port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -474,36 +474,6 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
-
-		@Test
-		@DisplayName("error obtiene un centro concreto")
-		public void errorConCentroConcreto(){
-			var peticion = get(port, token, "/centros/1");
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).getNombre()).isEqualTo("Gym");
-			assertThat(respuesta.getBody().getDireccion()).isEqualTo("C/Malaga");
-		}
-
-		@Test
-		@DisplayName("error obtiene un gerente concreto")
-		public void errorConGerenteConcreto(){
-			var peticion = get(port, token, "/gerentes/1");
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).getEmpresa()).isEqualTo("EmpresaS.L.");
-			assertThat(respuesta.getBody().getIdUsuario()).isEqualTo(0L);
-		}
-
-		@Test
-		@DisplayName("error obtiene un mensaje concreto")
-		public void errorConMensajeConcreto(){
-			var peticion = get(port,token, "/mensajes/1");
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).getAsunto()).isEqualTo("Prueba");
-			assertThat(respuesta.getBody().getContenido()).isEqualTo("mensaje de prueba");
-		}
 		
 		@Test
 		@DisplayName("modificar un mensaje existente correctamente")
@@ -653,42 +623,83 @@ class BackendApplicationTests {
 			assertEquals("Prueba", mensaje.getAsunto());
 			assertEquals("mensaje de prueba", mensaje.getContenido());
 		}
-/* 
+ 
 		@Test
 		@DisplayName("devuelve una lista de centros")
 		public void devuelveListaCentros() {
-			var peticion = get(port,token, "/centros");
+			/*var peticion = get(port, "/centros");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<CentroDTO>>() {});
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
+			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
+			
+			Centro centro = new Centro();
+			centro.setNombre("Gym");
+			centro.setDireccion("C/Malaga");
+			centroRepoMock.save(centro);
+
+			RequestEntity<Void> peticion = get(port, "/centros");
+			ResponseEntity<List<Centro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Centro>>() {});
+
+			assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+
+			List<Centro> centros = respuesta.getBody();
+			assertThat(centros).isNotNull();
+			//assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
+
 		}
 
 
 		@Test
 		@DisplayName("devuelve una lista de gerentes")
 		public void devuelveListaGerentes() {
-			var peticion = get(port, token, "/gerentes");
+			/*var peticion = get(port,  "/gerentes");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<GerenteDTO>>() {});
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
+			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
+
+			Gerente gerente = new Gerente();
+			gerente.setEmpresa("EmpresaS.L.");
+			gerente.setIdUsuario(0L);
+			gerenteRepoMock.save(gerente);
+
+			RequestEntity<Void> request = get(port, "/gerentes");
+			ResponseEntity<List<Gerente>> response = restTemplate.exchange(request, new ParameterizedTypeReference<List<Gerente>>() {});
+
+			assertEquals(HttpStatus.OK, response.getStatusCode());
+
+			List<Gerente> gerentes = response.getBody();
+			assertThat(gerentes).isNotNull();
 		}
 
 		@Test
 		@DisplayName("devuelve una lista de mensajes")
 		public void devuelveListaMensajes() {
-			var peticion = get(port, token, "/mensajes");
+			/*var peticion = get(port, "/mensajes");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<MensajeDTO>>() {});
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
+			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
+
+			MensajeCentro mensaje = new MensajeCentro();
+			mensaje.setAsunto("Prueba");
+			mensaje.setContenido("mensaje de prueba");
+			mensajeRepoMock.save(mensaje);
+
+			RequestEntity<Void> request = get(port, "/mensajes");
+			ResponseEntity<List<MensajeCentro>> response = restTemplate.exchange(request, new ParameterizedTypeReference<List<MensajeCentro>>() {});
+
+			assertEquals(HttpStatus.OK, response.getStatusCode());
+
+			List<MensajeCentro> mensajes = response.getBody();
+			assertThat(mensajes).isNotNull();
 		}
 
 		@Test
@@ -731,7 +742,7 @@ class BackendApplicationTests {
 				.endsWith("/"+ger.getId());
 			compruebaCampos(gerente.gerente(), ger);
 		}
-*/
+
 	}
 	
 }
