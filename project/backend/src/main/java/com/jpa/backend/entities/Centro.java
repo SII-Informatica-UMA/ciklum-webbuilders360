@@ -1,10 +1,12 @@
 package com.jpa.backend.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Data
+@Builder
 public class Centro {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "centro_seq")

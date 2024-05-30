@@ -1,6 +1,7 @@
 package com.jpa.backend.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "mensaje")
 @Data
+@Builder
 public class MensajeCentro {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mensaje_centro_seq")

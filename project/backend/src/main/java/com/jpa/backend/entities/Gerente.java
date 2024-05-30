@@ -1,12 +1,14 @@
 package com.jpa.backend.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Data
+@Builder
 public class Gerente {
     @Id
     @GeneratedValue

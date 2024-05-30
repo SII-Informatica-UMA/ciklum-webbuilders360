@@ -28,26 +28,27 @@ public class GerenteDTO {
     @JsonProperty("_links")
     private Links links;
 
-    public static GerenteDTO fromGerente(Gerente gerente, Function<Long, URI> uriBuilder) { //TODO hacer con builder
-        var dto = new GerenteDTO();
-        dto.setId(gerente.getId());
-        dto.setIdUsuario(gerente.getIdUsuario());
-        dto.setEmpresa(gerente.getEmpresa());
-        dto.setCentrosAsociados(gerente.getCentrosAsociados());
-        dto.setLinks(
-                Links.builder()
-                        .self(uriBuilder.apply(gerente.getId()))
-                        .build());
-        return dto;
+    public static GerenteDTO fromGerente(Gerente gerente, Function<Long, URI> uriBuilder) {
+        return GerenteDTO.builder()
+                .id(gerente.getId())
+                .idUsuario(gerente.getIdUsuario())
+                .empresa(gerente.getEmpresa())
+                .centrosAsociados(gerente.getCentrosAsociados())
+                .links(
+                        Links.builder()
+                                .self(uriBuilder.apply(gerente.getId()))
+                                .build()
+                )
+                .build();
     }
 
-    public Gerente gerente() { //TODO hacer con builder
-        var ger = new Gerente();
-        ger.setId(id);
-        ger.setIdUsuario(idUsuario);
-        ger.setEmpresa(empresa);
-        ger.setCentrosAsociados(centrosAsociados);
-        return ger;
+    public Gerente gerente() {
+        return Gerente.builder()
+                .id(id)
+                .idUsuario(idUsuario)
+                .empresa(empresa)
+                .centrosAsociados(centrosAsociados)
+                .build();
     }
 
 }

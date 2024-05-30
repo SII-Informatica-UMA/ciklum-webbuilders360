@@ -42,17 +42,17 @@ public class MensajeDTO {
                 .build();
     }
 
-    public MensajeCentro mensaje() { //TODO hacer con builder
-        MensajeCentro mensaje = new MensajeCentro();
-        mensaje.setId(id);
-        mensaje.setCentro(centro);
-        mensaje.setAsunto(asunto);
-        mensaje.setContenido(contenido);
-        mensaje.setRemitente(remitente);
-        mensaje.setCopias(copias);
-        mensaje.setDestinatarios(destinatarios);
-        mensaje.setCopiasOcultas(copiasOcultas);
-        return mensaje;
+    public MensajeCentro mensaje() {
+        return MensajeCentro.builder()
+                .id(id)
+                .centro(centro)
+                .asunto(asunto)
+                .contenido(contenido)
+                .remitente(remitente)
+                .destinatarios(destinatarios)
+                .copias(copias)
+                .copiasOcultas(copiasOcultas)
+                .build();
     }
 
 }
