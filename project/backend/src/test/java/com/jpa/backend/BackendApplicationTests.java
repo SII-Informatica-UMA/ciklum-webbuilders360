@@ -416,7 +416,7 @@ class BackendApplicationTests {
 			mensajeRepoMock.save(mensaje);
 
 		}
-/* 
+ 
 		@Test
 		@DisplayName("da error cuando se inserta un centro que ya existe (mismo nombre y direccion)")
 		public void insertaCentroExistente(){
@@ -428,7 +428,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
-*/
+
 		@Test
 		@DisplayName("se inserta un centro correctamente cuando ya existe uno con mismo nombre y distinta direccion")
 		public void insertaCentroExistenteDistintaDireccion(){
@@ -440,7 +440,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 		}
- /*
+ 
 		@Test
 		@DisplayName("da error cuando se inserta un gerente que ya existe")
 		public void insertaGerenteExistente(){
@@ -450,7 +450,7 @@ class BackendApplicationTests {
 				.build();
 			var peticion = post(port, "/gerentes", gerente);
 			var respuesta = restTemplate.exchange(peticion, Void.class);
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
  		
 		@Test
@@ -464,7 +464,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
-		
+/*	
 		@Test
 		@DisplayName("da error cuando se inserta un mensaje que sí tiene destinatarios")
 		public void insertaMensajeSinAsuntoNiDestinatarios(){
@@ -479,7 +479,7 @@ class BackendApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
 		}
-		
+*/		
 		@Test
 		@DisplayName("modificar un mensaje existente correctamente")
 		public void modificarMensaje(){
@@ -562,36 +562,19 @@ class BackendApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(mensajeRepoMock.count()).isEqualTo(1);
 		}
-*/
+
 		@Test
-		@Disabled
 		@DisplayName("obtiene un centro concreto")
-		public void obtenerCentroConcreto(){
-			/* 
+		public void obtenerCentroConcreto(){ 
 			var peticion = get(port, "/centros/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<CentroDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getNombre()).isEqualTo("Gym");
 			assertThat(respuesta.getBody().getDireccion()).isEqualTo("C/Malaga");
-			*/
-			Centro mockCentro = new Centro();
-			mockCentro.setNombre("Gym");
-			mockCentro.setDireccion("C/Malaga");
-
-			ResponseEntity<Centro> mockResponse = new ResponseEntity<>(mockCentro, HttpStatus.OK);
-			//when(restTemplateAux.getForEntity(anyString(), eq(Centro.class))).thenReturn(mockResponse);
-
-			Centro centro = dbService.obtenerCentro(1L);
-
-			// Realiza las aserciones necesarias
-			assertNotNull(centro);
-			assertEquals("Gym", centro.getNombre());
-			assertEquals("C/Malaga", centro.getDireccion());
 		}
 
 		@Test
-		@Disabled
 		@DisplayName("obtiene un gerente concreto")
 		public void obtenerGerenteConcreto(){ 
 			var peticion = get(port, "gerentes/1");
@@ -603,30 +586,14 @@ class BackendApplicationTests {
 		}
 
 		@Test
-		@Disabled
 		@DisplayName("obtiene un mensaje concreto")
 		public void obtenerMensajeConcreto(){
-			/*
 			var peticion = get(port, "/mensajes/1");
 			var respuesta = restTemplate.exchange(peticion, 
 					new ParameterizedTypeReference<MensajeDTO>() {});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).getAsunto()).isEqualTo("Prueba");
 			assertThat(respuesta.getBody().getContenido()).isEqualTo("mensaje de prueba");
-		 	*/
-			MensajeCentro mockMensaje = new MensajeCentro();
-			mockMensaje.setAsunto("Prueba");
-			mockMensaje.setContenido("mensaje de prueba");
-	 
-			ResponseEntity<MensajeCentro> mockResponse = new ResponseEntity<>(mockMensaje, HttpStatus.OK);
-			//when(restTemplateAux.getForEntity(anyString(), eq(MensajeCentro.class))).thenReturn(mockResponse);
-	 
-			MensajeCentro mensaje = dbService.obtenerMensaje(1L);
-	 
-			 // Realiza las aserciones necesarias
-			assertNotNull(mensaje);
-			assertEquals("Prueba", mensaje.getAsunto());
-			assertEquals("mensaje de prueba", mensaje.getContenido());
 		}
  
 		@Test
