@@ -28,26 +28,25 @@ public class CentroDTO {
     private Links links;
 
     public static CentroDTO fromCentro(Centro centro, Function<Long, URI> uriBuilder) {
-        return CentroDTO.builder()
-                .id(centro.getId())
-                .nombre(centro.getNombre())
-                .direccion(centro.getDireccion())
-                .gerenteAsociado(centro.getGerenteAsociado())
-                .links(
-                        Links.builder()
-                                .self(uriBuilder.apply(centro.getId()))
-                                .build()
-                )
-                .build();
+        var dto = new CentroDTO();
+        dto.setId(centro.getId());
+        dto.setNombre(centro.getNombre());
+        dto.setDireccion(centro.getDireccion());
+        dto.setGerenteAsociado(centro.getGerenteAsociado());
+        dto.setLinks(
+                Links.builder()
+                        .self(uriBuilder.apply(centro.getId()))
+                        .build());
+        return dto;
     }
 
-    public Centro centro() {
-        return Centro.builder()
-                .id(id)
-                .direccion(direccion)
-                .nombre(nombre)
-                .gerenteAsociado(gerenteAsociado)
-                .build();
+    public Centro centro(){
+        var centro = new Centro();
+        centro.setId(id);
+        centro.setDireccion(direccion);
+        centro.setNombre(nombre);
+        centro.setGerenteAsociado(gerenteAsociado);
+        return centro;
     }
 
 }

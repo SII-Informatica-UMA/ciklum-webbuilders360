@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.function.Function;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class MensajeDTO {
     private Long id;
@@ -25,34 +28,36 @@ public class MensajeDTO {
     private Links links;
 
     public static MensajeDTO fromMensaje(MensajeCentro mensaje, Function<Long, URI> uriBuilder) {
-        return MensajeDTO.builder()
-                .id(mensaje.getId())
-                .centro(mensaje.getCentro())
-                .asunto(mensaje.getAsunto())
-                .contenido(mensaje.getContenido())
-                .remitente(mensaje.getRemitente())
-                .destinatarios(mensaje.getDestinatarios())
-                .copias(mensaje.getCopias())
-                .copiasOcultas(mensaje.getCopiasOcultas())
-                .links(
-                        Links.builder()
-                                .self(uriBuilder.apply(mensaje.getId()))
-                                .build()
-                )
-                .build();
+        var dto = new MensajeDTO();
+        dto.setId(mensaje.getId());
+        dto.setCentro(mensaje.getCentro());
+        dto.setDestinatarios(mensaje.getDestinatarios());
+        dto.setAsunto(mensaje.getAsunto());
+        dto.setContenido(mensaje.getContenido());
+        dto.setRemitente(mensaje.getRemitente());
+        dto.setDestinatarios(mensaje.getDestinatarios());
+        dto.setCopias(mensaje.getCopias());
+        dto.setCopiasOcultas(mensaje.getCopiasOcultas());
+        dto.setLinks(
+                Links.builder()
+                        .self(uriBuilder.apply(mensaje.getId()))
+                        .build()
+        );
+        return dto;
     }
 
-    public MensajeCentro mensaje() {
-        return MensajeCentro.builder()
-                .id(id)
-                .centro(centro)
-                .asunto(asunto)
-                .contenido(contenido)
-                .remitente(remitente)
-                .destinatarios(destinatarios)
-                .copias(copias)
-                .copiasOcultas(copiasOcultas)
-                .build();
+    public MensajeCentro mensaje(){
+        var men = new MensajeCentro();
+        men.setId(id);
+        men.setDestinatarios(destinatarios);
+        men.setCentro(centro);
+        men.setAsunto(asunto);
+        men.setContenido(contenido);
+        men.setRemitente(remitente);
+        men.setCopias(copias);
+        men.setDestinatarios(destinatarios);
+        men.setCopiasOcultas(copiasOcultas);
+        return men;
     }
 
 }
