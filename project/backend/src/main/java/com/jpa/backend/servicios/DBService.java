@@ -27,8 +27,7 @@ public class DBService {
     private final GerenteRepository gerenteRepo;
     private final CentroRepository centroRepo;
     private final MensajeCentroRepository mensajeRepo;
-    //private final JwtUtil jwtUtil;
-
+    
     @Value("${baseURIOfFrontend:http://localhost:4200}")
     private String baseURIOfFrontend;
 
@@ -162,6 +161,4 @@ public class DBService {
             throw new EntidadNoEncontradaException();
         }
     }
-
-
 }
