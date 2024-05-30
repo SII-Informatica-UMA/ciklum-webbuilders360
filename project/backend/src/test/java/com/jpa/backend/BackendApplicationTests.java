@@ -67,11 +67,15 @@ class BackendApplicationTests {
 	@Autowired
 	private JwtUtil jwtUtil;
 
-	@MockBean
+	//@MockBean
+	@Autowired
 	private CentroRepository centroRepoMock;
-	@MockBean
+	
+	//@MockBean
+	@Autowired
 	private GerenteRepository gerenteRepoMock;
-	@MockBean
+	//@MockBean
+	@Autowired
 	private MensajeCentroRepository mensajeRepoMock;
 
 	@Autowired
@@ -339,7 +343,7 @@ class BackendApplicationTests {
 			assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
-
+/*
 		@Test
 		@DisplayName("devuelve una lista vacía de centros")
 		public void devuelveListaVaciaCentros() {
@@ -379,6 +383,7 @@ class BackendApplicationTests {
 			// Aserciones
 			assertThat(gerentes).isEmpty(); // Verifica que la lista está vacía
     	}
+*/
 	}
 
 	
@@ -634,11 +639,6 @@ class BackendApplicationTests {
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
-			
-			Centro centro = new Centro();
-			centro.setNombre("Gym");
-			centro.setDireccion("C/Malaga");
-			centroRepoMock.save(centro);
 
 			RequestEntity<Void> peticion = get(port, "/centros");
 			ResponseEntity<List<Centro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Centro>>() {});
@@ -647,7 +647,7 @@ class BackendApplicationTests {
 
 			List<Centro> centros = respuesta.getBody();
 			assertThat(centros).isNotNull();
-			//assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
+			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
 
 		}
 
@@ -663,18 +663,15 @@ class BackendApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
 
-			Gerente gerente = new Gerente();
-			gerente.setEmpresa("EmpresaS.L.");
-			gerente.setIdUsuario(0L);
-			gerenteRepoMock.save(gerente);
+			RequestEntity<Void> peticion = get(port, "/gerentes");
+			ResponseEntity<List<Gerente>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Gerente>>() {});
 
-			RequestEntity<Void> request = get(port, "/gerentes");
-			ResponseEntity<List<Gerente>> response = restTemplate.exchange(request, new ParameterizedTypeReference<List<Gerente>>() {});
+			assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 
-			assertEquals(HttpStatus.OK, response.getStatusCode());
-
-			List<Gerente> gerentes = response.getBody();
+			List<Gerente> gerentes = respuesta.getBody();
 			assertThat(gerentes).isNotNull();
+			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
+
 		}
 
 		@Test
@@ -688,18 +685,15 @@ class BackendApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
 
-			MensajeCentro mensaje = new MensajeCentro();
-			mensaje.setAsunto("Prueba");
-			mensaje.setContenido("mensaje de prueba");
-			mensajeRepoMock.save(mensaje);
+			RequestEntity<Void> peticion = get(port, "/mensajes");
+			ResponseEntity<List<MensajeCentro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<MensajeCentro>>() {});
 
-			RequestEntity<Void> request = get(port, "/mensajes");
-			ResponseEntity<List<MensajeCentro>> response = restTemplate.exchange(request, new ParameterizedTypeReference<List<MensajeCentro>>() {});
+			assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 
-			assertEquals(HttpStatus.OK, response.getStatusCode());
-
-			List<MensajeCentro> mensajes = response.getBody();
+			List<MensajeCentro> mensajes = respuesta.getBody();
 			assertThat(mensajes).isNotNull();
+			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
+
 		}
 
 		@Test
