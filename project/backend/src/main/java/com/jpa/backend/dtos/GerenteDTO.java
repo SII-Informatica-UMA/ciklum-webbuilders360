@@ -4,7 +4,6 @@ import com.jpa.backend.entities.Centro;
 import com.jpa.backend.entities.Gerente;
 
 import java.net.URI;
-import java.util.List;
 import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +23,7 @@ public class GerenteDTO {
     private Long id;
     private Long idUsuario;
     private String empresa;
-    private List<Centro> centrosAsociados;
+    private Centro centroAsociado;
     @JsonProperty("_links")
     private Links links;
 
@@ -33,7 +32,7 @@ public class GerenteDTO {
         dto.setId(gerente.getId());
         dto.setIdUsuario(gerente.getIdUsuario());
         dto.setEmpresa(gerente.getEmpresa());
-        dto.setCentrosAsociados(gerente.getCentrosAsociados());
+        dto.setCentroAsociado(gerente.getCentroAsociado());
         dto.setLinks(
                 Links.builder()
                         .self(uriBuilder.apply(gerente.getId()))
@@ -46,7 +45,7 @@ public class GerenteDTO {
         ger.setId(id);
         ger.setIdUsuario(idUsuario);
         ger.setEmpresa(empresa);
-        ger.setCentrosAsociados(centrosAsociados);
+        ger.setCentroAsociado(centroAsociado);
         return ger;
     }
 

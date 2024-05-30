@@ -5,6 +5,7 @@ import com.jpa.backend.dtos.CentroDTO;
 import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.MensajeDTO;
 import com.jpa.backend.entities.Centro;
+import com.jpa.backend.entities.Destinatario;
 import com.jpa.backend.entities.Gerente;
 import com.jpa.backend.entities.MensajeCentro;
 import com.jpa.backend.repositories.CentroRepository;
@@ -62,16 +63,16 @@ class BackendApplicationTests {
     @Autowired
     private JwtUtil jwtUtil;
 
-    //@MockBean
-    @Autowired
-    private CentroRepository centroRepoMock;
 
-    //@MockBean
     @Autowired
-    private GerenteRepository gerenteRepoMock;
-    //@MockBean
+    private CentroRepository centroRepo;
+
     @Autowired
-    private MensajeCentroRepository mensajeRepoMock;
+    private GerenteRepository gerenteRepo;
+
+
+    @Autowired
+    private MensajeCentroRepository mensajeRepo;
 
     @Autowired
     private DBService dbService;
@@ -145,11 +146,8 @@ class BackendApplicationTests {
     private void compruebaCampos(Gerente expected, Gerente actual) {
         assertThat(actual.getIdUsuario()).isEqualTo(expected.getIdUsuario());
         assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
-        assertEquals(new ArrayList<>(
-                actual.getCentrosAsociados() != null ? actual.getCentrosAsociados() : new ArrayList<>()
-        ), new ArrayList<>(
-                expected.getCentrosAsociados() != null ? expected.getCentrosAsociados() : new ArrayList<>()
-        ));
+        System.out.println(actual.getCentroAsociado());
+        assertEquals(actual.getCentroAsociado(), expected.getCentroAsociado());
     }
 
     private void compruebaCampos(MensajeCentro expected, MensajeCentro actual) {
@@ -409,18 +407,18 @@ class BackendApplicationTests {
             Centro gym = new Centro();
             gym.setNombre("Gym");
             gym.setDireccion("C/Malaga");
-            centroRepoMock.save(gym);
+            centroRepo.save(gym);
 
             var gerente = new Gerente();
             gerente.setEmpresa("EmpresaS.L.");
             gerente.setIdUsuario(0L);
-            gerenteRepoMock.save(gerente);
+            gerenteRepo.save(gerente);
 
             //creo que le hace falta hacer un set de más atributos
             var mensaje = new MensajeCentro();
             mensaje.setAsunto("Prueba");
             mensaje.setContenido("mensaje de prueba");
-            mensajeRepoMock.save(mensaje);
+            mensajeRepo.save(mensaje);
 
 		}
         
@@ -459,10 +457,10 @@ class BackendApplicationTests {
             var respuesta = restTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
         }
-/*
+
         @Test
-        @DisplayName("da error cuando se inserta un mensaje que sí tiene destinatarios")
-        public void insertaMensajeSinAsuntoNiDestinatarios(){
+        @DisplayName("da error cuando se inserta un mensaje que sí tiene destinatarios pero no tiene asunto")
+        public void insertaMensajeSinAsuntoYConDestinatario(){
             Destinatario dst = new Destinatario();
             dst.setId(1L);
             List<Destinatario> listaDst = new ArrayList<>();
@@ -474,7 +472,7 @@ class BackendApplicationTests {
             var respuesta = restTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(409);
         }
-*/
+
         @Test
     	@DisplayName("modificar un mensaje existente correctamente")
         public void modificarMensaje(){
@@ -486,8 +484,8 @@ class BackendApplicationTests {
             var peticion = put(port, "/mensajes/1", mensaje);
     		var respuesta = restTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-            assertThat(mensajeRepoMock.findById(1L).getId()).isEqualTo(1L);
-            assertThat(mensajeRepoMock.findById(1L).getAsunto()).isEqualTo("Duda entrenamiento");
+            assertThat(mensajeRepo.findById(1L).getId()).isEqualTo(1L);
+            assertThat(mensajeRepo.findById(1L).getAsunto()).isEqualTo("Duda entrenamiento");
         }
 
         @Test
@@ -500,8 +498,8 @@ class BackendApplicationTests {
             var peticion = put(port, "/centros/1", centro);
             var respuesta = restTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-            assertThat(centroRepoMock.findById(1L).getNombre()).isEqualTo("GymNuevo");
-            assertThat(centroRepoMock.findById(1L).getDireccion()).isEqualTo("C/Teatinos");
+            assertThat(centroRepo.findById(1L).getNombre()).isEqualTo("GymNuevo");
+            assertThat(centroRepo.findById(1L).getDireccion()).isEqualTo("C/Teatinos");
         }
 
         @Test
@@ -515,8 +513,8 @@ class BackendApplicationTests {
             var peticion = put(port, "/gerentes/1", gerente);
             var respuesta = restTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-            assertThat(gerenteRepoMock.findById(1L).getId()).isEqualTo(1L);
-        	assertThat(gerenteRepoMock.findById(1L).getEmpresa()).isEqualTo("Gym Teatinos");
+            assertThat(gerenteRepo.findById(1L).getId()).isEqualTo(1L);
+        	assertThat(gerenteRepo.findById(1L).getEmpresa()).isEqualTo("Gym Teatinos");
         }
 
        @Test
@@ -525,11 +523,11 @@ class BackendApplicationTests {
            var centro = new Centro();
            centro.setNombre("GymNuevo");
            centro.setDireccion("C/Teatinos");
-           centroRepoMock.save(centro);
+           centroRepo.save(centro);
            var peticion = delete(port, "/centros/2");
            var respuesta = restTemplate.exchange(peticion, Void.class);
            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-           assertThat(centroRepoMock.count()).isEqualTo(1);
+           assertThat(centroRepo.count()).isEqualTo(1);
         }
 
     	@Test
@@ -538,11 +536,11 @@ class BackendApplicationTests {
            var gerente = new Gerente();
            gerente.setEmpresa("EmpresaNuevaS.L.");
            gerente.setIdUsuario(1L);
-           gerenteRepoMock.save(gerente);
+           gerenteRepo.save(gerente);
            var peticion = delete(port, "/gerentes/2");
            var respuesta = restTemplate.exchange(peticion, Void.class);
            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-           assertThat(gerenteRepoMock.count()).isEqualTo(1);
+           assertThat(gerenteRepo.count()).isEqualTo(1);
     	}
 
     	@Test
@@ -551,11 +549,11 @@ class BackendApplicationTests {
             var mensaje = new MensajeCentro();
             mensaje.setAsunto("MensajeEliminar");
             mensaje.setContenido("mensaje a eliminar");
-            mensajeRepoMock.save(mensaje);
+            mensajeRepo.save(mensaje);
             var peticion = delete(port, "/mensajes/2");
                    var respuesta = restTemplate.exchange(peticion, Void.class);
                    assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-                   assertThat(mensajeRepoMock.count()).isEqualTo(1);
+                   assertThat(mensajeRepo.count()).isEqualTo(1);
                }
         @Test
         @DisplayName("obtiene un centro concreto")
@@ -661,44 +659,47 @@ class BackendApplicationTests {
         }
 
         @Test
-        @Disabled
-        @DisplayName("asigna correctamente a un gerente dando el ID del centro")
-        public void asignarGerenteIndicandoCentroConId() {
+        @DisplayName("asigna correctamente un centro a un gerente")
+        public void asignarGerenteIndicandoCentro() {
 
             var centroDTO = CentroDTO.builder().id(1L).build();
 
             var centro = centroDTO.centro();
 
             // Preparamos el producto a insertar
-            var gerente = GerenteDTO.builder()
+            var gerenteDTO = GerenteDTO.builder()
                     .empresa("EmpresaNV")
-                    .centrosAsociados(Collections.singletonList(centro))
+            //        .centroAsociado(centro)
                     .idUsuario(1L)
                     .build();
-            List<Map<String, Object>> tablaCentro = jdbcTemplate.queryForList("SELECT * FROM Centro");
-            List<Map<String, Object>> tablaGerente = jdbcTemplate.queryForList("SELECT * FROM Gerente");
+
+            var gerente = gerenteDTO.gerente();
+            centro.setGerenteAsociado(gerente);
+
+
             // Preparamos la petición con el centro dentro
-            var peticion = post(port, "/gerentes", gerente);
+            var peticion = post(port, "/gerentes", gerenteDTO);
 
             // Invocamos al servicio REST
             var respuesta = restTemplate.exchange(peticion, Void.class);
-            List<Map<String, Object>> tablaCentro2 = jdbcTemplate.queryForList("SELECT * FROM Centro");
-            List<Map<String, Object>> tablaGerente2 = jdbcTemplate.queryForList("SELECT * FROM Gerente");
+
+            List<Gerente> gerentesBD = gerenteRepo.findAll();
+            Gerente ger = gerentesBD.stream()
+                    .filter(p -> p.getEmpresa().equals("EmpresaNV"))
+                    .findFirst()
+                    .get();
+
 
             // Comprobamos el resultado
             assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
             assertThat(Objects.requireNonNull(respuesta.getHeaders().get("Location")).getFirst())
                     .startsWith("http://localhost:" + port + "/gerentes");
 
-            List<Gerente> gerentesBD = gerenteRepoMock.findAll();
-            Gerente ger = gerentesBD.stream()
-                    .filter(p -> p.getEmpresa().equals("EmpresaNV"))
-                    .findFirst()
-                    .get();
+
             assertThat(gerentesBD).hasSize(2);
             assertThat(Objects.requireNonNull(respuesta.getHeaders().get("Location")).getFirst())
                     .endsWith("/" + ger.getId());
-            compruebaCampos(gerente.gerente(), ger);
+            compruebaCampos(gerenteDTO.gerente(), ger);
         }
 
     }

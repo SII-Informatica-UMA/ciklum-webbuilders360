@@ -19,7 +19,7 @@ public class Centro {
     private String nombre;
     private String direccion;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_gerente", unique = true)
     private Gerente gerenteAsociado;
 }
