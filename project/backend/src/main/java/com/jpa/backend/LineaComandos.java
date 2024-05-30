@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class LineaComandos implements CommandLineRunner {
+	
 	private final CentroRepository centroRepo;
 	private final GerenteRepository gerenteRepo;
 	private final MensajeCentroRepository mensajeRepo;

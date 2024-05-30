@@ -45,15 +45,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisplayName("En el servicio de administracion")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-//@ExtendWith(MockitoExtension.class)
+
 class BackendApplicationTests {
 
     @Value(value = "${local.server.port}")
     private int port;
     @Autowired
     private TestRestTemplate restTemplate;
-    //@Autowired
-    //private RestTemplate restTemplateAux;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -88,17 +86,6 @@ class BackendApplicationTests {
         // Generar token JWT
         UserDetails userDetails = User.withUsername("user").password("password").roles("USER").build();
         token = jwtUtil.generateToken(userDetails);
-
-        // Realiza una solicitud GET a un endpoint protegido, incluyendo el token JWT en el encabezado Authorization
-        /*try {
-			mockMvc.perform(MockMvcRequestBuilders.get("/api/protected-endpoint")
-			        .header("Authorization", "Bearer " + token)
-			        .contentType(MediaType.APPLICATION_JSON))
-			        .andExpect(MockMvcResultMatchers.status().isOk());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
     }
 
     private URI uri(int port, String... paths) {
@@ -260,16 +247,6 @@ class BackendApplicationTests {
             assertEquals(HttpStatus.CREATED, respuesta.getStatusCode());
         }
 
-		/*@Test
-		@DisplayName ("devuelve error al modificar un gerente que no existe")
-		public void modificarGerenteInexistente(){
-			var gerente = GerenteDTO.builder()
-					.empresa("EmpresaS.L.")
-					.build();
-			var peticion = put(port, "/gerentes/1", gerente);
-			var respuesta = restTemplate.exchange(peticion, Void.class);
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		}*/
 
         @Test
         @DisplayName("devuelve error al modificar un gerente que no existe")
@@ -348,59 +325,12 @@ class BackendApplicationTests {
             assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
-/*
-		@Test
-		@DisplayName("devuelve una lista vacía de centros")
-		public void devuelveListaVaciaCentros() {
-			// Configura el mock del repositorio para devolver una lista vacía
-			when(centroRepoMock.findAll()).thenReturn(emptyList());
-
-			// Llamada al método a probar
-			List<Centro> centros = dbService.obtenerCentros();
-
-			// Aserciones
-			assertThat(centros).isEmpty(); // Verifica que la lista está vacía
-    	}
-
-		@Test
-		@DisplayName("devuelve una lista vacía de mensajes")
-		public void devuelveListaVaciaMensajes() {
-			// Configura el mock del repositorio para devolver una lista vacía
-			when(mensajeRepoMock.findAll()).thenReturn(emptyList());
-
-			// Llamada al método a probar
-			List<MensajeCentro> mensajes = dbService.obtenerMensajes();
-
-			// Aserciones
-			assertThat(mensajes).isEmpty(); // Verifica que la lista está vacía
-    	}
-
-		@Test
-		@DisplayName("devuelve una lista vacía de gerentes")
-		public void devuelveListaVaciaGerentes() {
-			// Configura el mock del repositorio para devolver una lista vacía
-			List<Gerente> mockGerentes = new ArrayList<>();
-			when(gerenteRepoMock.findAll()).thenReturn(mockGerentes);
-
-			// Llamada al método a probar
-			List<Gerente> gerentes = dbService.obtenerGerentes();
-
-			// Aserciones
-			assertThat(gerentes).isEmpty(); // Verifica que la lista está vacía
-    	}
-*/
     }
 
 
     @Nested
     @DisplayName("cuando la base de datos tiene datos")
     public class BaseDatosConDatos {
-		/*private static String token;
-		@BeforeAll
-		public static void getToken(){
-			//token = new JwtUtil().generateToken("admin");
-			token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MTY0NTM0MTF9.SSoy13VsqxTesT8Ax9XPXKQC1WHm8lP6i0bVULCsn0g";
-		}*/
 
         @BeforeEach
         public void insertarDatos() {
@@ -414,7 +344,6 @@ class BackendApplicationTests {
             gerente.setIdUsuario(0L);
             gerenteRepo.save(gerente);
 
-            //creo que le hace falta hacer un set de más atributos
             var mensaje = new MensajeCentro();
             mensaje.setAsunto("Prueba");
             mensaje.setContenido("mensaje de prueba");
@@ -591,14 +520,7 @@ class BackendApplicationTests {
 		@Test
 		@DisplayName("devuelve una lista de centros")
 		public void devuelveListaCentros() {
-			/*var peticion = get(port, "/centros");
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<CentroDTO>>() {});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
-
+			
             RequestEntity<Void> peticion = get(port, "/centros");
             ResponseEntity<List<Centro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Centro>>() {
             });
@@ -615,14 +537,7 @@ class BackendApplicationTests {
         @Test
         @DisplayName("devuelve una lista de gerentes")
         public void devuelveListaGerentes() {
-			/*var peticion = get(port,  "/gerentes");
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<GerenteDTO>>() {});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
-
+			
             RequestEntity<Void> peticion = get(port, "/gerentes");
             ResponseEntity<List<Gerente>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Gerente>>() {
             });
@@ -638,14 +553,7 @@ class BackendApplicationTests {
         @Test
         @DisplayName("devuelve una lista de mensajes")
         public void devuelveListaMensajes() {
-			/*var peticion = get(port, "/mensajes");
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<MensajeDTO>>() {});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);*/
-
+			
             RequestEntity<Void> peticion = get(port, "/mensajes");
             ResponseEntity<List<MensajeCentro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<MensajeCentro>>() {
             });
