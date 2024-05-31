@@ -96,7 +96,7 @@ public class DBService {
         Optional<UserDetails> user = SecurityConfiguration.getAuthenticatedUser();
         user.ifPresent(u -> log.info("Usuario autenticado: " + u.getUsername()));
 
-        if (!centroRepo.existsByNombre(c.getNombre()) || !centroRepo.existsByDireccion(c.getDireccion())) {
+        if (!centroRepo.existsByDireccion(c.getDireccion())) {
             c.setId(null);
             centroRepo.save(c);
             return c.getId();

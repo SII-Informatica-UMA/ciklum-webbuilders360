@@ -1,6 +1,5 @@
 package com.jpa.backend;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpa.backend.dtos.CentroDTO;
 import com.jpa.backend.dtos.GerenteDTO;
 import com.jpa.backend.dtos.IdGerenteDTO;
@@ -13,7 +12,6 @@ import com.jpa.backend.repositories.CentroRepository;
 import com.jpa.backend.repositories.GerenteRepository;
 import com.jpa.backend.repositories.MensajeCentroRepository;
 import com.jpa.backend.security.JwtUtil;
-import com.jpa.backend.servicios.DBService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,14 +26,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
@@ -58,12 +53,6 @@ class BackendApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
     private JwtUtil jwtUtil;
 
 
@@ -76,9 +65,6 @@ class BackendApplicationTests {
 
     @Autowired
     private MensajeCentroRepository mensajeRepo;
-
-    @Autowired
-    private DBService dbService;
 
     private static final String SCHEME = "http";
     private static final String HOST = "localhost";
@@ -270,7 +256,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("devuelve error al modificar un gerente que no existe")
-        public void modificarGerenteInexistente() throws Exception {
+        public void modificarGerenteInexistente() {
 
             GerenteDTO gerenteDTO = GerenteDTO.builder()
                     .empresa("EmpresaS.L.")
@@ -354,34 +340,28 @@ class BackendApplicationTests {
 
         @BeforeEach
         public void insertarDatos() {
-            Centro gym = new Centro();
-            gym.setNombre("Gym");
-            gym.setDireccion("C/Malaga");
-            centroRepo.save(gym);
-
-            var gerente = new Gerente();
+            Gerente gerente = new Gerente();
             gerente.setEmpresa("EmpresaS.L.");
             gerente.setIdUsuario(0L);
             gerenteRepo.save(gerente);
 
-            var mensaje = new MensajeCentro();
+            Centro gym = new Centro();
+            gym.setNombre("Gym");
+            gym.setDireccion("C/Malaga");
+            gym.setGerenteAsociado(gerente);
+            centroRepo.save(gym);
+
+            MensajeCentro mensaje = new MensajeCentro();
             mensaje.setAsunto("Prueba");
             mensaje.setContenido("mensaje de prueba");
             mensajeRepo.save(mensaje);
-
-            IdGerenteDTO idGerenteDTO = IdGerenteDTO.builder()
-                    .id(1L)
-                    .build();
-            var peticion = put(port, "/centros/1/gerente", idGerenteDTO);
-            var respuesta = restTemplate.exchange(peticion, Void.class);
-
         }
 
         @Test
-        @DisplayName("da error cuando se inserta un centro que ya existe (mismo nombre y direccion)")
-        public void insertaCentroExistente() {
+        @DisplayName("da error cuando se inserta un centro con la misma direccion")
+        public void insertaCentroConDireccionRepetida() {
             var centro = CentroDTO.builder()
-                    .nombre("Gym")
+                    .nombre("Gym1")
                     .direccion("C/Malaga")
                     .build();
             var peticion = post(port, "/centros", centro);
@@ -421,7 +401,7 @@ class BackendApplicationTests {
             List<Destinatario> listaDst = new ArrayList<>();
             listaDst.add(dst);
             var mensaje = MensajeDTO.builder()
-                    .destinatarios(new ArrayList<Destinatario>(listaDst))
+                    .destinatarios(new ArrayList<>(listaDst))
                     .build();
             var peticion = post(port, "/mensajes", mensaje);
             var respuesta = restTemplate.exchange(peticion, Void.class);
@@ -552,7 +532,7 @@ class BackendApplicationTests {
         public void devuelveListaCentros() {
 
             RequestEntity<Void> peticion = get(port, "/centros");
-            ResponseEntity<List<Centro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Centro>>() {
+            ResponseEntity<List<Centro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<>() {
             });
 
             assertEquals(HttpStatus.OK, respuesta.getStatusCode());
@@ -569,7 +549,7 @@ class BackendApplicationTests {
         public void devuelveListaGerentes() {
 
             RequestEntity<Void> peticion = get(port, "/gerentes");
-            ResponseEntity<List<Gerente>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Gerente>>() {
+            ResponseEntity<List<Gerente>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<>() {
             });
 
             assertEquals(HttpStatus.OK, respuesta.getStatusCode());
@@ -585,7 +565,7 @@ class BackendApplicationTests {
         public void devuelveListaMensajes() {
 
             RequestEntity<Void> peticion = get(port, "/mensajes");
-            ResponseEntity<List<MensajeCentro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<MensajeCentro>>() {
+            ResponseEntity<List<MensajeCentro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<>() {
             });
 
             assertEquals(HttpStatus.OK, respuesta.getStatusCode());
@@ -660,6 +640,19 @@ class BackendApplicationTests {
         @DisplayName("desasocia correctamente un centro y un gerente indicando un gerente incorrecto")
         public void desasociarGerenteIndicandoCentroConRequestParamIncorrecto() {
             var peticion = delete(port, "/centros/1/gerente", "gerente", 2);
+            var respuesta = restTemplate.exchange(peticion, Void.class);
+
+            assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+        }
+
+        @Test
+        @DisplayName("desasocia correctamente un centro y un gerente indicando un gerente inexistente")
+        public void desasociarGerenteIndicandoCentroConRequestParamInexistente() {
+            Centro gym = new Centro();
+            gym.setNombre("Gym2");
+            gym.setDireccion("C/Malaga2");
+            centroRepo.save(gym);
+            var peticion = delete(port, "/centros/2/gerente", "gerente", 2);
             var respuesta = restTemplate.exchange(peticion, Void.class);
 
             assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
