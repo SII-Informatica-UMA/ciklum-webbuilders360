@@ -1,6 +1,9 @@
 package com.jpa.backend.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +17,4 @@ public class Gerente {
     @Column(nullable = false)
     private Long idUsuario;
     private String empresa;
-    @OneToOne (mappedBy = "gerenteAsociado", fetch = FetchType.EAGER, cascade = CascadeType.MERGE) //TODO cambiar relación
-    private Centro centroAsociado;
 }

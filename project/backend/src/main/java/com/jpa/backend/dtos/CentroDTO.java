@@ -1,18 +1,11 @@
 package com.jpa.backend.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jpa.backend.entities.Centro;
-import com.jpa.backend.entities.Gerente;
+import lombok.*;
 
 import java.net.URI;
 import java.util.function.Function;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -20,10 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class CentroDTO {
+
     private Long id;
     private String nombre;
     private String direccion;
-    private Gerente gerenteAsociado;
     @JsonProperty("_links")
     private Links links;
 
@@ -32,7 +25,6 @@ public class CentroDTO {
         dto.setId(centro.getId());
         dto.setNombre(centro.getNombre());
         dto.setDireccion(centro.getDireccion());
-        dto.setGerenteAsociado(centro.getGerenteAsociado());
         dto.setLinks(
                 Links.builder()
                         .self(uriBuilder.apply(centro.getId()))
@@ -40,12 +32,11 @@ public class CentroDTO {
         return dto;
     }
 
-    public Centro centro(){
+    public Centro centro() {
         var centro = new Centro();
         centro.setId(id);
         centro.setDireccion(direccion);
         centro.setNombre(nombre);
-        centro.setGerenteAsociado(gerenteAsociado);
         return centro;
     }
 

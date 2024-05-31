@@ -46,7 +46,7 @@ public class MensajeDTO {
         return dto;
     }
 
-    public MensajeCentro mensaje(){
+    public MensajeCentro mensaje() {
         var men = new MensajeCentro();
         men.setId(id);
         men.setDestinatarios(destinatarios);

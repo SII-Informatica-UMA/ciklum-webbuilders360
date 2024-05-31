@@ -27,7 +27,7 @@ public class DBService {
     private final GerenteRepository gerenteRepo;
     private final CentroRepository centroRepo;
     private final MensajeCentroRepository mensajeRepo;
-    
+
     @Value("${baseURIOfFrontend:http://localhost:4200}")
     private String baseURIOfFrontend;
 
@@ -84,13 +84,12 @@ public class DBService {
         return centroRepo.findAll();
     }
 
-    public Centro obtenerCentro(Long id) {
-        Optional<Centro> centro = centroRepo.findById(id);
-        if (centro.isPresent()) {
-            return centro.get();
-        } else {
+    public Centro obtenerCentro(long id) {
+        Centro centro = centroRepo.findById(id);
+        if (centro == null) {
             throw new EntidadNoEncontradaException();
         }
+        return centro;
     }
 
     public Long aniadirCentro(Centro c) {
@@ -115,11 +114,40 @@ public class DBService {
     }
 
     public void actualizarCentro(Centro centro) {
-        if (centroRepo.existsById(centro.getId())) {
+        Optional<Centro> aux = centroRepo.findById(centro.getId());
+        if (aux.isPresent()) {
+            centro.setGerenteAsociado(aux.get().getGerenteAsociado());
             centroRepo.save(centro);
         } else {
             throw new EntidadNoEncontradaException();
         }
+    }
+
+    public Gerente obtenerCentroGerente(long centroId) {
+        Centro centro = obtenerCentro(centroId);
+        return centro.getGerenteAsociado();
+    }
+
+    public void asociarCentroGerente(long centroId, long gerenteId) {
+        Centro centro = obtenerCentro(centroId);
+        Gerente gerente = obtenerGerente(gerenteId);
+        centro.setGerenteAsociado(gerente);
+        centroRepo.save(centro);
+    }
+
+    public void desasociarCentroGerente(long centroId) {
+        Centro centro = obtenerCentro(centroId);
+        centro.setGerenteAsociado(null);
+        centroRepo.save(centro);
+    }
+
+    public void desasociarCentroGerente(long centroId, int gerenteId) {
+        Centro centro = obtenerCentro(centroId);
+        if (centro.getGerenteAsociado() == null || centro.getGerenteAsociado().getId() != gerenteId) {
+            throw new EntidadNoEncontradaException();
+        }
+        centro.setGerenteAsociado(null);
+        centroRepo.save(centro);
     }
 
     //Mensaje
