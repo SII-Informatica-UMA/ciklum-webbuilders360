@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
@@ -43,9 +42,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DisplayName("En el servicio de administracion")
+@DisplayName("En el servicio de gestion de centros y gerentes")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@AutoConfigureMockMvc
 class BackendApplicationTests {
 
     @Value(value = "${local.server.port}")
@@ -256,7 +254,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("devuelve error al modificar un gerente que no existe")
-        public void modificarGerenteInexistente() {
+        public void errorModificarGerenteInexistente() {
 
             GerenteDTO gerenteDTO = GerenteDTO.builder()
                     .empresa("EmpresaS.L.")
@@ -271,7 +269,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("devuelve error al modificar un mensaje que no existe")
-        public void modificarMensajeInexistente() {
+        public void errorModificarMensajeInexistente() {
             MensajeDTO mensajeDTO = MensajeDTO.builder()
                     .asunto("consulta")
                     .destinatarios(new ArrayList<>())
@@ -286,7 +284,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("devuelve error al modificar un centro que no existe")
-        public void modificarCentroInexistente() {
+        public void errorModificarCentroInexistente() {
             CentroDTO centroDTO = CentroDTO.builder()
                     .nombre("Gym S.L.")
                     .direccion("C/24")
@@ -301,34 +299,31 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("devuelve un error al eliminar un gerente que no existe")
-        public void eliminarGerenteInexistente() {
+        public void errorEliminarGerenteInexistente() {
             var peticion = delete(port, "/gerentes/1");
             var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<GerenteDTO>() {
             });
 
-            assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
 
         @Test
         @DisplayName("devuelve un error al eliminar un centro que no existe")
-        public void eliminarCentroInexistente() {
+        public void errorEliminarCentroInexistente() {
             var peticion = delete(port, "/centros/1");
             var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<CentroDTO>() {
             });
 
-            assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
 
         @Test
         @DisplayName("devuelve un error al eliminar un mensaje que no existe")
-        public void eliminarMensajeInexistente() {
+        public void errorEliminarMensajeInexistente() {
             var peticion = delete(port, "/mensajes/1");
             var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeDTO>() {
             });
 
-            assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
     }
@@ -359,7 +354,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("da error cuando se inserta un centro con la misma direccion")
-        public void insertaCentroConDireccionRepetida() {
+        public void errorInsertaCentroConDireccionRepetida() {
             var centro = CentroDTO.builder()
                     .nombre("Gym1")
                     .direccion("C/Malaga")
@@ -371,7 +366,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("da error cuando se inserta un gerente que ya existe")
-        public void insertaGerenteExistente() {
+        public void errorInsertaGerenteExistente() {
             var gerente = GerenteDTO.builder()
                     .empresa("EmpresaS.L.")
                     .idUsuario(0L)
@@ -383,7 +378,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("da error cuando se inserta un mensaje que ya existe")
-        public void insertaMensajeExistente() {
+        public void errorInsertaMensajeExistente() {
             var mensaje = MensajeDTO.builder()
                     .asunto("Prueba")
                     .contenido("mensaje de prueba")
@@ -395,7 +390,7 @@ class BackendApplicationTests {
 
         @Test
         @DisplayName("da error cuando se inserta un mensaje que sí tiene destinatarios pero no tiene asunto")
-        public void insertaMensajeSinAsuntoYConDestinatario() {
+        public void errorInsertaMensajeSinAsuntoYConDestinatario() {
             Destinatario dst = new Destinatario();
             dst.setId(1L);
             List<Destinatario> listaDst = new ArrayList<>();
@@ -535,9 +530,9 @@ class BackendApplicationTests {
             ResponseEntity<List<Centro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<>() {
             });
 
-            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
-
             List<Centro> centros = respuesta.getBody();
+
+            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
             assertThat(centros).isNotNull();
             assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
 
@@ -552,9 +547,9 @@ class BackendApplicationTests {
             ResponseEntity<List<Gerente>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<>() {
             });
 
-            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
-
             List<Gerente> gerentes = respuesta.getBody();
+
+            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
             assertThat(gerentes).isNotNull();
             assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
 
@@ -568,9 +563,9 @@ class BackendApplicationTests {
             ResponseEntity<List<MensajeCentro>> respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<>() {
             });
 
-            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
-
             List<MensajeCentro> mensajes = respuesta.getBody();
+
+            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
             assertThat(mensajes).isNotNull();
             assertThat(Objects.requireNonNull(respuesta.getBody()).size()).isEqualTo(1);
 
@@ -594,7 +589,6 @@ class BackendApplicationTests {
             var peticion = put(port, "/centros/2/gerente", idGerenteDTO);
             var respuesta = restTemplate.exchange(peticion, Void.class);
 
-            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 
             var peticionCentroGerente = get(port, "/centros/2/gerente");
             var respuestaCentroGerente = restTemplate.exchange(peticionCentroGerente,
@@ -606,6 +600,7 @@ class BackendApplicationTests {
                     new ParameterizedTypeReference<GerenteDTO>() {
                     });
 
+            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
             assertEquals(Objects.requireNonNull(respuestaCentroGerente.getBody()).getId(),
                     Objects.requireNonNull(respuestaGerente.getBody()).getId());
         }
@@ -616,13 +611,12 @@ class BackendApplicationTests {
             var peticion = delete(port, "/centros/1/gerente");
             var respuesta = restTemplate.exchange(peticion, Void.class);
 
-            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
-
             var peticionCentroGerente = get(port, "/centros/1/gerente");
             var respuestaCentroGerente = restTemplate.exchange(peticionCentroGerente,
                     new ParameterizedTypeReference<IdGerenteDTO>() {
                     });
 
+            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
             assertNull(respuestaCentroGerente.getBody());
         }
 
