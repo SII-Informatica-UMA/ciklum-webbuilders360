@@ -68,7 +68,7 @@ public class CentroRest {
         servicio.desasociarCentroGerente(id);
     }
 
-    @DeleteMapping(path="{id}/gerente", params="gerente")
+    @DeleteMapping(path = "{id}/gerente", params = "gerente")
     public void desasociarCentroGerente(@PathVariable long id, @RequestParam int gerente) {
         servicio.desasociarCentroGerente(id, gerente);
     }
